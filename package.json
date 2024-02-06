@@ -1,0 +1,15 @@
+{
+  "name": "codealpha_expense_tracker",
+  "version": "1.0.0",
+  "description": "launch a django web app as a desktop app with electron framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "expense": "electron ."
+  },
+  "author": "rana awais",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.2.1"
+  }
+}
