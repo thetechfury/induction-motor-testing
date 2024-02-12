@@ -38,3 +38,12 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 ## License
 
 [CC0 1.0 (Public Domain)](LICENSE.md)
+
+## Install Dependencies
+
+```angular2html
+1- npm install electron-packager --save-dev
+2- npm install --save-dev electron
+3- npm install sequelize sqlite3 sequelize-cli
+
+```
