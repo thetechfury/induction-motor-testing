@@ -23,5 +23,10 @@
   "devDependencies": {
     "electron": "^28.2.2",
     "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "sequelize": "^6.37.0",
+    "sequelize-cli": "^6.6.2",
+    "sqlite3": "^5.1.7"
   }
 }
