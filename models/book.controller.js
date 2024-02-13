@@ -1,7 +1,7 @@
-const database_sequelize = require('./db_manager.js');
+// const database_sequelize = require('./db_manager.js');
 const BookModel = require('./book.model.js');
 
-database_sequelize.sync().then(() => {
+// database_sequelize.sync().then(() => {
     // uncomment each code block as per your requirement
     // BookModel.create({
     //     title: "My Book",
@@ -14,11 +14,11 @@ database_sequelize.sync().then(() => {
     //     console.error('Failed to create a new record : ', error);
     // });
 
-    BookModel.findAll().then(res => {
-        console.log(res)
-    }).catch((error) => {
-        console.error('Failed to retrieve data : ', error);
-    });
+    // BookModel.findAll().then(res => {
+    //     console.log(res)
+    // }).catch((error) => {
+    //     console.error('Failed to retrieve data : ', error);
+    // });
 
     // BookModel.findOne({
     //     where: {
@@ -55,4 +55,45 @@ database_sequelize.sync().then(() => {
     //         console.error('Failed to delete record : ', error);
     //     });
 
-})
+// })
+
+// for creating a new book instance/record
+// Controller for creating a new book
+exports.createBook = async (req, res) => {
+  try {
+    const { title, author, release_date, subject } = req.body;
+    const book = await BookModel.create({ title, author, release_date, subject });
+    res.json({ message: 'Book created successfully', book });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+// getting all books records
+exports.getAllBooks = async (req, res) => {
+  try {
+    const books = await BookModel.findAll();
+    res.json(books);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+// Controller for getting a book by ID
+exports.getBookById = async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    const book = await BookModel.findByPk(bookId);
+    if (!book) {
+      res.status(404).send('Book not found');
+    } else {
+      res.json(book);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
