@@ -2,88 +2,118 @@
 {% load static %}
 }
 {% block content %}
-<body>
+    <body>
 
-  <!-- ======= Header ======= -->
+    <!-- ======= Header ======= -->
 
-  <!-- ======= Sidebar ======= -->
+    <!-- ======= Sidebar ======= -->
 
-  <main id="main" class="main">
+    <main id="main" class="main">
 
-    <div class="pagetitle">
-      <h1>Listings</h1>
-    </div><!-- End Page Title -->
+        <div class="pagetitle">
+            <h1>Listings</h1>
+        </div><!-- End Page Title -->
 
-    <section class="section">
-      <div class="row">
-        <div class="col-lg-12">
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Listing of all the Test Records</h5>
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Position</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Start Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Brandon Jacob</td>
-                    <td>Designer</td>
-                    <td>28</td>
-                    <td>2016-05-25</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Bridie Kessler</td>
-                    <td>Developer</td>
-                    <td>35</td>
-                    <td>2014-12-05</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Ashleigh Langosh</td>
-                    <td>Finance</td>
-                    <td>45</td>
-                    <td>2011-08-12</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td>Angus Grady</td>
-                    <td>HR</td>
-                    <td>34</td>
-                    <td>2012-06-11</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">5</th>
-                    <td>Raheem Lehner</td>
-                    <td>Dynamic Division Officer</td>
-                    <td>47</td>
-                    <td>2011-04-19</td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- End small tables -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Listing of all the Test Records</h5>
+                            <div class="datatable-top">
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-success rounded-pill">Create New Record</button>
+                                </div>
+                                <div class="datatable-search">
+                                    <input class="datatable-input" placeholder="Search..." type="search"
+                                           title="Search within table">
+                                </div>
+                            </div>
+                            <table class="table table-sm">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Position</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Start Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Brandon Jacob</td>
+                                    <td>Designer</td>
+                                    <td>28</td>
+                                    <td>2016-05-25</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Bridie Kessler</td>
+                                    <td>Developer</td>
+                                    <td>35</td>
+                                    <td>2014-12-05</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Ashleigh Langosh</td>
+                                    <td>Finance</td>
+                                    <td>45</td>
+                                    <td>2011-08-12</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">4</th>
+                                    <td>Angus Grady</td>
+                                    <td>HR</td>
+                                    <td>34</td>
+                                    <td>2012-06-11</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">5</th>
+                                    <td>Raheem Lehner</td>
+                                    <td>Dynamic Division Officer</td>
+                                    <td>47</td>
+                                    <td>2011-04-19</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="datatable-bottom">
+                                <div class="datatable-info">Showing page {{ page_obj.number }}
+                                    of {{ page_obj.paginator.num_pages }} pages
+                                </div>
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        {% if page_obj.has_previous %}
+                                            <li class="page-item"><a class="page-link"
+                                                                     href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                            </li>
+                                        {% endif %}
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                                        </li>
+                                        {% if page_obj.has_next %}
+                                            <li class="page-item"><a class="page-link"
+                                                                     href="?page={{ page_obj.next_page_number }}">Next</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            </div>
 
+                        </div>
+                    </div>
+
+                </div>
             </div>
-          </div>
+        </section>
 
-        </div>
-      </div>
-    </section>
+    </main><!-- End #main -->
 
-  </main><!-- End #main -->
-
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
 
-
-</body>
+    </body>
 
 {% endblock %}
