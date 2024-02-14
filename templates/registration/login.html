@@ -16,16 +16,26 @@
                             </div>
 
                             <form class="row g-3 needs-validation" method="post" novalidate>
+                                {% if form.non_field_errors %}
+                                    <div class="text-danger">* Please enter a correct username and password.</div>
+                                {% endif %}
+
                                 {% csrf_token %}
 
                                 <div class="col-12">
                                     <label for="yourUsername" class="form-label">{{ form.username.label }}</label>
                                     <div class="input-group has-validation">{{ form.username }}</div>
+                                    {% if form.username.errors %}
+                                        <div class="text-danger fst-italic">* This field is required.</div>
+                                    {% endif %}
                                 </div>
 
                                 <div class="col-12">
                                     <label for="yourPassword" class="form-label">{{ form.password.label }}</label>
                                     <div class="input-group has-validation">{{ form.password }}</div>
+                                    {% if form.password.errors %}
+                                        <div class="text-danger fst-italic">* This field is required.</div>
+                                    {% endif %}
                                 </div>
 
                                 <div class="col-12">
