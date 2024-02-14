@@ -1,7 +1,8 @@
 from django.urls import path
 
-from .views import InductionMotorFormView
+from .views import InductionMotorListingsView, TestsView
 
 urlpatterns = [
-    path("home/", InductionMotorFormView.as_view(), name="home"),
+    path("listings/", InductionMotorListingsView.as_view(), name="listings"),
+    path("tests/", TestsView.as_view(), name="tests"),
 ]

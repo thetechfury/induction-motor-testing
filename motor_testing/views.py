@@ -1,11 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
-from django.views.generic import ListView, FormView, View
-
-from motor_testing.forms import MotorInductionForm, SearchForm, ElectricResistanceTestForm, \
-    TemperatureRiseTestForm, PerformanceDeterminationTestForm, NoLoadTestForm, WithstandVoltageACTestForm, \
-    InsulationResistanceTestForm
+from django.views.generic import ListView, View
 from motor_testing.models import InductionMotor
+
+from motor_testing.forms import (
+    InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
+    NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm
+)
 
 
 class InductionMotorListingsView(ListView):
@@ -17,6 +17,7 @@ class InductionMotorListingsView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = SearchForm(self.request.GET)
+        context['form'] = InitialForm
         return context
 
     def get_queryset(self):
@@ -25,11 +26,6 @@ class InductionMotorListingsView(ListView):
         if search_query:
             queryset = queryset.filter(serial_number__icontains=search_query)
         return queryset
-
-
-class InductionMotorFormView(LoginRequiredMixin, FormView):
-    form_class = MotorInductionForm
-    template_name = "main_form.html"
 
 
 class TestsView(View):
@@ -41,7 +37,8 @@ class TestsView(View):
         withstand_voltage_form = WithstandVoltageACTestForm(request.POST or None)
         insulation_resistance_form = InsulationResistanceTestForm(request.POST or None)
         forms = [
-            electric_resistance_form, temperature_rise_form, performance_determination_form, no_load_form, withstand_voltage_form, insulation_resistance_form
+            electric_resistance_form, temperature_rise_form, performance_determination_form, no_load_form,
+            withstand_voltage_form, insulation_resistance_form
         ]
         context = {
             "forms": forms,

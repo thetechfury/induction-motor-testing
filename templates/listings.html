@@ -2,100 +2,161 @@
 {% load static %}
 }
 {% block content %}
-    <body>
 
-    <!-- ======= Header ======= -->
+    <div class="pagetitle">
+        <h1>Listings</h1>
+    </div>
 
-    <!-- ======= Sidebar ======= -->
-
-    <main id="main" class="main">
-
-        <div class="pagetitle">
-            <h1>Listings</h1>
-        </div><!-- End Page Title -->
-
-        <section class="section">
-            <div class="row">
-                <div class="col-lg-12">
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Listing of all the Test Records</h5>
-                            <div class="datatable-top">
-                                <div class="text-center">
-                                    <button type="button" class="btn btn-success rounded-pill">Create New Record
-                                    </button>
-                                </div>
-                                <div class="datatable-search">
-                                    <form action="" method="get" type="submit">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Listing of all the Test Records</h5>
+                    <div class="datatable-top">
+                        <div class="text-center">
+                            <button type="button" class="btn btn-success rounded-pill" data-bs-toggle="modal"
+                                    data-bs-target="#main_form">Create New Record
+                            </button>
+                        </div>
+                        <div class="datatable-search">
+                            <form action="" method="get" type="submit">
                                 {% for field in search_form %}
-                                    {{field }}
-                                        {% endfor %}
-                                    </form>
-                                </div>
-                            </div>
-                            <table class="table table-sm">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Motor Sr. No</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for inductionmotor in inductionmotor_list %}
-                                    <tr>
-                                        <td>{{ inductionmotor.serial_number }}</td>
-                                        <td>{{ incductionmotor.customer }}</td>
-                                        <td>Status</td>
-                                        <td>
-                                            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                                <button type="button" class="btn btn-danger"><i class="bi bi-eye"></i></button>
-                                                <button type="button" class="btn btn-warning"><i class="bi bi-pencil-square"></i></button>
-                                                <button type="button" class="btn btn-success"><i class="bi bi-trash"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    {{ field }}
                                 {% endfor %}
-                                </tbody>
-                            </table>
-                            <div class="datatable-bottom">
-                                <div class="datatable-info">Showing page {{ page_obj.number }}
-                                    of {{ page_obj.paginator.num_pages }} pages
-                                </div>
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        {% if page_obj.has_previous %}
-                                            <li class="page-item"><a class="page-link"
-                                                                     href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                                            </li>
-                                        {% endif %}
-                                        <li class="page-item"><a class="page-link"
-                                                                 href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
-                                        </li>
-                                        {% if page_obj.has_next %}
-                                            <li class="page-item"><a class="page-link"
-                                                                     href="?page={{ page_obj.next_page_number }}">Next</a>
-                                            </li>
-                                        {% endif %}
-                                    </ul>
-                                </nav>
-                            </div>
-
+                            </form>
                         </div>
                     </div>
-
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Motor Sr. No</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for inductionmotor in inductionmotor_list %}
+                            <tr>
+                                <td>{{ inductionmotor.serial_number }}</td>
+                                <td>{{ incductionmotor.customer }}</td>
+                                <td>Status</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                        <button type="button" class="btn btn-danger"><i class="bi bi-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-warning"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button type="button" class="btn btn-success"><i
+                                                class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="datatable-bottom">
+                        <div class="datatable-info">Showing page {{ page_obj.number }}
+                            of {{ page_obj.paginator.num_pages }} pages
+                        </div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                                </li>
+                                {% if page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ page_obj.next_page_number }}">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-    </main><!-- End #main -->
+    <div class="modal fade" id="main_form" tabindex="-1" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Initial Form</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="row g-3" method="post" novalidate>{% csrf_token %}
+
+                        <h5 class="italic">* Basic Information</h5>
+                        <div class="col-md-4">
+                            <label for="id_serial_number" class="form-label">Motor's Serial Number</label>
+                            {{ form.serial_number }}</div>
+                        <div class="col-md-4">
+                            <label for="id_customer_name" class="form-label">Customer</label>
+                            {{ form.customer_name }}</div>
+                        <div class="col-md-4">
+                            <label for="id_sales_order_number" class="form-label">Sales Order</label>
+                            {{ form.sales_order_number }}</div>
+
+                        <h5 class="italic">* Motor Identification</h5>
+                        <div class="col-md-4">
+                            <label for="id_tag" class="form-label">TAG</label>
+                            {{ form.tag }}</div>
+                        <div class="col-md-4">
+                            <label for="id_material" class="form-label">{{ form.material.label }}</label>
+                            {{ form.material }}</div>
+                        <div class="col-md-4">
+                            <label for="id_frame" class="form-label">{{ form.frame.label }}</label>
+                            {{ form.frame }}</div>
+
+                        <div class="col-md-4">
+                            <label for="id_mounting" class="form-label">{{ form.mounting.label }}</label>
+                            {{ form.mounting }}</div>
+                        <div class="col-md-4">
+                            <label for="id_drawing" class="form-label">{{ form.drawing.label }}</label>
+                            {{ form.drawing }}</div>
+                        <div class="col-md-4">
+                            <label for="id_enclosure" class="form-label">{{ form.enclosure.label }}</label>
+                            {{ form.enclosure }}</div>
+
+                        <div class="col-md-4">
+                            <label for="id_altitude_M" class="form-label">Altitude (m)</label>
+                            {{ form.altitude_M }}</div>
+                        <div class="col-md-4">
+                            <label for="id_duty_cycle" class="form-label">Duty Cycle</label>
+                            {{ form.duty_cycle }}</div>
+                        <div class="col-md-4">
+                            <label for="id_design" class="form-label">{{ form.design.label }}</label>
+                            {{ form.design }}</div>
+
+                        <div class="col-md-3">
+                            <label for="id_insulation_class" class="form-label">Insulation Class</label>
+                            {{ form.insulation_class }}</div>
+                        <div class="col-md-3">
+                            <label for="id_temperature_rise_K" class="form-label">Temperature Rise (K)</label>
+                            {{ form.temperature_rise_K }}</div>
+                        <div class="col-md-3">
+                            <label for="id_ambient_temperature_C" class="form-label">Ambient Temperature (°C)</label>
+                            {{ form.ambient_temperature_C }}</div>
+                        <div class="col-md-3">
+                            <label for="id_service_factor" class="form-label">Service Factor</label>
+                            {{ form.service_factor }}</div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
-
-
-    </body>
 
 {% endblock %}

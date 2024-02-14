@@ -18,10 +18,15 @@ class UserLoginForm(AuthenticationForm):
         self.fields["password"].widget.attrs["class"] = "form-control"
 
 
-class MotorInductionForm(ModelForm):
+class InitialForm(ModelForm):
     class Meta:
         model = InductionMotor
-        fields = '__all__'
+        exclude = ('user',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
 
 
 class SearchForm(forms.Form):
