@@ -1,8 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import ListView
-from motor_testing.models import InductionMotor
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, FormView
 
-# Create your views here.
+from motor_testing.forms import MotorInductionForm
+from motor_testing.models import InductionMotor
 
 
 class InductionMotorListingsView(ListView):
@@ -10,3 +10,8 @@ class InductionMotorListingsView(ListView):
     queryset = InductionMotor.objects.all().order_by("-updated_on")
     template_name = "listings.html"
     paginate_by = 10
+
+
+class InductionMotorFormView(LoginRequiredMixin, FormView):
+    form_class = MotorInductionForm
+    template_name = "main_form.html"
