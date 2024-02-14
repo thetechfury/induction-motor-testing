@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.contrib.auth import views
 from django.urls import path
 from django.views.generic import TemplateView
-
+from motor_testing.views import InductionMotorListingsView
 from motor_testing.forms import UserLoginForm
 
 urlpatterns = [
@@ -26,4 +26,5 @@ urlpatterns = [
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("login/", views.LoginView.as_view(authentication_form=UserLoginForm), name="login"),
     path("home/", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("listings/", InductionMotorListingsView.as_view(), name="listings"),
 ]
