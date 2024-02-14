@@ -103,7 +103,7 @@ class InductionMotor(TimeStampedModel):
 class ElectricResistanceTest(TimeStampedModel):
     """ 3.1. Electric Resistance Test Report"""
 
-    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE)
+    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="electric_resistance_test")
     resistance_ohm_1 = models.DecimalField(
         max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
@@ -124,7 +124,7 @@ class ElectricResistanceTest(TimeStampedModel):
 class TemperatureRiseTest(TimeStampedModel):
     """ 3.2. Temperature Rise - Nominal Condition - Direct Test Report """
 
-    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE)
+    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="temperature_rise_test")
     voltage = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
@@ -145,7 +145,7 @@ class TemperatureRiseTest(TimeStampedModel):
 class PerformanceDeterminationTest(TimeStampedModel):
     """  3.3. Performance Determination Test Report """
 
-    induction_motor = models.ForeignKey(InductionMotor, on_delete=models.CASCADE, related_name="induction_motor")
+    induction_motor = models.ForeignKey(InductionMotor, on_delete=models.CASCADE, related_name="performance_determination_test")
     voltage = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
@@ -184,7 +184,7 @@ class NoLoadTest(TimeStampedModel):
         (ANTI_CLOCKWISE, "Anti Clockwise"),
     )
 
-    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE)
+    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="no_load_test")
     voltage = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
@@ -206,7 +206,7 @@ class NoLoadTest(TimeStampedModel):
 class WithstandVoltageACTest(TimeStampedModel):
     """ 3.5. Withstand Voltage AC Test Report """
 
-    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE)
+    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="withstand_voltage_ac_test")
     description = models.CharField(max_length=50, blank=True, null=True)
     voltage_kv = models.DecimalField(
         max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
@@ -217,7 +217,7 @@ class WithstandVoltageACTest(TimeStampedModel):
 class InsulationResistanceTest(TimeStampedModel):
     """ 3.6. Insulation Resistance Test Report """
 
-    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE)
+    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="insulation_resistance_test")
     description = models.CharField(max_length=50, blank=True, null=True)
     voltage = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
