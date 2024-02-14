@@ -1,8 +1,14 @@
-{% extends "base.html" %}
-
-{% block title %}Login{% endblock %}
-
-{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
     <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
             <div class="row justify-content-center">
@@ -49,5 +55,6 @@
             </div>
         </div>
     </section>
-
-{% endblock %}
+</div>
+</body>
+</html>
