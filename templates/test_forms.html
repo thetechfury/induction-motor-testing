@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="pagetitle">
+      <h1>Test Forms</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Please submit the forms below</h5>
+
+              <!-- Default Tabs -->
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  {% for form in forms %}
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="{{ form.prefix }}-tab" data-bs-toggle="tab" data-bs-target="#{{ form.prefix }}" type="button" role="tab" aria-controls="{{ form.prefix }}" aria-selected="false">
+                      {{ form.meta.prefix }}</button>
+                </li>
+                  {% endfor %}
+              </ul>
+              <div class="tab-content pt-2" id="myTabContent">
+                  {% for form in forms %}
+                <div class="tab-pane fade" id="{{ form.prefix }}" role="tabpanel" aria-labelledby="{{ form.prefix }}-tab">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        {{ field.label_tag }}
+                            {{ field }}
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary rounded-pill">Save</button>
+                    </form>
+                </div>
+                  {% endfor %}
+              </div><!-- End Default Tabs -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}

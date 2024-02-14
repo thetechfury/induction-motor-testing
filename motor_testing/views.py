@@ -1,7 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, FormView
+from django.shortcuts import render
+from django.views.generic import ListView, FormView, View
 
-from motor_testing.forms import MotorInductionForm, SearchForm
+from motor_testing.forms import MotorInductionForm, SearchForm, ElectricResistanceTestForm, \
+    TemperatureRiseTestForm, PerformanceDeterminationTestForm, NoLoadTestForm, WithstandVoltageACTestForm, \
+    InsulationResistanceTestForm
 from motor_testing.models import InductionMotor
 
 
@@ -27,3 +30,20 @@ class InductionMotorListingsView(ListView):
 class InductionMotorFormView(LoginRequiredMixin, FormView):
     form_class = MotorInductionForm
     template_name = "main_form.html"
+
+
+class TestsView(View):
+    def get(self, request, *args, **kwargs):
+        electric_resistance_form = ElectricResistanceTestForm(request.POST or None)
+        temperature_rise_form = TemperatureRiseTestForm(request.POST or None)
+        performance_determination_form = PerformanceDeterminationTestForm(request.POST or None)
+        no_load_form = NoLoadTestForm(request.POST or None)
+        withstand_voltage_form = WithstandVoltageACTestForm(request.POST or None)
+        insulation_resistance_form = InsulationResistanceTestForm(request.POST or None)
+        forms = [
+            electric_resistance_form, temperature_rise_form, performance_determination_form, no_load_form, withstand_voltage_form, insulation_resistance_form
+        ]
+        context = {
+            "forms": forms,
+        }
+        return render(request, "test_forms.html", context)

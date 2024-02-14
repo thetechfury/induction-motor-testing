@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views
 from django.urls import path, include
-from motor_testing.views import InductionMotorListingsView
+from motor_testing.views import InductionMotorListingsView, TestsView
 from motor_testing.forms import UserLoginForm
 
 urlpatterns = [
@@ -26,4 +26,5 @@ urlpatterns = [
     path("login/", views.LoginView.as_view(authentication_form=UserLoginForm), name="login"),
     path("", include("motor_testing.urls")),
     path("listings/", InductionMotorListingsView.as_view(), name="listings"),
+    path("tests/", TestsView.as_view(), name="tests"),
 ]
