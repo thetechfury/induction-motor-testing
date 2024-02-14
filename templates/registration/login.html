@@ -3,10 +3,41 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <h2>Log In</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit">Log In</button>
-    </form>
+    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                    <div class="card mb-3">
+                        <div class="card-body">
+
+                            <div class="pt-4 pb-2">
+                                <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                                <p class="text-center small">Enter your username & password to login</p>
+                            </div>
+
+                            <form class="row g-3 needs-validation" method="post" novalidate>
+                                {% csrf_token %}
+
+                                <div class="col-12">
+                                    <label for="yourUsername" class="form-label">{{ form.username.label }}</label>
+                                    <div class="input-group has-validation">{{ form.username }}</div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="yourPassword" class="form-label">{{ form.password.label }}</label>
+                                    <div class="input-group has-validation">{{ form.password }}</div>
+                                </div>
+
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100" type="submit">Login</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="credits">Designed by <strong>TheTechFury</strong></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
