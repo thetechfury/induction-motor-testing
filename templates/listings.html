@@ -15,7 +15,7 @@
                     <div class="datatable-top">
                         <div class="text-center">
                             <button type="button" class="btn btn-success rounded-pill" data-bs-toggle="modal"
-                                    data-bs-target="#main_form">Create New Record
+                                    data-bs-target="#main_form" id="main_modal_btn">Create New Record
                             </button>
                         </div>
                         <div class="datatable-search">
@@ -82,8 +82,8 @@
         </div>
     </div>
 
-    <div class="modal fade {% if error %} show {% endif %}" id="main_form" tabindex="-1" aria-modal="true"
-         role="dialog" {% if error %} style="display: block;" {% endif %}>
+    <div class="modal fade {% if error %} error {% endif %}" id="main_form" tabindex="-1" aria-modal="true"
+         role="dialog">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -92,7 +92,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="row g-3" method="post" novalidate>{% csrf_token %}
-                         {% if form.non_field_errors %}
+                        {% if form.non_field_errors %}
                             <div class="text-danger">{{ form.non_field_errors }}</div>
                         {% endif %}
 
@@ -242,4 +242,21 @@
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
 
+{% endblock %}
+
+{% block script %}
+    <script>
+        errorModal = document.getElementsByClassName("error")
+
+        if (errorModal.length > 0) {
+            var modal = document.querySelector(".modal")
+            modal.style.display = "none"
+            modal.classList.remove("show")
+        }
+
+        if (errorModal.length > 0) {
+            document.getElementById("main_modal_btn").click()
+        }
+
+    </script>
 {% endblock %}
