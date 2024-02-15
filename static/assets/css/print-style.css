@@ -7,6 +7,11 @@
   .border-1 {
     border: 1px solid black;
   }
+  header{
+    margin: 1px 1px 0px 1px;
+  }
+
+
   header,
   footer {
     background-color: #bde3f6;
@@ -92,6 +97,9 @@
     font-size: 15px;
     padding-left: 10px;
     margin-bottom: 0;
+    margin: 14px 1px 0px 1px;
+
+
   }
   .main-section .section-1,
   .main-section .section-3,
