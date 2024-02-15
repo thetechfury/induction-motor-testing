@@ -21,6 +21,15 @@ STATUS_CHOICES = (
         (COMPLETED, "Completed"),
         (NOT_FOUND, "Not Found"),
     )
+ROUTINE = "ROUTINE"
+TYPE = "TYPE"
+SPECIAL = "SPECIAL"
+
+TEST_CHOICES = (
+        (ROUTINE, "Routine"),
+        (TYPE, "Type"),
+        (SPECIAL, "Special"),
+    )
 
 
 class TimeStampedModel(models.Model):
@@ -35,16 +44,6 @@ class TimeStampedModel(models.Model):
 
 class InductionMotor(TimeStampedModel):
     """ Induction Motor Test Report """
-
-    ROUTINE = "ROUTINE"
-    TYPE = "TYPE"
-    SPECIAL = "SPECIAL"
-
-    TEST_CHOICES = (
-        (ROUTINE, "Routine"),
-        (TYPE, "Type"),
-        (SPECIAL, "Special"),
-    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="induction_motor")
     serial_number = models.CharField(max_length=20)
@@ -114,7 +113,14 @@ class PerformanceTest(models.Model):
     """ Represents a performance test for an InductionMotor """
     motor = models.ForeignKey(InductionMotor, on_delete=models.CASCADE, related_name="performance_tests")
     test_type = models.CharField(max_length=50, choices=PERFORMANCE_TEST_CHOICES)
+    routine = models.BooleanField(null=True)
+    type = models.BooleanField(null=True)
+    special = models.BooleanField(null=True)
+    page_number = models.IntegerField(default=1)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return f'{self.motor.serial_number} - {self.test_type}'
 
 
 class ElectricResistanceTest(TimeStampedModel):
