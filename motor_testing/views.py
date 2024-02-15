@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, View
+from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
 
 from motor_testing.forms import (
@@ -54,11 +54,17 @@ class TestsView(View):
         no_load_form = NoLoadTestForm(request.POST or None)
         withstand_voltage_form = WithstandVoltageACTestForm(request.POST or None)
         insulation_resistance_form = InsulationResistanceTestForm(request.POST or None)
-        forms = [
-            electric_resistance_form, temperature_rise_form, performance_determination_form, no_load_form,
-            withstand_voltage_form, insulation_resistance_form
-        ]
         context = {
-            "forms": forms,
+            'electric_resistance_form': electric_resistance_form,
+            'temperature_rise_form': temperature_rise_form,
+            'performance_determination_form': performance_determination_form,
+            'no_load_form': no_load_form,
+            'withstand_voltage_form': withstand_voltage_form,
+            'insulation_resistance_form': insulation_resistance_form
         }
+
         return render(request, "test_forms.html", context)
+
+
+class ReportView(TemplateView):
+    template_name = "index.html"
