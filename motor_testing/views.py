@@ -1,31 +1,49 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic import ListView, View
-from motor_testing.models import InductionMotor
+from django.views.generic.edit import FormMixin
 
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm
 )
+from motor_testing.models import InductionMotor
 
 
-class InductionMotorListingsView(ListView):
+class InductionMotorListingsView(ListView, FormMixin):
+    form_class = InitialForm
     model = InductionMotor
-    queryset = InductionMotor.objects.all().order_by("-updated_on")
     template_name = "listings.html"
     paginate_by = 10
+    context_object_name = 'inductionmotor_list'
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def get_queryset(self):
+        search_query = self.request.GET.get('search')
+        queryset = InductionMotor.objects.all()
+        if search_query:
+            queryset = InductionMotor.objects.filter(serial_number__icontains=search_query)
+        return queryset.order_by("-updated_on")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = SearchForm(self.request.GET)
-        context['form'] = InitialForm
         return context
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        search_query = self.request.GET.get('search')
-        if search_query:
-            queryset = queryset.filter(serial_number__icontains=search_query)
-        return queryset
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        return HttpResponseRedirect(reverse_lazy("tests"))
+
+    def form_invalid(self, form):
+        return render(self.request, "listings.html", {"form": form, "error": "error"})
 
 
 class TestsView(View):

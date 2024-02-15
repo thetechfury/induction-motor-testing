@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-}
+
 {% block content %}
 
     <div class="pagetitle">
@@ -82,76 +82,159 @@
         </div>
     </div>
 
-    <div class="modal fade" id="main_form" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal fade {% if error %} show {% endif %}" id="main_form" tabindex="-1" aria-modal="true"
+         role="dialog" {% if error %} style="display: block;" {% endif %}>
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Initial Form</h5>
+                    <h1 class="card-title p-0 text-center">Initial Form</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form class="row g-3" method="post" novalidate>{% csrf_token %}
+                         {% if form.non_field_errors %}
+                            <div class="text-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
 
-                        <h5 class="italic">* Basic Information</h5>
+                        <div class="italic card-title p-0 text-center">* Basic Information</div>
+
                         <div class="col-md-4">
                             <label for="id_serial_number" class="form-label">Motor's Serial Number</label>
-                            {{ form.serial_number }}</div>
+                            {{ form.serial_number }}
+                            {% if form.serial_number.errors %}
+                                <div class="text-danger fst-italic">* This field is required.</div>
+                            {% endif %}
+                        </div>
                         <div class="col-md-4">
                             <label for="id_customer_name" class="form-label">Customer</label>
-                            {{ form.customer_name }}</div>
+                            {{ form.customer_name }}
+                            {% if form.customer_name.errors %}
+                                <div class="text-danger fst-italic">* This field is required.</div>
+                            {% endif %}
+                        </div>
                         <div class="col-md-4">
                             <label for="id_sales_order_number" class="form-label">Sales Order</label>
-                            {{ form.sales_order_number }}</div>
+                            {{ form.sales_order_number }}
+                            {% if form.sales_order_number.errors %}
+                                <div class="text-danger fst-italic">* This field is required.</div>
+                            {% endif %}
+                        </div>
 
-                        <h5 class="italic">* Motor Identification</h5>
-                        <div class="col-md-4">
-                            <label for="id_tag" class="form-label">TAG</label>
-                            {{ form.tag }}</div>
-                        <div class="col-md-4">
-                            <label for="id_material" class="form-label">{{ form.material.label }}</label>
-                            {{ form.material }}</div>
-                        <div class="col-md-4">
-                            <label for="id_frame" class="form-label">{{ form.frame.label }}</label>
-                            {{ form.frame }}</div>
+                        <hr style="border-top: 2px solid #1559d3;">
 
-                        <div class="col-md-4">
-                            <label for="id_mounting" class="form-label">{{ form.mounting.label }}</label>
-                            {{ form.mounting }}</div>
-                        <div class="col-md-4">
-                            <label for="id_drawing" class="form-label">{{ form.drawing.label }}</label>
-                            {{ form.drawing }}</div>
-                        <div class="col-md-4">
-                            <label for="id_enclosure" class="form-label">{{ form.enclosure.label }}</label>
-                            {{ form.enclosure }}</div>
+                        <div class="d-flex align-items-start">
+                            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+                                 aria-orientation="vertical">
+                                <button class="nav-link active" id="motor_identification" data-bs-toggle="pill"
+                                        data-bs-target="#v-pills-home" type="button" role="tab"
+                                        aria-controls="v-pills-home" aria-selected="true">Motor Identification
+                                </button>
+                                <button class="nav-link" id="performed_tests" data-bs-toggle="pill"
+                                        data-bs-target="#v-pills-profile" type="button" role="tab"
+                                        aria-controls="v-pills-profile" aria-selected="false">Performed Tests
+                                </button>
+                            </div>
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                     aria-labelledby="motor_identification">
+                                    <div class="row g-3">
+                                        <div class="italic card-title p-0 text-center">Motor Identification</div>
 
-                        <div class="col-md-4">
-                            <label for="id_altitude_M" class="form-label">Altitude (m)</label>
-                            {{ form.altitude_M }}</div>
-                        <div class="col-md-4">
-                            <label for="id_duty_cycle" class="form-label">Duty Cycle</label>
-                            {{ form.duty_cycle }}</div>
-                        <div class="col-md-4">
-                            <label for="id_design" class="form-label">{{ form.design.label }}</label>
-                            {{ form.design }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_tag" class="form-label">TAG</label>
+                                            {{ form.tag }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_material"
+                                                   class="form-label">{{ form.material.label }}</label>
+                                            {{ form.material }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_frame" class="form-label">{{ form.frame.label }}</label>
+                                            {{ form.frame }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_mounting"
+                                                   class="form-label">{{ form.mounting.label }}</label>
+                                            {{ form.mounting }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_drawing" class="form-label">{{ form.drawing.label }}</label>
+                                            {{ form.drawing }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_enclosure"
+                                                   class="form-label">{{ form.enclosure.label }}</label>
+                                            {{ form.enclosure }}</div>
 
-                        <div class="col-md-3">
-                            <label for="id_insulation_class" class="form-label">Insulation Class</label>
-                            {{ form.insulation_class }}</div>
-                        <div class="col-md-3">
-                            <label for="id_temperature_rise_K" class="form-label">Temperature Rise (K)</label>
-                            {{ form.temperature_rise_K }}</div>
-                        <div class="col-md-3">
-                            <label for="id_ambient_temperature_C" class="form-label">Ambient Temperature (°C)</label>
-                            {{ form.ambient_temperature_C }}</div>
-                        <div class="col-md-3">
-                            <label for="id_service_factor" class="form-label">Service Factor</label>
-                            {{ form.service_factor }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_altitude_M" class="form-label">Altitude (m)</label>
+                                            {{ form.altitude_M }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_duty_cycle" class="form-label">Duty Cycle</label>
+                                            {{ form.duty_cycle }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_design" class="form-label">{{ form.design.label }}</label>
+                                            {{ form.design }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_insulation_class" class="form-label">Insulation Class</label>
+                                            {{ form.insulation_class }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_temperature_rise_K" class="form-label">Temperature Rise
+                                                (K)</label>
+                                            {{ form.temperature_rise_K }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_ambient_temperature_C" class="form-label">Ambient Temperature
+                                                (°C)</label>
+                                            {{ form.ambient_temperature_C }}</div>
+
+                                        <div class="col-md-3">
+                                            <label for="id_service_factor" class="form-label">Service Factor</label>
+                                            {{ form.service_factor }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_voltage" class="form-label">Voltage (V)</label>
+                                            {{ form.voltage }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_current" class="form-label">Current (A)</label>
+                                            {{ form.current }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_power" class="form-label">Power (kW)</label>
+                                            {{ form.power }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_frequency" class="form-label">Freq. (Hz)</label>
+                                            {{ form.frequency }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_speed" class="form-label">Speed (rpm)</label>
+                                            {{ form.speed }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_p_f" class="form-label">P.F.</label>
+                                            {{ form.p_f }}</div>
+                                        <div class="col-md-3">
+                                            <label for="id_efficiency" class="form-label">Eff. (%)</label>
+                                            {{ form.efficiency }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
+                                     aria-labelledby="performed_tests">
+                                    <div class="row g-3">
+                                        <div class="italic card-title p-0 text-center">Performed Tests</div>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <hr style="border-top: 2px solid #1559d3;">
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-center mt-5">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Submit</button>
-                </div>
+                {#                <div class="modal-footer">#}
+                {#                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>#}
+                {#                    <button type="submit" class="btn btn-primary">Submit</button>#}
+                {#                </div>#}
             </div>
         </div>
     </div>
