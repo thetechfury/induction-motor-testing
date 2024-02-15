@@ -68,3 +68,8 @@ class TestsView(View):
 
 class ReportView(TemplateView):
     template_name = "index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['induction_motor'] = InductionMotor.objects.get(id=self.kwargs['id'])
+        return context
