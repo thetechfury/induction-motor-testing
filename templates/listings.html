@@ -29,19 +29,19 @@
                     <table class="table table-sm">
                         <thead>
                         <tr>
-                            <th scope="col">Motor Sr. No</th>
-                            <th scope="col">Customer</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Actions</th>
+                            <th class="text-center" scope="col">Motor Sr. No</th>
+                            <th class="text-center" scope="col">Customer</th>
+                            <th class="text-center" scope="col">Status</th>
+                            <th class="text-center" scope="col">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for inductionmotor in inductionmotor_list %}
                             <tr>
-                                <td>{{ inductionmotor.serial_number }}</td>
-                                <td>{{ incductionmotor.customer_name }}</td>
-                                <td>Status</td>
-                                <td>
+                                <td class="text-center">{{ inductionmotor.serial_number }}</td>
+                                <td class="text-center">{{ incductionmotor.customer_name }}</td>
+                                <td class="text-center">Status</td>
+                                <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                         <button type="button" class="btn btn-danger"><i class="bi bi-eye"></i>
                                         </button>
