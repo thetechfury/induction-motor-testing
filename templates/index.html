@@ -1,0 +1,352 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style_doc.css' %}" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'assets/css/print-style.css' %}"
+      media="print"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="page-main-1">
+      <div class="border-1 page-1">
+        <header>
+          <div class="main-heading">
+            <img class="border-1" src="{% static 'assets/img/logo_weg.png' %}" alt="" />
+            <h1>
+              Test Report <br />
+              Three Phase Induction Motor
+            </h1>
+            <h2 class="border-1">Motor's Serial Number 1081350993</h2>
+          </div>
+          <div class="second-heading border-1">
+            <div>WEG México S.A. de C.V.</div>
+            <div>Quality Control - Medium Voltage Laboratory</div>
+          </div>
+          <div class="third-heading">
+            Carretera Jorobas-Tula km 3.5, - 54680, Huehuetoca - Estado de
+            México - México
+          </div>
+        </header>
+        <section class="main-section">
+          <div class="section-1">
+            <h1 class="text">
+              <span class="title">Customer:</span> WEG MIDDLE EAST FZE
+            </h1>
+            <h1 class="text">
+              <span class="title">Sales Order:</span> 51998940
+            </h1>
+          </div>
+          <h1 class="main-title">1. Motor Identification</h1>
+          <div class="section-2">
+            <table>
+              <tr>
+                <td>TAG: -</td>
+              </tr>
+              <tr>
+                <td>Material: 17081049</td>
+                <td>Enclosure: IP65</td>
+                <td>Insulation Class: F</td>
+              </tr>
+              <tr>
+                <td>Frame: 315S/M</td>
+                <td>Altitude (m): 1000</td>
+                <td>Temperature Rise (K): 70</td>
+              </tr>
+              <tr>
+                <td>Mounting: B3T</td>
+                <td>Duty Cycle: S1</td>
+                <td>Ambient Temperature (°C): 50</td>
+              </tr>
+              <tr>
+                <td>Drawing: -</td>
+                <td>Design: N</td>
+                <td>Service Factor: 1.15</td>
+              </tr>
+            </table>
+            <table class="table-border">
+              <tr>
+                <th>Voltage (V)</th>
+                <th>Current (A)</th>
+                <th>Power (kW)</th>
+                <th>Freq. (Hz)</th>
+                <th>Speed (rpm)</th>
+                <th>P.F.</th>
+                <th>Eff. (%)</th>
+              </tr>
+              <tr>
+                <td>400</td>
+                <td>276</td>
+                <td>160</td>
+                <td>60</td>
+                <td>1790</td>
+                <td>0.87</td>
+                <td>96.2</td>
+              </tr>
+            </table>
+          </div>
+          <h1 class="main-title">2. Performed Tests</h1>
+          <section class="section-3">
+            <table class="table-border">
+              <tr>
+                <th class="same-width-td"></th>
+                <th>Routine</th>
+                <th>Type</th>
+                <th>Special</th>
+                <th>Page</th>
+              </tr>
+              <tr>
+                <td class="same-width-td">1. Electric Resistance</td>
+                <td>X</td>
+                <td>X</td>
+                <td>-</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td class="same-width-td">
+                  2. Temperature Rise - Nominal Condition
+                </td>
+                <td>-</td>
+                <td>X</td>
+                <td>-</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td class="same-width-td">3. Performance Determination</td>
+                <td>-</td>
+                <td>X</td>
+                <td>-</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td class="same-width-td">4. No Load</td>
+                <td>X</td>
+                <td>X</td>
+                <td>-</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td class="same-width-td">5. Withstand Voltage</td>
+                <td>X</td>
+                <td>X</td>
+                <td>-</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td class="same-width-td">6. Insulation Resistance</td>
+                <td>X</td>
+                <td>X</td>
+                <td>-</td>
+                <td>2</td>
+              </tr>
+            </table>
+          </section>
+          <h1 class="main-title">3. Tests</h1>
+          <section class="section-4">
+            <h1 class="text">
+              <span class="title">3.1. Electric Resistance</span>
+            </h1>
+            <ul class="section-ul">
+              <li>Resistance (mOhms): 12.61 / 12.56 / 12.70</li>
+              <li>Ambient Temperature (°C): 24.5</li>
+              <li>Unbalance (%): 1.14</li>
+              <li>R20°C (mOhms): 12.39 / 12.34 / 12.48</li>
+            </ul>
+            <h1 class="text">
+              <span class="title"
+                >3.2. Temperature Rise - Nominal Condition - Direct</span
+              >
+            </h1>
+            <ul class="section-ul-2">
+              <li>Voltage (V): 400.0</li>
+              <li>Frequency (Hz): 60.0</li>
+              <li>Winding (Resistance Method) (K): 48.9</li>
+              <li>DE Bearing (K): 34.3</li>
+              <li></li>
+              <li>NDE Bearing (K): 29.3</li>
+            </ul>
+            <h1 class="text">
+              <span class="title">3.3. Performance Determination</span>
+            </h1>
+            <ul class="section-ul">
+              <li>Voltage (V): 400.0</li>
+              <li>Frequency (Hz): 60.0</li>
+              <li>Nominal T. (N.m): 853.04</li>
+            </ul>
+            <table class="table-border">
+              <tr>
+                <th>Load (%)</th>
+                <th>Current (A)</th>
+                <th>Slip</th>
+                <th>Speed (rpm)</th>
+                <th>Efficiency (%)</th>
+                <th>Cos Ø</th>
+              </tr>
+              <tr>
+                <td>25</td>
+                <td>108.97</td>
+                <td>0.0013</td>
+                <td>1797.6</td>
+                <td>94.16</td>
+                <td>0.56</td>
+              </tr>
+              <tr>
+                <td>50</td>
+                <td>156.57</td>
+                <td>0.0027</td>
+                <td>1795.1</td>
+                <td>96.26</td>
+                <td>0.77</td>
+              </tr>
+              <tr>
+                <td>75</td>
+                <td>213.34</td>
+                <td>0.0041</td>
+                <td>1792.5</td>
+                <td>96.64</td>
+                <td>0.84</td>
+              </tr>
+              <tr>
+                <td>100</td>
+                <td>276.76</td>
+                <td>0.0056</td>
+                <td>1789.8</td>
+                <td>96.56</td>
+                <td>0.86</td>
+              </tr>
+            </table>
+            <h1 class="text">
+              <span class="title">3.4. No Load</span>
+            </h1>
+            <ul class="section-ul-3">
+              <li>Voltage (V): 400.9</li>
+              <li>Current (A): 85.02</li>
+              <li>Power (W): 2263.33</li>
+              <li>Frequency (Hz): 60.0</li>
+              <li>Speed (rpm): 1800</li>
+              <li>Direction of Rotation: Clockwise</li>
+            </ul>
+            <h1 class="text">
+              <span class="title">3.5. Withstand Voltage AC</span>
+            </h1>
+            <table class="table-border">
+              <tr>
+                <th>Description</th>
+                <th>Voltage (kV)</th>
+                <th>Time (s)</th>
+              </tr>
+              <tr>
+                <td>Winding</td>
+                <td>1.8</td>
+                <td>60</td>
+              </tr>
+            </table>
+          </section>
+          <hr />
+          <ul class="footer-ul">
+            <li>
+              Confidential report. Reproduction of this document shall not be
+              partial and depends on the written approval of the laboratory
+            </li>
+            <li>
+              The results presented in this document refer exclusively to the
+              electric motor subjected to the specified tests and do not extend
+              to any batch; * WEG will keep the original document archived for
+              at least five years.
+            </li>
+          </ul>
+        </section>
+        <footer class="footer-1">
+          <div>Report issued on 04/28/2023</div>
+        </footer>
+      </div>
+      <p class="page-number">Page 1 of 2</p>
+    </div>
+    <div class="page-main-2">
+      <div class="border-1 page-2">
+        <header>
+          <div class="main-heading">
+            <img class="border-1" src="{% static 'assets/img/logo_weg.png' %}" alt="" />
+            <h1>
+              Test Report <br />
+              Three Phase Induction Motor
+            </h1>
+            <h2 class="border-1">Motor's Serial Number 1081350993</h2>
+          </div>
+          <div class="second-heading border-1">
+            <div>WEG México S.A. de C.V.</div>
+            <div>Quality Control - Medium Voltage Laboratory</div>
+          </div>
+          <div class="third-heading">
+            Carretera Jorobas-Tula km 3.5, - 54680, Huehuetoca - Estado de
+            México - México
+          </div>
+        </header>
+        <section class="main-section">
+          <section class="section-4">
+            <h1 class="text">
+              <span class="title">3.6. Insulation Resistance</span>
+            </h1>
+            <table class="table-border">
+              <tr>
+                <th>Description</th>
+                <th>Voltage (V)</th>
+                <th>Insulation Res. (Mohms)</th>
+                <th>Time (s)</th>
+              </tr>
+              <tr>
+                <td>Winding</td>
+                <td>500.0</td>
+                <td>22700.0</td>
+                <td>60</td>
+              </tr>
+            </table>
+            <ul class="section-ul-4">
+              <li>Voltage (V): 400.0</li>
+              <li>Frequency (Hz): 60.0</li>
+            </ul>
+          </section>
+          <h1 class="main-title">5. Result</h1>
+          <section class="section-4">
+            <p>
+              Test approved in accordance with the requirements of IEC
+              60034-1:2017. Performance calculated according to IEEE 112:2004 -
+              Method B.
+            </p>
+          </section>
+        </section>
+        <footer class="footer-2">
+          <table class="table-border">
+            <tr>
+              <th>WEG Motors</th>
+              <th>Customer</th>
+            </tr>
+            <tr>
+              <td>
+                <div class="d-f">
+                  <div>
+                    <p>Agnaldo Reus Medeiros Rodrigues</p>
+                    <p>Test Date: 4/18/2023</p>
+                  </div>
+                  <img src="{% static 'assets/img/sign.png' %}" alt="" />
+                </div>
+              </td>
+              <td>Inspector</td>
+            </tr>
+            <tr>
+              <td colspan="2">Report issued on 04/28/2023</td>
+            </tr>
+          </table>
+        </footer>
+      </div>
+      <p class="page-number">Page 1 of 2</p>
+    </div>
+    <script src="{% static 'assets/js/index.js' %}"></script>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, View
+from django.views.generic import ListView, View, TemplateView
 from motor_testing.models import InductionMotor
 
 from motor_testing.forms import (
@@ -46,3 +46,7 @@ class TestsView(View):
         }
 
         return render(request, "test_forms.html", context)
+
+
+class ReportView(TemplateView):
+    template_name = "index.html"
