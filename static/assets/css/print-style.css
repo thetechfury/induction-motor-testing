@@ -213,4 +213,16 @@
     margin-right: 2rem;
     margin-top: 2px;
   }
+
+  hr {
+  margin-top: 20px;
+}
+
+.footer-1{
+margin: 0px 1px 1px 1px;
+}
+
+.border-1.page-2 > .main-section{
+height: 800px;
+}
 }

@@ -5,7 +5,7 @@ body {
   max-height: 100%;
 }
 .main-section {
-  height: 1005px;
+  height: 990px;
 }
 .page-main-1,
 .page-main-2 {
@@ -163,7 +163,7 @@ table {
   margin-top: 5px;
 }
 hr {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 .footer-ul {
   font-size: 10px;
