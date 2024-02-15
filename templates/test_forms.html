@@ -7,34 +7,132 @@
 
     <section class="section">
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
 
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Please submit the forms below</h5>
-
+            <div class="mb-1 clearfix">
+                <button type="button" class="btn btn-warning rounded-pill float-lg-end">Update This Record</button>
+            </div>
               <!-- Default Tabs -->
               <ul class="nav nav-tabs" id="myTab" role="tablist">
-                  {% for form in forms %}
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="{{ form.prefix }}-tab" data-bs-toggle="tab" data-bs-target="#{{ form.prefix }}" type="button" role="tab" aria-controls="{{ form.prefix }}" aria-selected="false">
-                      {{ form.meta.prefix }}</button>
+                  <button class="nav-link active" id="electric-tab" data-bs-toggle="tab" data-bs-target="#electric" type="button" role="tab" aria-controls="electric" aria-selected="true">Electric Resistance Test</button>
                 </li>
-                  {% endfor %}
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="temperature-tab" data-bs-toggle="tab" data-bs-target="#temperature" type="button" role="tab" aria-controls="temperature" aria-selected="false" tabindex="-1">Temperature Rise Test</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="performance-tab" data-bs-toggle="tab" data-bs-target="#performance" type="button" role="tab" aria-controls="performance" aria-selected="false" tabindex="-1">Performance Determination Test</button>
+                </li>
+                  <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="noload-tab" data-bs-toggle="tab" data-bs-target="#noload" type="button" role="tab" aria-controls="noload" aria-selected="false" tabindex="-1">No Load Test</button>
+                </li>
+                  <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="withstand-tab" data-bs-toggle="tab" data-bs-target="#withstand" type="button" role="tab" aria-controls="withstand" aria-selected="false" tabindex="-1">Withstand Voltage AC Test</button>
+                </li>
+                  <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="insulation-tab" data-bs-toggle="tab" data-bs-target="#insulation" type="button" role="tab" aria-controls="insulation" aria-selected="false" tabindex="-1">Insulation Resistance Test</button>
+                </li>
               </ul>
               <div class="tab-content pt-2" id="myTabContent">
-                  {% for form in forms %}
-                <div class="tab-pane fade" id="{{ form.prefix }}" role="tabpanel" aria-labelledby="{{ form.prefix }}-tab">
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        {% for field in form %}
-                        {{ field.label_tag }}
-                            {{ field }}
-                        {% endfor %}
-                        <button type="submit" class="btn btn-primary rounded-pill">Save</button>
-                    </form>
+                <div class="tab-pane fade show active" id="electric" role="tabpanel" aria-labelledby="electric-tab">
+                  <form class="row g-3" type="submit" method="post" novalidate>
+                      {% csrf_token %}
+                      {% for field in electric_resistance_form %}
+                <div class="col-md-12">
+                  <div class="form-floating">
+                      {{field}}
+                      {{field.label_tag}}
+                  </div>
                 </div>
-                  {% endfor %}
+                      {% endfor %}
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+                </div>
+                <div class="tab-pane fade" id="temperature" role="tabpanel" aria-labelledby="temperature-tab">
+                  <form class="row g-3" type="submit" method="post" novalidate>
+                      {% csrf_token %}
+                      {% for field in temperature_rise_form %}
+                <div class="col-md-12">
+                  <div class="form-floating">
+                      {{field}}
+                      {{field.label_tag}}
+                  </div>
+                </div>
+                      {% endfor %}
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+                </div>
+                <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="performance-tab">
+                  <form class="row g-3" type="submit" method="post" novalidate>
+                      {% csrf_token %}
+                      {% for field in performance_determination_form %}
+                <div class="col-md-12">
+                  <div class="form-floating">
+                      {{field}}
+                      {{field.label_tag}}
+                  </div>
+                </div>
+                      {% endfor %}
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+                </div>
+              <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
+                  <form class="row g-3" type="submit" method="post" novalidate>
+                      {% csrf_token %}
+                      {% for field in no_load_form %}
+                <div class="col-md-12">
+                  <div class="form-floating">
+                      {{field}}
+                      {{field.label_tag}}
+                  </div>
+                </div>
+                      {% endfor %}
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+                </div>
+              <div class="tab-pane fade" id="withstand" role="tabpanel" aria-labelledby="withstand-tab">
+                  <form class="row g-3" type="submit" method="post" novalidate>
+                      {% csrf_token %}
+                      {% for field in withstand_voltage_form %}
+                <div class="col-md-12">
+                  <div class="form-floating">
+                      {{field}}
+                      {{field.label_tag}}
+                  </div>
+                </div>
+                      {% endfor %}
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+                </div>
+              <div class="tab-pane fade" id="insulation" role="tabpanel" aria-labelledby="insulation-tab">
+                  <form class="row g-3" type="submit" method="post" novalidate>
+                      {% csrf_token %}
+                      {% for field in insulation_resistance_form %}
+                <div class="col-md-12">
+                  <div class="form-floating">
+                      {{field}}
+                      {{field.label_tag}}
+                  </div>
+                </div>
+                      {% endfor %}
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+                </div>
               </div><!-- End Default Tabs -->
 
             </div>
