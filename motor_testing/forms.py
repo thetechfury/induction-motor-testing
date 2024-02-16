@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 
 from motor_testing.models import InductionMotor, ElectricResistanceTest, TemperatureRiseTest, \
-    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest
+    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, PerformanceTest
 
 
 class UserLoginForm(AuthenticationForm):
@@ -22,6 +22,22 @@ class InitialForm(ModelForm):
     class Meta:
         model = InductionMotor
         exclude = ('user',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
+
+class PerformanceTestForm(ModelForm):
+    class Meta:
+        model = PerformanceTest
+        exclude = ('status', 'motor',)
+        widgets = {
+            'routine': forms.CheckboxInput(attrs={'style': 'width:20px;height:20px;'}),
+            'type': forms.CheckboxInput(attrs={'style': 'width:20px;height:20px;'}),
+            'special': forms.CheckboxInput(attrs={'style': 'width:20px;height:20px;'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -214,8 +214,48 @@
                                      aria-labelledby="performed_tests">
                                     <div class="row g-3">
                                         <div class="italic card-title p-0 text-center">Performed Tests</div>
+                                        {#                                        <div class="container">#}
+                                        {#                                            {% for form in formset %}#}
+                                        {#                                                <div class="row">#}
+                                        {#                                                    <div class="col">#}
+                                        {#                                                        {{ form.test_type }}#}
+                                        {#                                                    </div>#}
+                                        {#                                                    <div class="col">#}
+                                        {#                                                        {{ form.routine }}#}
+                                        {#                                                    </div>#}
+                                        {#                                                    <div class="col">#}
+                                        {#                                                        {{ form.type }}#}
+                                        {#                                                    </div>#}
+                                        {#                                                    <div class="col">#}
+                                        {#                                                        {{ form.special }}#}
+                                        {#                                                    </div>#}
+                                        {#                                                </div>#}
+                                        {#                                            {% endfor %}#}
+                                        {#                                        </div>#}
 
 
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Sr. #</th>
+                                                <th scope="col">Test Name</th>
+                                                <th scope="col">Routine</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Special</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for form in formset %}
+                                            <tr>
+                                                <th scope="row">{{ forloop.counter }}</th>
+                                                <th scope="row">{{ form.test_type }}</th>
+                                                <td>{{ form.routine }}</td>
+                                                <td>{{ form.type }}</td>
+                                                <td>{{ form.special }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
 

@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import formset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -6,12 +8,12 @@ from django.views.generic.edit import FormMixin
 
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
-    NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm
+    NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm
 )
 from motor_testing.models import InductionMotor
 
 
-class InductionMotorListingsView(ListView, FormMixin):
+class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
     form_class = InitialForm
     model = InductionMotor
     template_name = "listings.html"
@@ -32,9 +34,16 @@ class InductionMotorListingsView(ListView, FormMixin):
             queryset = InductionMotor.objects.filter(serial_number__icontains=search_query)
         return queryset.order_by("-updated_on")
 
+    def get_formset(self):
+        PerformanceTestFormSet = formset_factory(PerformanceTestForm, extra=6)
+        dataset = ''
+        formset = PerformanceTestFormSet(initial=dataset)
+        return formset
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = SearchForm(self.request.GET)
+        context['formset'] = self.get_formset()
         return context
 
     def form_valid(self, form):
@@ -46,7 +55,7 @@ class InductionMotorListingsView(ListView, FormMixin):
         return render(self.request, "listings.html", {"form": form, "error": "error"})
 
 
-class TestsView(View):
+class TestsView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         electric_resistance_form = ElectricResistanceTestForm(request.POST or None)
         temperature_rise_form = TemperatureRiseTestForm(request.POST or None)
@@ -66,7 +75,7 @@ class TestsView(View):
         return render(request, "test_forms.html", context)
 
 
-class ReportView(TemplateView):
+class ReportView(LoginRequiredMixin, TemplateView):
     template_name = "index.html"
 
     def get_context_data(self, **kwargs):
