@@ -3,32 +3,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
 
-PENDING = "PENDING"
-COMPLETED = "COMPLETED"
-NOT_FOUND = "NOT_FOUND"
-PERFORMANCE_TEST_CHOICES = (('electric_resistance_test', 'Electric Resistance Test'),
-                            ('temperature_rise_test', 'Temperature Rise Test'),
-                            ('performance_determination_test', 'Performance Determination Test'),
-                            ('no_load_test', 'No Load Test'),
-                            ('withstand_voltage_ac_test', 'Withstand Voltage AC Test'),
-                            ('insulation_resistance_test', 'Insulation Resistance Test'),
-                            )
-
-STATUS_CHOICES = (
-    (PENDING, "Pending"),
-    (COMPLETED, "Completed"),
-    (NOT_FOUND, "Not Found"),
-)
-ROUTINE = "ROUTINE"
-TYPE = "TYPE"
-SPECIAL = "SPECIAL"
-
-TEST_CHOICES = (
-    (ROUTINE, "Routine"),
-    (TYPE, "Type"),
-    (SPECIAL, "Special"),
-)
-
 
 class TimeStampedModel(models.Model):
     """ TimeStamped Abstract Model """
@@ -80,35 +54,32 @@ class InductionMotor(TimeStampedModel):
         max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
 
-    # 2- Performed Tests
-    # electric_resistance = models.CharField(max_length=20, choices=TEST_CHOICES, blank=True, null=True)
-    # electric_resistance_test_status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=True, null=True)
-    #
-    # temperature_rise_nominal_condition = models.CharField(max_length=20, choices=TEST_CHOICES, blank=True, null=True)
-    # temperature_rise_nominal_condition_test_status = models.CharField(
-    #     max_length=10, choices=STATUS_CHOICES, blank=True, null=True
-    # )
-    #
-    # performance_determination = models.CharField(max_length=20, choices=TEST_CHOICES, blank=True, null=True)
-    # performance_determination_test_status = models.CharField(
-    #     max_length=10, choices=STATUS_CHOICES, blank=True, null=True
-    # )
-    #
-    # no_load = models.CharField(max_length=20, choices=TEST_CHOICES, blank=True, null=True)
-    # no_load_test_status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=True, null=True)
-    #
-    # Withstand_voltage = models.CharField(max_length=20, choices=TEST_CHOICES, blank=True, null=True)
-    # Withstand_voltage_test_status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=True, null=True)
-    #
-    # insulation_resistance = models.CharField(max_length=20, choices=TEST_CHOICES, blank=True, null=True)
-    # insulation_resistance_test_status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=True, null=True)
-
     def __str__(self):
         return self.serial_number
 
 
 class PerformanceTest(models.Model):
     """ Represents a performance test for an InductionMotor """
+
+    PERFORMANCE_TEST_CHOICES = (
+        ('electric_resistance_test', 'Electric Resistance Test'),
+        ('temperature_rise_test', 'Temperature Rise Test'),
+        ('performance_determination_test', 'Performance Determination Test'),
+        ('no_load_test', 'No Load Test'),
+        ('withstand_voltage_ac_test', 'Withstand Voltage AC Test'),
+        ('insulation_resistance_test', 'Insulation Resistance Test'),
+    )
+
+    PENDING = "PENDING"
+    COMPLETED = "COMPLETED"
+    NOT_FOUND = "NOT_FOUND"
+
+    STATUS_CHOICES = (
+        (PENDING, "Pending"),
+        (COMPLETED, "Completed"),
+        (NOT_FOUND, "Not Found"),
+    )
+
     motor = models.ForeignKey(InductionMotor, on_delete=models.CASCADE, related_name="performance_tests")
     test_type = models.CharField(max_length=50, choices=PERFORMANCE_TEST_CHOICES)
     routine = models.BooleanField(null=True)

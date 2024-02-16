@@ -32,17 +32,14 @@ class InitialForm(ModelForm):
 class PerformanceTestForm(ModelForm):
     class Meta:
         model = PerformanceTest
-        exclude = ('status', 'motor',)
-        widgets = {
-            'routine': forms.CheckboxInput(attrs={'style': 'width:20px;height:20px;'}),
-            'type': forms.CheckboxInput(attrs={'style': 'width:20px;height:20px;'}),
-            'special': forms.CheckboxInput(attrs={'style': 'width:20px;height:20px;'}),
-        }
+        exclude = ('motor', 'page_number', 'status', )
+        readonly_fields = ['test_type']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
+        self.fields['test_type'].widget.attrs['readonly'] = True
 
 
 class SearchForm(forms.Form):

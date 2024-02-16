@@ -10,7 +10,7 @@ from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm
 )
-from motor_testing.models import InductionMotor
+from motor_testing.models import InductionMotor, PerformanceTest
 
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
@@ -22,10 +22,13 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
+        formset = self.get_formset()
+        is_form_valid = form.is_valid()
+        formset_valid = formset.is_valid()
+        if is_form_valid and formset_valid:
+            return self.form_valid(form, formset)
         else:
-            return self.form_invalid(form)
+            return self.form_invalid(form, formset)
 
     def get_queryset(self):
         search_query = self.request.GET.get('search')
@@ -35,9 +38,12 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         return queryset.order_by("-updated_on")
 
     def get_formset(self):
-        PerformanceTestFormSet = formset_factory(PerformanceTestForm, extra=6)
-        dataset = ''
-        formset = PerformanceTestFormSet(initial=dataset)
+        PerformanceTestFormSet = formset_factory(PerformanceTestForm, extra=0)
+        dataset = [{'test_type': d, 'routine': False, 'type': False, 'special': False} for d in
+                   PerformanceTest.PERFORMANCE_TEST_CHOICES]
+        formset = PerformanceTestFormSet(
+            initial=dataset, data=self.request.POST if self.request and self.request.method == 'POST' else None
+        )
         return formset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -46,12 +52,24 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         context['formset'] = self.get_formset()
         return context
 
-    def form_valid(self, form):
+    def save_forset(self, formset, motor):
+        for form in formset:
+            if form.is_valid():
+                instance = form.save(commit=False)
+                instance.motor = motor
+                instance.page_number = 1
+                instance.status = PerformanceTest.PENDING if (
+                            instance.routine or instance.type or instance.special) else PerformanceTest.NOT_FOUND
+                instance.save()
+
+    def form_valid(self, form, formset):
         form.instance.user = self.request.user
         form.save()
+        motor = form.instance
+        self.save_forset(formset, motor)
         return HttpResponseRedirect(reverse_lazy("tests"))
 
-    def form_invalid(self, form):
+    def form_invalid(self, form, formset):
         return render(self.request, "listings.html", {"form": form, "error": "error"})
 
 
