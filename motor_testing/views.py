@@ -52,7 +52,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         context['formset'] = self.get_formset()
         return context
 
-    def save_forset(self, formset, motor):
+    def save_formset(self, formset, motor):
         for form in formset:
             if form.is_valid():
                 instance = form.save(commit=False)
@@ -66,7 +66,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         form.instance.user = self.request.user
         form.save()
         motor = form.instance
-        self.save_forset(formset, motor)
+        self.save_formset(formset, motor)
         return HttpResponseRedirect(reverse_lazy("tests"))
 
     def form_invalid(self, form, formset):
