@@ -76,7 +76,10 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
 class TestsView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         motor_id = kwargs['pk']
-        tests = PerformanceTest.objects.filter(motor_id=motor_id).filter(status=PerformanceTest.PENDING).first()
+        tests = PerformanceTest.objects.filter(motor_id=motor_id).filter(status=PerformanceTest.PENDING)
+        test_types = []
+        for test in tests:
+            test_types.append(test.test_type)
         electric_resistance_form = ElectricResistanceTestForm(request.POST or None)
         temperature_rise_form = TemperatureRiseTestForm(request.POST or None)
         performance_determination_form = PerformanceDeterminationTestForm(request.POST or None)
@@ -93,7 +96,7 @@ class TestsView(LoginRequiredMixin, View):
         }
         context = {}
         for key, form in forms.items():
-            if form.prefix == tests.test_type:
+            if form.prefix in test_types:
                 context[form.prefix] = form
             else:
                 context[form.prefix] = None

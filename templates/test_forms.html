@@ -75,7 +75,6 @@
                         {% endif %}
                         </ul>
                         <div class="tab-content pt-2" id="myTabContent">
-                        {% if electric_resistance_test %}
                             <div class="tab-pane fade show active" id="electric" role="tabpanel"
                                  aria-labelledby="electric-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
@@ -93,13 +92,11 @@
                                     </div>
                                 </form>
                             </div>
-                        {% endif %}
-                        {% if temperature_rise_test %}
                             <div class="tab-pane fade" id="temperature" role="tabpanel"
                                  aria-labelledby="temperature-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
-                                    {% for field in temperature_rise_form %}
+                                    {% for field in temperature_rise_test %}
                                         <div class="col-md-12">
                                             <div class="form-floating">
                                                 {{ field }}
@@ -112,13 +109,11 @@
                                     </div>
                                 </form>
                             </div>
-                        {% endif %}
-                        {% if performance_determination_test %}
                             <div class="tab-pane fade" id="performance" role="tabpanel"
                                  aria-labelledby="performance-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
-                                    {% for field in performance_determination_form %}
+                                    {% for field in performance_determination_test %}
                                         <div class="col-md-12">
                                             <div class="form-floating">
                                                 {{ field }}
@@ -131,12 +126,10 @@
                                     </div>
                                 </form>
                             </div>
-                        {% endif %}
-                        {% if no_load_test %}
                             <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
-                                    {% for field in no_load_form %}
+                                    {% for field in no_load_test %}
                                         <div class="col-md-12">
                                             <div class="form-floating">
                                                 {{ field }}
@@ -149,12 +142,10 @@
                                     </div>
                                 </form>
                             </div>
-                        {% endif %}
-                        {% if withstand_voltage_ac_test %}
                             <div class="tab-pane fade" id="withstand" role="tabpanel" aria-labelledby="withstand-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
-                                    {% for field in withstand_voltage_form %}
+                                    {% for field in withstand_voltage_test %}
                                         <div class="col-md-12">
                                             <div class="form-floating">
                                                 {{ field }}
@@ -167,12 +158,10 @@
                                     </div>
                                 </form>
                             </div>
-                        {% endif %}
-                        {% if insulation_resistance_test %}
                             <div class="tab-pane fade" id="insulation" role="tabpanel" aria-labelledby="insulation-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
-                                    {% for field in insulation_resistance_form %}
+                                    {% for field in insulation_resistance_test %}
                                         <div class="col-md-12">
                                             <div class="form-floating">
                                                 {{ field }}
@@ -185,7 +174,6 @@
                                     </div>
                                 </form>
                             </div>
-                        {% endif %}
                         </div><!-- End Default Tabs -->
 
                     </div>
