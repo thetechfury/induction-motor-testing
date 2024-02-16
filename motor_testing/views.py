@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import formset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
 
@@ -67,7 +67,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         form.save()
         motor = form.instance
         self.save_formset(formset, motor)
-        return HttpResponseRedirect(reverse_lazy("tests"))
+        return HttpResponseRedirect(reverse('tests', kwargs={"pk": motor.id}))
 
     def form_invalid(self, form, formset):
         return render(self.request, "listings.html", {"form": form, "error": "error"})
