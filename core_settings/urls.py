@@ -8,6 +8,6 @@ urlpatterns = [
     path('', lambda request: redirect('home/', permanent=True)),
     path('admin/', admin.site.urls),
     path("logout/", views.LogoutView.as_view(), name="logout"),
-    path("login/", views.LoginView.as_view(authentication_form=UserLoginForm), name="login"),
+    path("accounts/login/", views.LoginView.as_view(authentication_form=UserLoginForm), name="login"),
     path("", include("motor_testing.urls")),
 ]
