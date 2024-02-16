@@ -15,7 +15,7 @@
                         <h5 class="card-title">Listing of all the Test Records</h5>
                         <div class="text-center datatable-top mt-2">
                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#main_form" id="main_modal_btn">Create New Record
+                                    data-bs-target="#main_form">Create New Record
                             </button>
                         </div>
                         <div class="datatable-search datatable-top mt-2">
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <div class="modal fade {% if error %} error {% endif %}" id="main_form" tabindex="-1" aria-modal="true"
+    <div class="modal fade" id="main_form" tabindex="-1" aria-modal="true"
          role="dialog">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
@@ -93,7 +93,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="row g-3" method="post" novalidate>{% csrf_token %}
+                    <form id="main-form" class="row g-3" method="post" novalidate>{% csrf_token %}
                         {% if form.non_field_errors %}
                             <div class="text-danger">{{ form.non_field_errors }}</div>
                         {% endif %}
@@ -103,23 +103,17 @@
                         <div class="col-md-4">
                             <label for="id_serial_number" class="form-label">Motor's Serial Number</label>
                             {{ form.serial_number }}
-                            {% if form.serial_number.errors %}
-                                <div class="text-danger fst-italic">* This field is required.</div>
-                            {% endif %}
+                            <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
                         <div class="col-md-4">
                             <label for="id_customer_name" class="form-label">Customer</label>
                             {{ form.customer_name }}
-                            {% if form.customer_name.errors %}
-                                <div class="text-danger fst-italic">* This field is required.</div>
-                            {% endif %}
+                            <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
                         <div class="col-md-4">
                             <label for="id_sales_order_number" class="form-label">Sales Order</label>
                             {{ form.sales_order_number }}
-                            {% if form.sales_order_number.errors %}
-                                <div class="text-danger fst-italic">* This field is required.</div>
-                            {% endif %}
+                            <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
 
                         <hr style="border-top: 2px solid #1559d3;">
@@ -215,26 +209,12 @@
                                 <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
                                      aria-labelledby="performed_tests">
                                     <div class="row g-3">
-                                        <div class="italic card-title p-0 text-center">Performed Tests</div>
-                                        {#                                        <div class="container">#}
-                                        {#                                            {% for form in formset %}#}
-                                        {#                                                <div class="row">#}
-                                        {#                                                    <div class="col">#}
-                                        {#                                                        {{ form.test_type }}#}
-                                        {#                                                    </div>#}
-                                        {#                                                    <div class="col">#}
-                                        {#                                                        {{ form.routine }}#}
-                                        {#                                                    </div>#}
-                                        {#                                                    <div class="col">#}
-                                        {#                                                        {{ form.type }}#}
-                                        {#                                                    </div>#}
-                                        {#                                                    <div class="col">#}
-                                        {#                                                        {{ form.special }}#}
-                                        {#                                                    </div>#}
-                                        {#                                                </div>#}
-                                        {#                                            {% endfor %}#}
-                                        {#                                        </div>#}
-
+                                        <div class="italic card-title p-0 text-center">
+                                            Performed Tests
+                                            <div id="error-message" class="text-danger" style="display: none;">
+                                                Please select at least one test
+                                            </div>
+                                        </div>
 
                                         <table class="table">
                                             <thead>
@@ -274,10 +254,6 @@
 
                     </form>
                 </div>
-                {#                <div class="modal-footer">#}
-                {#                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>#}
-                {#                    <button type="submit" class="btn btn-primary">Submit</button>#}
-                {#                </div>#}
             </div>
         </div>
     </div>
@@ -289,17 +265,65 @@
 
 {% block script %}
     <script>
-        errorModal = document.getElementsByClassName("error")
+        document.getElementById("main-form").addEventListener("submit", function (event) {
+            // Flag to track if any field is empty
+            var anyFieldEmpty = false;
 
-        if (errorModal.length > 0) {
-            var modal = document.querySelector(".modal")
-            modal.style.display = "none"
-            modal.classList.remove("show")
-        }
+            // Check the first input field
+            var serialNumberField = document.getElementById("id_serial_number");
+            var serialNumberErrorMessage = serialNumberField.nextElementSibling;
+            if (serialNumberField.value.trim() === "") {
+                serialNumberErrorMessage.style.display = "block";
+                anyFieldEmpty = true;
+            } else {
+                serialNumberErrorMessage.style.display = "none";
+            }
 
-        if (errorModal.length > 0) {
-            document.getElementById("main_modal_btn").click()
-        }
+            // Check the second input field
+            var customerNameField = document.getElementById("id_customer_name");
+            var customerNameErrorMessage = customerNameField.nextElementSibling;
+            if (customerNameField.value.trim() === "") {
+                customerNameErrorMessage.style.display = "block";
+                anyFieldEmpty = true;
+            } else {
+                customerNameErrorMessage.style.display = "none";
+            }
 
+            // Check the third input field
+            var salesOrderNumberField = document.getElementById("id_sales_order_number");
+            var salesOrderNumberErrorMessage = salesOrderNumberField.nextElementSibling;
+            if (salesOrderNumberField.value.trim() === "") {
+                salesOrderNumberErrorMessage.style.display = "block";
+                anyFieldEmpty = true;
+            } else {
+                salesOrderNumberErrorMessage.style.display = "none";
+            }
+
+            // If any field is empty, prevent form submission
+            if (anyFieldEmpty) {
+                event.preventDefault();
+            }
+
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            var atLeastOneChecked = false;
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    atLeastOneChecked = true;
+                    break;
+                }
+            }
+
+            if (!atLeastOneChecked) {
+                document.getElementById("error-message").style.display = "block";
+                document.querySelector('#v-pills-home').classList.remove('show', 'active');
+                document.querySelector('#motor_identification').classList.remove('active');
+                document.querySelector('#v-pills-profile').classList.add('show', 'active');
+                document.querySelector('#performed_tests').classList.add('active');
+                event.preventDefault(); // Prevent form submission
+            } else {
+                document.getElementById("error-message").style.display = "none";
+            }
+        });
     </script>
 {% endblock %}

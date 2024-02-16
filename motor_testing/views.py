@@ -70,7 +70,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         return HttpResponseRedirect(reverse('tests', kwargs={"pk": motor.id}))
 
     def form_invalid(self, form, formset):
-        return render(self.request, "listings.html", {"form": form, "error": "error"})
+        return render(self.request, "listings.html", {"form": form, "error": "error", "formset": formset})
 
 
 class TestsView(LoginRequiredMixin, View):
