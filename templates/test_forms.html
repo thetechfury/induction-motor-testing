@@ -23,12 +23,15 @@
                         </div>
                         <!-- Default Tabs -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            {% if electric_resistance_test %}
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="electric-tab" data-bs-toggle="tab"
                                         data-bs-target="#electric" type="button" role="tab" aria-controls="electric"
                                         aria-selected="true">Electric Resistance Test
                                 </button>
                             </li>
+                            {% endif %}
+                        {% if temperature_rise_test %}
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="temperature-tab" data-bs-toggle="tab"
                                         data-bs-target="#temperature" type="button" role="tab"
@@ -36,6 +39,8 @@
                                     Test
                                 </button>
                             </li>
+                        {% endif %}
+                        {% if performance_determination_test %}
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="performance-tab" data-bs-toggle="tab"
                                         data-bs-target="#performance" type="button" role="tab"
@@ -43,31 +48,39 @@
                                     Determination Test
                                 </button>
                             </li>
+                        {% endif %}
+                        {% if no_load_test %}
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="noload-tab" data-bs-toggle="tab" data-bs-target="#noload"
                                         type="button" role="tab" aria-controls="noload" aria-selected="false"
                                         tabindex="-1">No Load Test
                                 </button>
                             </li>
+                        {% endif %}
+                        {% if withstand_voltage_ac_test %}
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="withstand-tab" data-bs-toggle="tab"
                                         data-bs-target="#withstand" type="button" role="tab" aria-controls="withstand"
                                         aria-selected="false" tabindex="-1">Withstand Voltage AC Test
                                 </button>
                             </li>
+                        {% endif %}
+                        {% if insulation_resistance_test %}
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="insulation-tab" data-bs-toggle="tab"
                                         data-bs-target="#insulation" type="button" role="tab" aria-controls="insulation"
                                         aria-selected="false" tabindex="-1">Insulation Resistance Test
                                 </button>
                             </li>
+                        {% endif %}
                         </ul>
                         <div class="tab-content pt-2" id="myTabContent">
+                        {% if electric_resistance_test %}
                             <div class="tab-pane fade show active" id="electric" role="tabpanel"
                                  aria-labelledby="electric-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
-                                    {% for field in electric_resistance_form %}
+                                    {% for field in electric_resistance_test %}
                                         <div class="col-md-12">
                                             <div class="form-floating">
                                                 {{ field }}
@@ -80,6 +93,8 @@
                                     </div>
                                 </form>
                             </div>
+                        {% endif %}
+                        {% if temperature_rise_test %}
                             <div class="tab-pane fade" id="temperature" role="tabpanel"
                                  aria-labelledby="temperature-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
@@ -97,6 +112,8 @@
                                     </div>
                                 </form>
                             </div>
+                        {% endif %}
+                        {% if performance_determination_test %}
                             <div class="tab-pane fade" id="performance" role="tabpanel"
                                  aria-labelledby="performance-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
@@ -114,6 +131,8 @@
                                     </div>
                                 </form>
                             </div>
+                        {% endif %}
+                        {% if no_load_test %}
                             <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
@@ -130,6 +149,8 @@
                                     </div>
                                 </form>
                             </div>
+                        {% endif %}
+                        {% if withstand_voltage_ac_test %}
                             <div class="tab-pane fade" id="withstand" role="tabpanel" aria-labelledby="withstand-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
@@ -146,6 +167,8 @@
                                     </div>
                                 </form>
                             </div>
+                        {% endif %}
+                        {% if insulation_resistance_test %}
                             <div class="tab-pane fade" id="insulation" role="tabpanel" aria-labelledby="insulation-tab">
                                 <form class="row g-3" type="submit" method="post" novalidate>
                                     {% csrf_token %}
@@ -162,6 +185,7 @@
                                     </div>
                                 </form>
                             </div>
+                        {% endif %}
                         </div><!-- End Default Tabs -->
 
                     </div>
