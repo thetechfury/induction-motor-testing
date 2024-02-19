@@ -11,6 +11,9 @@ from motor_testing.forms import (
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm
 )
 from motor_testing.models import InductionMotor, PerformanceTest
+from django.http import HttpResponse
+from django.views.generic import View
+from motor_testing.html_to_pdf import html_to_pdf
 
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
@@ -111,3 +114,12 @@ class ReportView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['induction_motor'] = InductionMotor.objects.get(id=self.kwargs['id'])
         return context
+
+
+class GeneratePdf(View):
+    def get(self, request, *args, **kwargs):
+        # getting the template
+        pdf = html_to_pdf('index.html')
+
+        # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
