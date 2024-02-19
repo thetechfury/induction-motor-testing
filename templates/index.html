@@ -19,11 +19,11 @@
         <header>
           <div class="main-heading">
             <img class="border-1" src="{% static 'assets/img/logo_uet.png' %}" alt="" />
-            <h1 >
+            <h1>
               Test Report <br />
               Three Phase Induction Motor
             </h1>
-            <h2 class="border-1">Motor's Serial Number {{ induction_motor.serial_number }}</h2>
+            <h2 class="border-1">Motor's Serial Number 1081350993</h2>
           </div>
           <div class="second-heading border-1">
             <div>WEG México S.A. de C.V.</div>
@@ -37,37 +37,37 @@
         <section class="main-section">
           <div class="section-1">
             <h1 class="text">
-              <span class="title">Customer:</span> {{ induction_motor.customer_name|upper }}
+              <span class="title">Customer:</span> WEG MIDDLE EAST FZE
             </h1>
             <h1 class="text">
-              <span class="title">Sales Order:</span> {{ induction_motor.sales_order_number }}
+              <span class="title">Sales Order:</span> 51998940
             </h1>
           </div>
           <h1 class="main-title">1. Motor Identification</h1>
           <div class="section-2">
             <table>
               <tr>
-                <td>TAG: {{ induction_motor.tag }}</td>
+                <td>TAG: -</td>
               </tr>
               <tr>
-                <td>Material: {{ induction_motor.material }}</td>
-                <td>Enclosure: {{ induction_motor.enclosure }}</td>
-                <td>Insulation Class: {{ induction_motor.insulation_class }}</td>
+                <td>Material: 17081049</td>
+                <td>Enclosure: IP65</td>
+                <td>Insulation Class: F</td>
               </tr>
               <tr>
-                <td>Frame: {{ induction_motor.frame}}</td>
-                <td>Altitude (m): {{ induction_motor.altitude_M }}</td>
-                <td>Temperature Rise (K): {{ induction_motor.temperature_rise_K }}</td>
+                <td>Frame: 315S/M</td>
+                <td>Altitude (m): 1000</td>
+                <td>Temperature Rise (K): 70</td>
               </tr>
               <tr>
-                <td>Mounting: {{ induction_motor.mounting }}</td>
-                <td>Duty Cycle: {{ induction_motor.duty_cycle }}</td>
-                <td>Ambient Temperature (°C): {{ induction_motor.ambient_temperature_C }}</td>
+                <td>Mounting: B3T</td>
+                <td>Duty Cycle: S1</td>
+                <td>Ambient Temperature (°C): 50</td>
               </tr>
               <tr>
-                <td>Drawing: {{ induction_motor.drawing }}</td>
-                <td>Design: {{ induction_motor.design }}</td>
-                <td>Service Factor: {{ induction_motor.service_factor }}</td>
+                <td>Drawing: -</td>
+                <td>Design: N</td>
+                <td>Service Factor: 1.15</td>
               </tr>
             </table>
             <table class="table-border">
@@ -81,13 +81,13 @@
                 <th>Eff. (%)</th>
               </tr>
               <tr>
-                <td>{{ induction_motor.voltage }}</td>
-                <td>{{ induction_motor.current }}</td>
-                <td>{{ induction_motor.power }}</td>
-                <td>{{ induction_motor.frequency }}</td>
-                <td>{{ induction_motor.speed }}</td>
-                <td>{{ induction_motor.p_f }}</td>
-                <td>{{ induction_motor.efficiency }}</td>
+                <td>400</td>
+                <td>276</td>
+                <td>160</td>
+                <td>60</td>
+                <td>1790</td>
+                <td>0.87</td>
+                <td>96.2</td>
               </tr>
             </table>
           </div>
@@ -334,6 +334,7 @@
                     <p>Agnaldo Reus Medeiros Rodrigues</p>
                     <p>Test Date: 4/18/2023</p>
                   </div>
+                  <img src="{% static 'assets/img/sign.png' %}" alt="" />
                 </div>
               </td>
               <td>Inspector</td>

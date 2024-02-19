@@ -13,7 +13,8 @@ from motor_testing.forms import (
 from motor_testing.models import InductionMotor, PerformanceTest
 from django.http import HttpResponse
 from django.views.generic import View
-from motor_testing.html_to_pdf import html_to_pdf
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
@@ -62,7 +63,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
                 instance.motor = motor
                 instance.page_number = 1
                 instance.status = PerformanceTest.PENDING if (
-                            instance.routine or instance.type or instance.special) else PerformanceTest.NOT_FOUND
+                        instance.routine or instance.type or instance.special) else PerformanceTest.NOT_FOUND
                 instance.save()
 
     def form_valid(self, form, formset):
@@ -116,10 +117,18 @@ class ReportView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class GeneratePdf(View):
+class GeneratePDF(View):
     def get(self, request, *args, **kwargs):
-        # getting the template
-        pdf = html_to_pdf('index.html')
+        template = get_template('exp.html')
+        html = template.render({'induction_motor': InductionMotor.objects.get(id=self.kwargs['id'])})  # Pass any context variables here
 
-        # rendering the template
-        return HttpResponse(pdf, content_type='application/pdf')
+        # Create a PDF file
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="output.pdf"'
+
+        # Generate PDF
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        if pisa_status.err:
+            return HttpResponse('PDF generation error!', status=500)
+
+        return response
