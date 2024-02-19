@@ -44,13 +44,16 @@
                                 <td class="text-center">{{ obj.customer_name }}</td>
                                 <td class="text-center">{{ obj.sales_order_number }}</td>
                                 <td class="text-center">
-                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                        <button type="button" class="btn btn-danger"><i class="bi bi-eye"></i>
+                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                        <a href="{% url 'report' obj.id %}" type="button" class="btn btn-outline-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-primary">
+                                            <i class="bi bi-pencil-square"></i>
                                         </button>
-                                        <button type="button" class="btn btn-warning"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button type="button" class="btn btn-success"><i
-                                                class="bi bi-trash"></i></button>
+                                        <button type="button" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
