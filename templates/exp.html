@@ -1,0 +1,316 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style_doc.css' %}"/>
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'assets/css/print-style.css' %}"
+            media="print"
+    />
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'assets/css/style_doc.css' %}"
+            media="print"
+    />
+    <title>Document</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            @frame header_frame { /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 50pt;
+            width: 512pt;
+            top: 50pt;
+            height: 40pt;
+        }
+        @frame content_frame {
+            /* Content Frame */
+        left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+        }
+        @frame footer_frame {
+            /* Another static Frame */
+        -pdf-frame-content:footer_content;
+        left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+        }
+        .main-heading img {
+        width: 10%;
+    }
+        .main-heading h1 {
+            font-size: 30px;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        @media print {
+  .page-1,
+  .page-2 {
+    margin: 2rem;
+    margin-bottom: 0;
+  }
+  .border-1 {
+    border: 1px solid black;
+  }
+  header{
+    margin: 1px 1px 0px 1px;
+  }
+
+
+  header,
+  footer {
+    background-color: #bde3f6;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    color: rgb(0, 0, 128);
+  }
+  .main-heading {
+    display: flex;
+    justify-content: space-between;
+    height: 70px;
+  }
+  .main-heading h1,
+  .main-heading img,
+  .main-heading h2 {
+    height: 100%;
+    margin: 0;
+  }
+  .main-heading img {
+    width: 10%;
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 0;
+  }
+  .main-heading h1 {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+  }
+  .main-heading h2 {
+    width: 15%;
+    font-size: 15px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    border-top: 0;
+    border-bottom: 0;
+    border-right: 0;
+  }
+
+  .second-heading {
+    font-size: 12px;
+    border-left: 0;
+    border-bottom: 0;
+    border-right: 0;
+    display: flex;
+  }
+  .second-heading div {
+    width: 50%;
+    padding: 5px;
+    padding-left: 8px;
+  }
+  .second-heading div:nth-child(1) {
+    border-right: 1px solid #000000;
+  }
+  .third-heading {
+    font-size: 12px;
+    padding-left: 10px;
+    padding: 5px;
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+  }
+
+  .main-section .section-1,
+  .main-section .section-3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .main-section .text {
+    font-size: 13px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+  .main-section .title {
+    color: rgb(0, 0, 128);
+  }
+  .main-section .main-title {
+    background-color: #bde3f6;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    color: rgb(0, 0, 128);
+    font-size: 15px;
+    padding-left: 10px;
+    margin-bottom: 0;
+    margin: 14px 1px 0px 1px;
+
+
+  }
+  .main-section .section-1,
+  .main-section .section-3,
+  .main-section .section-2,
+  .main-section .section-4 {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
+  }
+  table {
+    width: 100%;
+  }
+  .table-border th {
+    color: rgb(0, 0, 128);
+  }
+  .table-border td {
+    text-align: center;
+  }
+  .table-border,
+  .table-border th,
+  .table-border td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  .same-width-td {
+    width: 30rem;
+    text-align: left !important;
+  }
+  .section-ul,
+  .section-ul-2,
+  .section-ul-3,
+  .section-ul-4 {
+    list-style: none;
+    display: flex;
+    width: 100%;
+    padding-left: 0;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .section-ul li:nth-child(1) {
+    width: 33%;
+  }
+  .section-ul li:nth-child(2) {
+    width: 30%;
+  }
+  .section-ul li:nth-child(3) {
+    width: 30%;
+  }
+  .section-ul li:nth-child(4) {
+    margin-top: 5px;
+  }
+  .section-ul-2 li {
+    width: 50%;
+    margin-top: 5px;
+  }
+  .section-ul-3 li {
+    width: 30%;
+    margin-top: 5px;
+  }
+  hr {
+    margin-top: 40px;
+  }
+  .footer-ul {
+    font-size: 10px;
+    padding-left: 20px;
+    padding-right: 50px;
+    list-style: none;
+  }
+  .footer-ul li:before {
+    content: "*";
+  }
+  .section-ul-4 {
+    margin-top: 2px;
+  }
+  .section-ul-4 li {
+    width: 100%;
+    margin-top: 5px;
+  }
+  .footer-1 div {
+    font-size: 12px;
+    padding: 5px;
+    border-top: 1px solid #000000;
+  }
+  .footer-2 {
+    margin-top: 5rem;
+  }
+  .footer-2 th,
+  .footer-2 td {
+    width: 50%;
+  }
+  .footer-2 td {
+    font-size: 13px;
+    text-align: left;
+  }
+  .footer-2 .d-f {
+    display: flex;
+    justify-content: space-between;
+  }
+  .footer-2 .d-f p {
+    margin: 5px;
+  }
+  .footer-2 td:nth-child(2) {
+    display: flex;
+    align-items: start;
+    border: 0;
+  }
+  .page-number {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-right: 2rem;
+    margin-top: 2px;
+  }
+
+  hr {
+  margin-top: 20px;
+}
+
+.footer-1{
+margin: 0px 1px 1px 1px;
+}
+
+.border-1.page-2 > .main-section{
+height: 800px;
+}
+}
+
+    </style>
+</head>
+
+<body>
+<!-- Content for Static Frame 'header_frame' -->
+<div id="header_content">
+    <header>
+        <div class="main-heading">
+            <img style="border: 1px solid #000000" src="../static/assets/img/logo_uet.png" alt=""/>
+            <h1>
+                Test Report <br/>
+                Three Phase Induction Motor
+            </h1>
+            <h2 class="border-1">Motor's Serial Number {{ induction_motor.serial_number }}</h2>
+        </div>
+        <div class="second-heading border-1">
+            <div>WEG México S.A. de C.V.</div>
+            <div>Quality Control - Medium Voltage Laboratory</div>
+        </div>
+        <div class="third-heading">
+            Carretera Jorobas-Tula km 3.5, - 54680, Huehuetoca - Estado de
+            México - México
+        </div>
+    </header>
+</div>
+
+<!-- Content for Static Frame 'footer_frame' -->
+<div id="footer_content">(c) - page
+    <pdf:pagenumber>
+        of
+        <pdf:pagecount>
+</div>
+
+<!-- HTML Content -->
+To PDF or not to PDF
+</body>
+</html>
