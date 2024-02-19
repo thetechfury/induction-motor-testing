@@ -15,7 +15,7 @@
                         <h5 class="card-title">Listing of all the Test Records</h5>
                         <div class="text-center datatable-top mt-2">
                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#main_form">Create New Record
+                                    data-bs-target="#main-modal">Create New Record
                             </button>
                         </div>
                         <div class="datatable-search datatable-top mt-2">
@@ -44,13 +44,16 @@
                                 <td class="text-center">{{ obj.customer_name }}</td>
                                 <td class="text-center">{{ obj.sales_order_number }}</td>
                                 <td class="text-center">
-                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                        <button type="button" class="btn btn-danger"><i class="bi bi-eye"></i>
+                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                        <a href="{% url 'report' obj.id %}" type="button" class="btn btn-outline-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-primary">
+                                            <i class="bi bi-pencil-square"></i>
                                         </button>
-                                        <button type="button" class="btn btn-warning"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button type="button" class="btn btn-success"><i
-                                                class="bi bi-trash"></i></button>
+                                        <button type="button" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -84,7 +87,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="main_form" tabindex="-1" aria-modal="true"
+    <div class="modal fade" id="main-modal" tabindex="-1" aria-modal="true"
          role="dialog">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
@@ -101,17 +104,17 @@
                         <div class="italic card-title p-0 text-center">* Basic Information</div>
 
                         <div class="col-md-4">
-                            <label for="id_serial_number" class="form-label">Motor's Serial Number</label>
+                            <label for="id_serial_number" class="form-label">* Motor's Serial Number</label>
                             {{ form.serial_number }}
                             <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
                         <div class="col-md-4">
-                            <label for="id_customer_name" class="form-label">Customer</label>
+                            <label for="id_customer_name" class="form-label">* Customer</label>
                             {{ form.customer_name }}
                             <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
                         <div class="col-md-4">
-                            <label for="id_sales_order_number" class="form-label">Sales Order</label>
+                            <label for="id_sales_order_number" class="form-label">* Sales Order</label>
                             {{ form.sales_order_number }}
                             <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
@@ -210,7 +213,7 @@
                                      aria-labelledby="performed_tests">
                                     <div class="row g-3">
                                         <div class="italic card-title p-0 text-center">
-                                            Performed Tests
+                                            * Performed Tests
                                             <div id="error-message" class="text-danger" style="display: none;">
                                                 Please select at least one test
                                             </div>
@@ -265,6 +268,22 @@
 
 {% block script %}
     <script>
+        document.getElementById('main-modal').addEventListener('show.bs.modal', function (event) {
+            document.querySelector('#v-pills-home').classList.add('show', 'active');
+            document.querySelector('#motor_identification').classList.add('active');
+            document.querySelector('#v-pills-profile').classList.remove('show', 'active');
+            document.querySelector('#performed_tests').classList.remove('active');
+
+
+            document.getElementById("id_form-0-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-1-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-2-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-3-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-4-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-5-test_type").setAttribute("disabled", "");
+        })
+
+
         document.getElementById("main-form").addEventListener("submit", function (event) {
             // Flag to track if any field is empty
             var anyFieldEmpty = false;
@@ -324,6 +343,28 @@
             } else {
                 document.getElementById("error-message").style.display = "none";
             }
+
+            if (!anyFieldEmpty && atLeastOneChecked) {
+                document.getElementById("id_form-0-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-1-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-2-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-3-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-4-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-5-test_type").removeAttribute("disabled");
+
+                var myModal = document.getElementById('main-modal');
+                var modal = bootstrap.Modal.getInstance(myModal);
+                modal.hide();
+            }
         });
+
+        document.getElementById('main-modal').addEventListener('hidden.bs.modal', function (event) {
+            document.getElementById("main-form").reset();
+            // Display None for error messages
+            document.getElementById("id_serial_number").nextElementSibling.style.display = "none";
+            document.getElementById("id_customer_name").nextElementSibling.style.display = "none";
+            document.getElementById("id_sales_order_number").nextElementSibling.style.display = "none";
+            document.getElementById("error-message").style.display = "none";
+        })
     </script>
 {% endblock %}
