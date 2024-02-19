@@ -36,7 +36,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search')
-        queryset = InductionMotor.objects.all()
+        queryset = InductionMotor.objects.filter(status=InductionMotor.ACTIVE)
         if search_query:
             queryset = InductionMotor.objects.filter(serial_number__icontains=search_query)
         return queryset.order_by("-updated_on")
@@ -79,33 +79,38 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
 
 class TestsView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        motor_id = kwargs['pk']
-        tests = PerformanceTest.objects.filter(motor_id=motor_id).filter(status=PerformanceTest.PENDING)
-        test_types = []
-        for test in tests:
-            test_types.append(test.test_type)
-        electric_resistance_form = ElectricResistanceTestForm(request.POST or None)
-        temperature_rise_form = TemperatureRiseTestForm(request.POST or None)
-        performance_determination_form = PerformanceDeterminationTestForm(request.POST or None)
-        no_load_form = NoLoadTestForm(request.POST or None)
-        withstand_voltage_form = WithstandVoltageACTestForm(request.POST or None)
-        insulation_resistance_form = InsulationResistanceTestForm(request.POST or None)
-        forms = {
-            'electric_resistance_form': electric_resistance_form,
-            'temperature_rise_form': temperature_rise_form,
-            'performance_determination_form': performance_determination_form,
-            'no_load_form': no_load_form,
-            'withstand_voltage_form': withstand_voltage_form,
-            'insulation_resistance_form': insulation_resistance_form
-        }
-        context = {}
-        for key, form in forms.items():
-            if form.prefix in test_types:
-                context[form.prefix] = form
-            else:
-                context[form.prefix] = None
 
-        return render(request, "test_forms.html", context)
+        inductionMotorReport = InductionMotor.objects.filter(id=kwargs['pk'], status=InductionMotor.ACTIVE).first()
+        if not inductionMotorReport:
+            return render(request, "registration/404.html")
+        else:
+            tests = PerformanceTest.objects.filter(motor_id=inductionMotorReport.id).filter(
+                status=PerformanceTest.PENDING)
+            test_types = []
+            for test in tests:
+                test_types.append(test.test_type)
+            electric_resistance_form = ElectricResistanceTestForm(request.POST or None)
+            temperature_rise_form = TemperatureRiseTestForm(request.POST or None)
+            performance_determination_form = PerformanceDeterminationTestForm(request.POST or None)
+            no_load_form = NoLoadTestForm(request.POST or None)
+            withstand_voltage_form = WithstandVoltageACTestForm(request.POST or None)
+            insulation_resistance_form = InsulationResistanceTestForm(request.POST or None)
+            forms = {
+                'electric_resistance_form': electric_resistance_form,
+                'temperature_rise_form': temperature_rise_form,
+                'performance_determination_form': performance_determination_form,
+                'no_load_form': no_load_form,
+                'withstand_voltage_form': withstand_voltage_form,
+                'insulation_resistance_form': insulation_resistance_form
+            }
+            context = {}
+            for key, form in forms.items():
+                if form.prefix in test_types:
+                    context[form.prefix] = form
+                else:
+                    context[form.prefix] = None
+
+            return render(request, "test_forms.html", context)
 
 
 class ReportView(LoginRequiredMixin, TemplateView):
@@ -120,7 +125,8 @@ class ReportView(LoginRequiredMixin, TemplateView):
 class GeneratePDF(View):
     def get(self, request, *args, **kwargs):
         template = get_template('exp.html')
-        html = template.render({'induction_motor': InductionMotor.objects.get(id=self.kwargs['id'])})  # Pass any context variables here
+        html = template.render(
+            {'induction_motor': InductionMotor.objects.get(id=self.kwargs['id'])})  # Pass any context variables here
 
         # Create a PDF file
         response = HttpResponse(content_type='application/pdf')
