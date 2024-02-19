@@ -101,17 +101,17 @@
                         <div class="italic card-title p-0 text-center">* Basic Information</div>
 
                         <div class="col-md-4">
-                            <label for="id_serial_number" class="form-label">Motor's Serial Number</label>
+                            <label for="id_serial_number" class="form-label">* Motor's Serial Number</label>
                             {{ form.serial_number }}
                             <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
                         <div class="col-md-4">
-                            <label for="id_customer_name" class="form-label">Customer</label>
+                            <label for="id_customer_name" class="form-label">* Customer</label>
                             {{ form.customer_name }}
                             <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
                         <div class="col-md-4">
-                            <label for="id_sales_order_number" class="form-label">Sales Order</label>
+                            <label for="id_sales_order_number" class="form-label">* Sales Order</label>
                             {{ form.sales_order_number }}
                             <div class="text-danger fst-italic" style="display: none;">* This field is required.</div>
                         </div>
@@ -210,7 +210,7 @@
                                      aria-labelledby="performed_tests">
                                     <div class="row g-3">
                                         <div class="italic card-title p-0 text-center">
-                                            Performed Tests
+                                            * Performed Tests
                                             <div id="error-message" class="text-danger" style="display: none;">
                                                 Please select at least one test
                                             </div>
@@ -265,6 +265,22 @@
 
 {% block script %}
     <script>
+        document.getElementById('main-modal').addEventListener('show.bs.modal', function (event) {
+            document.querySelector('#v-pills-home').classList.add('show', 'active');
+            document.querySelector('#motor_identification').classList.add('active');
+            document.querySelector('#v-pills-profile').classList.remove('show', 'active');
+            document.querySelector('#performed_tests').classList.remove('active');
+
+
+            document.getElementById("id_form-0-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-1-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-2-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-3-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-4-test_type").setAttribute("disabled", "");
+            document.getElementById("id_form-5-test_type").setAttribute("disabled", "");
+        })
+
+
         document.getElementById("main-form").addEventListener("submit", function (event) {
             // Flag to track if any field is empty
             var anyFieldEmpty = false;
@@ -326,6 +342,13 @@
             }
 
             if (!anyFieldEmpty && atLeastOneChecked) {
+                document.getElementById("id_form-0-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-1-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-2-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-3-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-4-test_type").removeAttribute("disabled");
+                document.getElementById("id_form-5-test_type").removeAttribute("disabled");
+
                 var myModal = document.getElementById('main-modal');
                 var modal = bootstrap.Modal.getInstance(myModal);
                 modal.hide();
@@ -334,6 +357,11 @@
 
         document.getElementById('main-modal').addEventListener('hidden.bs.modal', function (event) {
             document.getElementById("main-form").reset();
+            // Display None for error messages
+            document.getElementById("id_serial_number").nextElementSibling.style.display = "none";
+            document.getElementById("id_customer_name").nextElementSibling.style.display = "none";
+            document.getElementById("id_sales_order_number").nextElementSibling.style.display = "none";
+            document.getElementById("error-message").style.display = "none";
         })
     </script>
 {% endblock %}
