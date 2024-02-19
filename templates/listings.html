@@ -15,7 +15,7 @@
                         <h5 class="card-title">Listing of all the Test Records</h5>
                         <div class="text-center datatable-top mt-2">
                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#main_form">Create New Record
+                                    data-bs-target="#main-modal">Create New Record
                             </button>
                         </div>
                         <div class="datatable-search datatable-top mt-2">
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="main_form" tabindex="-1" aria-modal="true"
+    <div class="modal fade" id="main-modal" tabindex="-1" aria-modal="true"
          role="dialog">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
@@ -323,7 +323,14 @@
                 event.preventDefault(); // Prevent form submission
             } else {
                 document.getElementById("error-message").style.display = "none";
+                var myModal = document.getElementById('main-modal');
+                var modal = bootstrap.Modal.getInstance(myModal);
+                modal.hide();
             }
         });
+
+        document.getElementById('main-modal').addEventListener('hidden.bs.modal', function (event) {
+            document.getElementById("main-form").reset();
+        })
     </script>
 {% endblock %}
