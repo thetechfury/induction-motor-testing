@@ -17,6 +17,14 @@ class TimeStampedModel(models.Model):
 class InductionMotor(TimeStampedModel):
     """ Induction Motor Test Report """
 
+    ACTIVE = "ACTIVE"
+    DELETE = "DELETE"
+
+    REPORT_STATUS = (
+        (ACTIVE, "Active"),
+        (DELETE, "DELETED"),
+    )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="induction_motor")
     serial_number = models.CharField(max_length=20)
     customer_name = models.CharField(max_length=100)
@@ -53,6 +61,8 @@ class InductionMotor(TimeStampedModel):
     efficiency = models.DecimalField(
         max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+    status = models.CharField(max_length=7, choices=REPORT_STATUS, default=ACTIVE)
+    report_link = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.serial_number
