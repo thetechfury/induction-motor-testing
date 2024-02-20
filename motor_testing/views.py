@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import DatabaseError
-from django.forms import formset_factory
-from django.http import HttpResponseRedirect
+from django.forms import formset_factory, model_to_dict
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
@@ -12,8 +12,6 @@ from motor_testing.forms import (
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm
 )
 from motor_testing.models import InductionMotor, PerformanceTest
-from django.http import HttpResponse
-from django.views.generic import View
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
@@ -79,9 +77,22 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
 
 
 class TestsView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
 
-        inductionMotorReport = InductionMotor.objects.filter(id=kwargs['pk'], status=InductionMotor.ACTIVE).first()
+    def get_performance_tests_forms(self, obj=None):
+        PerformanceTestFormSet = formset_factory(PerformanceTestForm, extra=0)
+        dataset = PerformanceTest.objects.filter(motor=obj)
+        dataset = [model_to_dict(x, fields=['test_type', 'routine', 'type', 'special']) for x in dataset]
+        formset = PerformanceTestFormSet(
+            initial=dataset,
+            data=self.request.POST if self.request and self.request.method == 'POST' else None
+        )
+        return formset
+
+    def get_object(self):
+        return InductionMotor.objects.filter(id=self.kwargs['pk'], status=InductionMotor.ACTIVE).first()
+
+    def get(self, request, *args, **kwargs):
+        inductionMotorReport = self.get_object()
         if not inductionMotorReport:
             return render(request, "registration/404.html")
         else:
@@ -110,8 +121,44 @@ class TestsView(LoginRequiredMixin, View):
                     context[form.prefix] = form
                 else:
                     context[form.prefix] = None
+            context['edit_form'] = InitialForm(initial=model_to_dict(inductionMotorReport))
+            context['edit_formset'] = self.get_performance_tests_forms(inductionMotorReport)
 
             return render(request, "test_forms.html", context)
+
+    def post(self, request, *args, **kwargs):
+        form = InitialForm(data=self.request.POST)
+        formset = self.get_performance_tests_forms()
+        is_form_valid = form.is_valid()
+        formset_valid = formset.is_valid()
+        if is_form_valid and formset_valid:
+            return self.form_valid(form, formset)
+        else:
+            return self.form_invalid(form, formset)
+
+    def save_formset(self, formset, motor):
+        for form in formset:
+            if form.is_valid():
+                instance = form.cleaned_data
+                form.cleaned_data['status'] = PerformanceTest.PENDING if (
+                        instance['routine'] or instance['type'] or instance['special']) else PerformanceTest.NOT_FOUND
+                motor.performance_tests.update_or_create(
+                    test_type=form.cleaned_data['test_type'], defaults=form.cleaned_data
+                )
+
+    def update_motor_report(self, form):
+        return InductionMotor.objects.update_or_create(id=self.kwargs['pk'], defaults=form.cleaned_data)
+
+    def form_valid(self, form, formset):
+        form.instance.id = self.kwargs['pk']
+        form.instance.user = self.request.user
+        form.cleaned_data['status'] = InductionMotor.ACTIVE
+        motor = self.update_motor_report(form)
+        self.save_formset(formset, motor[0])
+        return HttpResponseRedirect(reverse('tests', kwargs={"pk": motor[0].id}))
+
+    def form_invalid(self, form, formset):
+        return render(self.request, "test_forms.html", {"edit_form": form, "error": "error", "edit_formset": formset})
 
 
 class ReportView(LoginRequiredMixin, TemplateView):
