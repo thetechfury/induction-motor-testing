@@ -97,7 +97,17 @@ document.getElementById('main-modal').addEventListener('hidden.bs.modal', functi
     document.getElementById("error-message").style.display = "none";
 })
 
-function deleteRecord(deletedRowID){
-    console.log(deletedRowID);
-    alert(deletedRowID);
+function deleteRecord(deletedRowID) {
+    var result = confirm(" Want to delete ID: " + deletedRowID);
+    if (result) {
+        $.get("/report/" + deletedRowID + "/delete", function () {
+        })
+            .done(function () {
+                alert("Successfuly Deleted");
+                location.reload();
+            })
+            .fail(function () {
+                alert("error");
+            });
+    }
 }

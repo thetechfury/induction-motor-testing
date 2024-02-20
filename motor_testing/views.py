@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import DatabaseError
 from django.forms import formset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -138,3 +139,14 @@ class GeneratePDF(View):
             return HttpResponse('PDF generation error!', status=500)
 
         return response
+
+
+class DeleteReportView(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            InductionMotor.objects.filter(pk=kwargs['id']).update(status=InductionMotor.DELETE)
+        except DatabaseError:
+            return HttpResponse('Record Deleted', status=401)
+        return HttpResponse('Record Deleted', status=200)
