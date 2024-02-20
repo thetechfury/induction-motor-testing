@@ -61,7 +61,7 @@ class InductionMotor(TimeStampedModel):
     efficiency = models.DecimalField(
         max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
-    status = models.CharField(max_length=7, choices=REPORT_STATUS, default=ACTIVE)
+    status = models.CharField(max_length=7, choices=REPORT_STATUS, default=ACTIVE, blank=True)
     report_link = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
