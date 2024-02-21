@@ -76,9 +76,9 @@
                         {% endif %}
                         </ul>
                         <div class="tab-content pt-2" id="myTabContent">
-                            <div class="tab-pane fade show active" id="electric" role="tabpanel"
+                            <div class="tab-pane fade " id="electric" role="tabpanel"
                                  aria-labelledby="electric-tab">
-                                <form class="row g-3" type="submit" method="post" novalidate>
+                                <form id="electric-form" class="row g-3" action="{% url 'electric-form' inductionMotorReport.id %}" method="post" novalidate>
                                     {% csrf_token %}
                                     {% for field in electric_resistance_test %}
                                         <div class="col-md-12">
@@ -95,7 +95,7 @@
                             </div>
                             <div class="tab-pane fade" id="temperature" role="tabpanel"
                                  aria-labelledby="temperature-tab">
-                                <form class="row g-3" type="submit" method="post" novalidate>
+                                <form id="temperature-form" class="row g-3" action="{% url 'temperature-form' inductionMotorReport.id %}" method="post" novalidate>
                                     {% csrf_token %}
                                     {% for field in temperature_rise_test %}
                                         <div class="col-md-12">
@@ -112,13 +112,12 @@
                             </div>
                             <div class="tab-pane fade" id="performance" role="tabpanel"
                                  aria-labelledby="performance-tab">
-                                <form class="row g-3" type="submit" method="post" novalidate>
+                                <form class="row g-3" action="" method="post" novalidate>
                                     {% csrf_token %}
                                     {% for field in performance_determination_test %}
                                         <div class="col-md-12">
                                             <div class="form-floating">
                                                 {{ field }}
-                                                {{ field.label_tag }}
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -128,7 +127,7 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
-                                <form class="row g-3" type="submit" method="post" novalidate>
+                                <form class="row g-3" action="" method="post" novalidate>
                                     {% csrf_token %}
                                     {% for field in no_load_test %}
                                         <div class="col-md-12">
@@ -144,7 +143,7 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="withstand" role="tabpanel" aria-labelledby="withstand-tab">
-                                <form class="row g-3" type="submit" method="post" novalidate>
+                                <form class="row g-3" action="" method="post" novalidate>
                                     {% csrf_token %}
                                     {% for field in withstand_voltage_ac_test %}
                                         <div class="col-md-12">
@@ -160,7 +159,7 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="insulation" role="tabpanel" aria-labelledby="insulation-tab">
-                                <form class="row g-3" type="submit" method="post" novalidate>
+                                <form class="row g-3" action="" method="post" novalidate>
                                     {% csrf_token %}
                                     {% for field in insulation_resistance_test %}
                                         <div class="col-md-12">
@@ -176,10 +175,57 @@
                                 </form>
                             </div>
                         </div><!-- End Default Tabs -->
-
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <script src="{% static 'assets/js/jQuery-3.7.js' %}"></script>
+    <script>
+    $(document).ready(function () {
+        $('#electric-form').submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: formData,
+                success: function (data) {
+                    console.log(data);
+                // Update form fields with saved data
+                $('#id_electric_resistance_test-resistance_ohm_1').val(data.resistance_ohm_1);
+                $('#id_electric_resistance_test-resistance_ohm_2').val(data.resistance_ohm_2);
+                $('#id_electric_resistance_test-resistance_ohm_3').val(data.resistance_ohm_3);
+                $('#id_electric_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C);
+                $('#id_electric_resistance_test-unbalance_percentage').val(data.unbalance_percentage);
+
+                // Optionally, display a success message or perform other actions
+                alert('Form data saved successfully!');
+            },
+            });
+        });
+    });
+</script>
+    <script>
+    $(document).ready(function () {
+        $('#temperature-form').submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: formData,
+                success: function (data) {
+                    console.log(data);
+                // Update form fields with saved data
+                $('#id_temperature_rise_test-voltage').val(data.voltage);
+                $('#id_temperature_rise_test-winding').val(data.winding);
+                $('#id_temperature_rise_test-frequency').val(data.time);
+                // Optionally, display a success message or perform other actions
+                alert('Form data saved successfully!');
+            },
+            });
+        });
+    });
+</script>
 {% endblock %}

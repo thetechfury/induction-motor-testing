@@ -1,8 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import DatabaseError
 from django.forms import formset_factory, model_to_dict
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
@@ -11,7 +11,8 @@ from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm
 )
-from motor_testing.models import InductionMotor, PerformanceTest
+from motor_testing.models import InductionMotor, PerformanceTest, ElectricResistanceTest, TemperatureRiseTest, \
+    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
@@ -93,6 +94,12 @@ class TestsView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         inductionMotorReport = self.get_object()
+        ElectricResistanceTest.objects.get_or_create(induction_motor=inductionMotorReport)
+        TemperatureRiseTest.objects.get_or_create(induction_motor=inductionMotorReport)
+        PerformanceDeterminationTest.objects.get_or_create(induction_motor=inductionMotorReport)
+        NoLoadTest.objects.get_or_create(induction_motor=inductionMotorReport)
+        WithstandVoltageACTest.objects.get_or_create(induction_motor=inductionMotorReport)
+        InsulationResistanceTest.objects.get_or_create(induction_motor=inductionMotorReport)
         if not inductionMotorReport:
             return render(request, "registration/404.html")
         else:
@@ -101,12 +108,18 @@ class TestsView(LoginRequiredMixin, View):
             test_types = []
             for test in tests:
                 test_types.append(test.test_type)
-            electric_resistance_form = ElectricResistanceTestForm(request.POST or None)
-            temperature_rise_form = TemperatureRiseTestForm(request.POST or None)
-            performance_determination_form = PerformanceDeterminationTestForm(request.POST or None)
-            no_load_form = NoLoadTestForm(request.POST or None)
-            withstand_voltage_form = WithstandVoltageACTestForm(request.POST or None)
-            insulation_resistance_form = InsulationResistanceTestForm(request.POST or None)
+
+            electric_resistance_form = ElectricResistanceTestForm(
+                instance=inductionMotorReport.electric_resistance_test)
+            temperature_rise_form = TemperatureRiseTestForm(instance=inductionMotorReport.temperature_rise_test)
+            performance_determination_form = PerformanceDeterminationTestForm(
+                initial={'parent': inductionMotorReport})
+            no_load_form = NoLoadTestForm(instance=inductionMotorReport.no_load_test)
+            withstand_voltage_form = WithstandVoltageACTestForm(instance=inductionMotorReport.withstand_voltage_ac_test)
+            insulation_resistance_form = InsulationResistanceTestForm(
+                instance=inductionMotorReport.insulation_resistance_test
+            )
+
             forms = {
                 'electric_resistance_form': electric_resistance_form,
                 'temperature_rise_form': temperature_rise_form,
@@ -115,14 +128,14 @@ class TestsView(LoginRequiredMixin, View):
                 'withstand_voltage_form': withstand_voltage_form,
                 'insulation_resistance_form': insulation_resistance_form
             }
+
             context = {}
+
             for key, form in forms.items():
                 if form.prefix in test_types:
                     context[form.prefix] = form
-                else:
-                    context[form.prefix] = None
-            context['edit_form'] = InitialForm(initial=model_to_dict(inductionMotorReport))
-            context['edit_formset'] = self.get_performance_tests_forms(inductionMotorReport)
+
+            context['inductionMotorReport'] = inductionMotorReport
 
             return render(request, "test_forms.html", context)
 
@@ -197,3 +210,59 @@ class DeleteReportView(LoginRequiredMixin, View):
         except DatabaseError:
             return HttpResponse('Record Deleted', status=401)
         return HttpResponse('Record Deleted', status=200)
+
+
+class ElectricFormSaveView(View):
+    def post(self, request, *args, **kwargs):
+        motor_id = kwargs['id']
+        motor = get_object_or_404(InductionMotor, id=motor_id)
+
+        # Check if the InductionMotor instance has an associated ElectricResistanceTest
+        if not hasattr(motor, 'electric_resistance_test'):
+            motor.electric_resistance_test = ElectricResistanceTest.objects.get_or_create(induction_motor=motor)
+
+        motor.electric_resistance_test.resistance_ohm_1 = request.POST.get('electric_resistance_test-resistance_ohm_1')
+        motor.electric_resistance_test.resistance_ohm_2 = request.POST.get('electric_resistance_test-resistance_ohm_2')
+        motor.electric_resistance_test.resistance_ohm_3 = request.POST.get('electric_resistance_test-resistance_ohm_3')
+        motor.electric_resistance_test.ambient_temperature_C = request.POST.get(
+            'electric_resistance_test-ambient_temperature_C')
+        motor.electric_resistance_test.unbalance_percentage = request.POST.get(
+            'electric_resistance_test-unbalance_percentage')
+        motor.electric_resistance_test.save()
+
+        response_data = {
+            'resistance_ohm_1': motor.electric_resistance_test.resistance_ohm_1,
+            'resistance_ohm_2': motor.electric_resistance_test.resistance_ohm_2,
+            'resistance_ohm_3': motor.electric_resistance_test.resistance_ohm_3,
+            'ambient_temperature_C': motor.electric_resistance_test.ambient_temperature_C,
+            'unbalance_percentage': motor.electric_resistance_test.unbalance_percentage
+        }
+
+        return JsonResponse(response_data)
+
+
+class TemperatureFormSaveView(View):
+    def post(self, request, *args, **kwargs):
+        motor_id = kwargs['id']
+        motor = get_object_or_404(InductionMotor, id=motor_id)
+
+        # Check if the InductionMotor instance has an associated ElectricResistanceTest
+        if not hasattr(motor, 'temperature_rise_test'):
+            motor.temperature_rise_test = TemperatureRiseTest.objects.get_or_create(induction_motor=motor)
+
+        motor.temperature_rise_test.voltage = request.POST.get('temp_rise_test-voltage')
+        motor.temperature_rise_test.winding = request.POST.get('temp_rise_test-winding')
+        motor.temperature_rise_test.frequency = request.POST.get('temp_rise_test-frequency')
+        motor.temperature_rise_test.de_bearing = request.POST.get('temp_rise_test-de_bearing')
+        motor.temperature_rise_test.nde_bearing = request.POST.get('temp_rise_test-nde_bearing')
+        motor.temperature_rise_test.save()
+
+        response_data = {
+            'voltage': motor.temperature_rise_test.voltage,
+            'winding': motor.temperature_rise_test.winding,
+            'frequency': motor.temperature_rise_test.frequency,
+            'de_bearing': motor.temperature_rise_test.de_bearing,
+            'nde_bearing': motor.temperature_rise_test.nde_bearing
+        }
+
+        return JsonResponse(response_data)

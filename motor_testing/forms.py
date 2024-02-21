@@ -86,32 +86,28 @@ class TemperatureRiseTestForm(forms.ModelForm):
 
 
 class PerformanceDeterminationTestForm(forms.ModelForm):
+    file_1 = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': False}), required=False)
+    file_2 = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': False}), required=False)
+    file_3 = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': False}), required=False)
+    file_4 = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': False}), required=False)
     prefix = 'performance_determination_test'
 
     class Meta:
         model = PerformanceDeterminationTest
-        fields = ['voltage', 'frequency', 'nominal_t', 'load', 'current', 'slip', 'speed', 'efficiency', 'cos']
+        fields = ['voltage', 'frequency', 'nominal_t', 'file_1', 'file_2', 'file_3', 'file_4']
         widgets = {
             'voltage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
             'frequency': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Frequency (Hz)'}),
             'nominal_t': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Nominal T (N.m)'}),
-            'load': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Load (%)'}),
-            'current': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Current (A)'}),
-            'slip': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Slip (%)'}),
-            'speed': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Speed (rpm)'}),
-            'efficiency': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Efficiency (%)'}),
-            'cos': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'COS Ø'}),
+            'file_1': forms.FileInput(attrs={'class': 'form-control'}),
+            'file_2': forms.FileInput(attrs={'class': 'form-control'}),
+            'file_3': forms.FileInput(attrs={'class': 'form-control'}),
+            'file_4': forms.FileInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            'slip': 'Slip (%)',
-            'speed': 'Speed (rpm)',
-            'efficiency': 'Efficiency (%)',
-            'cos': 'COS Ø',
-            'frequency': 'Frequency (Hz)',
-            'current': 'Current (A)',
             'voltage': 'Voltage (V)',
+            'frequency': 'Frequency (Hz)',
             'nominal_t': 'Nominal T (N.m)',
-            'load': 'Load (%)',
         }
 
 
