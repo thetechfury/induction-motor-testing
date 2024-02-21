@@ -45,18 +45,21 @@
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
-                        <h6>{{ user.first_name }} {{ user.last_name }}</h6>
+                        <h6>
+                            {% if user.first_name %}
+                                {{ user.first_name }} {{ user.last_name }}
+                            {% else %}
+                                {{ user.username }}
+                            {% endif %}
+                        </h6>
                     </li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
                     <li>
-                        <form action="{% url 'logout' %}" method="post">
-                            {% csrf_token %}
-                            <div class="dropdown-item d-flex align-items-center">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <button type="submit" class="btn btn-light w-100">Log Out</button>
-                            </div>
+                        <form action="{% url 'logout' %}" method="post">{% csrf_token %}
+                            <button class="dropdown-item d-flex align-items-center" type="submit">
+                                <i class="bi bi-box-arrow-right"></i><span>Sign Out</span></button>
                         </form>
                     </li>
 
@@ -73,8 +76,8 @@
         {% block content %}
         {% endblock %}
     </div>
-{% include 'report_modal.html' %}
-{% include 'edit_modal.html' %}
+    {% include 'report_modal.html' %}
+    {% include 'edit_modal.html' %}
 </main>
 
 <footer id="footer" class="footer">
