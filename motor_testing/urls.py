@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import InductionMotorListingsView, TestsView, ReportView, GeneratePDF, DeleteReportView, ElectricFormSaveView, TemperatureFormSaveView
+from .views import InductionMotorListingsView, TestsView, ReportView, GeneratePDF, DeleteReportView, ElectricFormSaveView, TemperatureFormSaveView, NoLoadFormSaveView, WithStandVoltageFormSaveView, InsulationFormSaveView
 
 urlpatterns = [
     path("home/", InductionMotorListingsView.as_view(), name="home"),
@@ -9,5 +9,8 @@ urlpatterns = [
     path("report/<int:id>/delete", DeleteReportView.as_view(), name="delete-report"),
     path("electric-form/<int:id>", ElectricFormSaveView.as_view(), name="electric-form"),
     path("temperature-form/<int:id>", TemperatureFormSaveView.as_view(), name="temperature-form"),
+    path("noload-form/<int:id>", NoLoadFormSaveView.as_view(), name="noload-form"),
+    path("withstand-form/<int:id>", WithStandVoltageFormSaveView.as_view(), name="withstand-form"),
+    path("insulation-form/<int:id>", InsulationFormSaveView.as_view(), name="insulation-form"),
     # path('pdf/<int:id>', GeneratePDF.as_view(), name='pdf'),
 ]

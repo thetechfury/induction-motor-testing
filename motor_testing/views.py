@@ -250,11 +250,11 @@ class TemperatureFormSaveView(View):
         if not hasattr(motor, 'temperature_rise_test'):
             motor.temperature_rise_test = TemperatureRiseTest.objects.get_or_create(induction_motor=motor)
 
-        motor.temperature_rise_test.voltage = request.POST.get('temp_rise_test-voltage')
-        motor.temperature_rise_test.winding = request.POST.get('temp_rise_test-winding')
-        motor.temperature_rise_test.frequency = request.POST.get('temp_rise_test-frequency')
-        motor.temperature_rise_test.de_bearing = request.POST.get('temp_rise_test-de_bearing')
-        motor.temperature_rise_test.nde_bearing = request.POST.get('temp_rise_test-nde_bearing')
+        motor.temperature_rise_test.voltage = request.POST.get('temperature_rise_test-voltage')
+        motor.temperature_rise_test.winding = request.POST.get('temperature_rise_test-winding')
+        motor.temperature_rise_test.frequency = request.POST.get('temperature_rise_test-frequency')
+        motor.temperature_rise_test.de_bearing = request.POST.get('temperature_rise_test-de_bearing')
+        motor.temperature_rise_test.nde_bearing = request.POST.get('temperature_rise_test-nde_bearing')
         motor.temperature_rise_test.save()
 
         response_data = {
@@ -263,6 +263,87 @@ class TemperatureFormSaveView(View):
             'frequency': motor.temperature_rise_test.frequency,
             'de_bearing': motor.temperature_rise_test.de_bearing,
             'nde_bearing': motor.temperature_rise_test.nde_bearing
+        }
+
+        return JsonResponse(response_data)
+
+
+class NoLoadFormSaveView(View):
+    def post(self, request, *args, **kwargs):
+        motor_id = kwargs['id']
+        motor = get_object_or_404(InductionMotor, id=motor_id)
+
+        # Check if the InductionMotor instance has an associated ElectricResistanceTest
+        if not hasattr(motor, 'no_load_test'):
+            motor.no_load_test = NoLoadTest.objects.get_or_create(induction_motor=motor)
+
+        motor.no_load_test.voltage = request.POST.get('no_load_test-voltage')
+        motor.no_load_test.current = request.POST.get('no_load_test-current')
+        motor.no_load_test.power = request.POST.get('no_load_test-power')
+        motor.no_load_test.frequency = request.POST.get('no_load_test-frequency')
+        motor.no_load_test.speed = request.POST.get('no_load_test-speed')
+        motor.no_load_test.direction_of_rotation = request.POST.get('no_load_test-direction_of_rotation')
+        motor.no_load_test.save()
+
+        response_data = {
+            'voltage': motor.no_load_test.voltage,
+            'current': motor.no_load_test.current,
+            'power': motor.no_load_test.power,
+            'frequency': motor.no_load_test.frequency,
+            'speed': motor.no_load_test.speed,
+            'direction_of_rotation': motor.no_load_test.direction_of_rotation
+        }
+
+        return JsonResponse(response_data)
+
+
+class WithStandVoltageFormSaveView(View):
+    def post(self, request, *args, **kwargs):
+        motor_id = kwargs['id']
+        motor = get_object_or_404(InductionMotor, id=motor_id)
+
+        # Check if the InductionMotor instance has an associated ElectricResistanceTest
+        if not hasattr(motor, 'withstand_voltage_ac_test'):
+            motor.withstand_voltage_ac_test = WithstandVoltageACTest.objects.get_or_create(induction_motor=motor)
+
+        motor.withstand_voltage_ac_test.description = request.POST.get('withstand_voltage_ac_test-description')
+        motor.withstand_voltage_ac_test.voltage_kv = request.POST.get('withstand_voltage_ac_test-voltage_kv')
+        motor.withstand_voltage_ac_test.time_in_seconds = request.POST.get('withstand_voltage_ac_test-time_in_seconds')
+        motor.withstand_voltage_ac_test.save()
+
+        response_data = {
+            'description': motor.withstand_voltage_ac_test.description,
+            'voltage_kv': motor.withstand_voltage_ac_test.voltage_kv,
+            'time_in_seconds': motor.withstand_voltage_ac_test.time_in_seconds
+        }
+
+        return JsonResponse(response_data)
+
+
+class InsulationFormSaveView(View):
+    def post(self, request, *args, **kwargs):
+        motor_id = kwargs['id']
+        motor = get_object_or_404(InductionMotor, id=motor_id)
+
+        # Check if the InductionMotor instance has an associated ElectricResistanceTest
+        if not hasattr(motor, 'insulation_resistance_test'):
+            motor.insulation_resistance_test = InsulationResistanceTest.objects.get_or_create(induction_motor=motor)
+
+        motor.insulation_resistance_test.description = request.POST.get('insulation_resistance_test-description')
+        motor.insulation_resistance_test.voltage = request.POST.get('insulation_resistance_test-voltage')
+        motor.insulation_resistance_test.insulation_resistance = request.POST.get('insulation_resistance_test-insulation_resistance')
+        motor.insulation_resistance_test.time_in_seconds = request.POST.get('insulation_resistance_test-time_in_seconds')
+        motor.insulation_resistance_test.ambient_temperature_C = request.POST.get('insulation_resistance_test-ambient_temperature_C')
+        motor.insulation_resistance_test.humidity_percentage = request.POST.get('insulation_resistance_test-humidity_percentage')
+        motor.insulation_resistance_test.save()
+
+        response_data = {
+            'description': motor.insulation_resistance_test.description,
+            'voltage': motor.insulation_resistance_test.voltage,
+            'insulation_resistance': motor.insulation_resistance_test.insulation_resistance,
+            'time_in_seconds': motor.insulation_resistance_test.time_in_seconds,
+            'ambient_temperature_C': motor.insulation_resistance_test.ambient_temperature_C,
+            'humidity_percentage': motor.insulation_resistance_test.humidity_percentage
         }
 
         return JsonResponse(response_data)
