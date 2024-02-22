@@ -137,6 +137,9 @@ class TestsView(LoginRequiredMixin, View):
 
             context['inductionMotorReport'] = inductionMotorReport
 
+            context['edit_form'] = InitialForm(initial=model_to_dict(inductionMotorReport))
+            context['edit_formset'] = self.get_performance_tests_forms(inductionMotorReport)
+
             return render(request, "test_forms.html", context)
 
     def post(self, request, *args, **kwargs):
