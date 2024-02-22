@@ -50,7 +50,7 @@ class SearchForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["search"].widget.attrs["class"] = "datatable-input"
+        self.fields["search"].widget.attrs["class"] = "datatable-input form-control"
         self.fields["search"].widget.attrs["placeholder"] = "Search..."
         self.fields["search"].widget.attrs["type"] = "search"
 
