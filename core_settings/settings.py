@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'motor_testing',
+    'wkhtmltopdf',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Redirect
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+
+WKHTMLTOPDF_CMD = 'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+WKHTMLTOPDF_CMD_OPTIONS = {
+    'quiet': True,
+}

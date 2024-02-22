@@ -120,7 +120,7 @@
                             </div>
                             <div class="tab-pane fade" id="performance" role="tabpanel"
                                  aria-labelledby="performance-tab">
-                                <form class="row g-3" action="" method="post" novalidate>
+                                <form id="performance-form" class="row g-3" action="{% url 'performance-form' inductionMotorReport.id %}" method="post" novalidate enctype="multipart/form-data">
                                     {% csrf_token %}
                                     {% for field in performance_determination_test %}
                                         <div class="col-md-2">
@@ -310,6 +310,34 @@
                         $('#id_insulation_resistance_test-time_in_seconds').val(data.time_in_seconds);
                         $('#id_insulation_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C);
                         $('#id_insulation_resistance_test-humidity_percentage').val(data.humidity_percentage);
+                        // Optionally, display a success message or perform other actions
+                        alert('Form data saved successfully!');
+                    },
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#performance-form').submit(function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        console.log(data);
+                        // Update form fields with saved data
+                        $('#id_performance_determination_test-voltage').val(data.voltage);
+                        $('#id_performance_determination_test-frequency').val(data.frequency);
+                        $('#id_performance_determination_test-nominal_t').val(data.nominal_t);
+                        $('#id_performance_determination_test-file_1').val(data.file_1);
+                        $('#id_performance_determination_test-file_2').val(data.file_2);
+                        $('#id_performance_determination_test-file_3').val(data.file_3);
+                        $('#id_performance_determination_test-file_4').val(data.file_4);
                         // Optionally, display a success message or perform other actions
                         alert('Form data saved successfully!');
                     },
