@@ -6,7 +6,6 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
-
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm
@@ -112,7 +111,7 @@ class TestsView(LoginRequiredMixin, View):
             electric_resistance_form = ElectricResistanceTestForm(
                 instance=inductionMotorReport.electric_resistance_test)
             temperature_rise_form = TemperatureRiseTestForm(instance=inductionMotorReport.temperature_rise_test)
-            performance_determination_form = PerformanceDeterminationTestForm(
+            performance_determination_form = PerformanceDeterminationTestForm(request.POST, request.FILES,
                 initial={'parent': inductionMotorReport})
             no_load_form = NoLoadTestForm(instance=inductionMotorReport.no_load_test)
             withstand_voltage_form = WithstandVoltageACTestForm(instance=inductionMotorReport.withstand_voltage_ac_test)
@@ -350,3 +349,43 @@ class InsulationFormSaveView(View):
         }
 
         return JsonResponse(response_data)
+
+
+# class PerformanceDeterminationFormSave(View):
+#     def post(self, request, *args, **kwargs):
+#         motor_id = kwargs['id']
+#         motor = get_object_or_404(InductionMotor, id=motor_id)
+#
+#         if not hasattr(motor, 'performance_determination'):
+#             motor.performance_determination_test.set(induction_motor=motor)
+#
+#         motor.performance_determination_test.voltage = request.POST.get('performance_determination_test-voltage')
+#         motor.performance_determination_test.frequency = request.POST.get('performance_determination_test-frequency')
+#         motor.performance_determination_test.nominal_t = request.POST.get('performance_determination_test-nominal_t')
+#
+#         # Parse and save Excel data if files are provided
+#         excel_files = [request.FILES.get(f'performance_determination_test-file_{i}') for i in range(1, 5)]
+#         for index, file in enumerate(excel_files):
+#             if file:
+#                 # Assuming the Excel file has headers
+#                 df = pd.read_excel(file)
+#                 # Assuming your Excel data structure matches the fields in your model
+#                 for _, row in df.iterrows():
+#                     motor.performance_determination_test.load = row['Load (%)']
+#                     motor.performance_determination_test.current = row['Current (A)']
+#                     motor.performance_determination_test.slip = row['Slip (%)']
+#                     motor.performance_determination_test.speed = row['Speed (rpm)']
+#                     motor.performance_determination_test.efficiency = row['Efficiency (%)']
+#                     motor.performance_determination_test.cos = row['COS Ø']
+#                     motor.performance_determination_test.save()
+#         response_data = {
+#             'voltage': motor.performance_determination_test.voltage,
+#             'frequency': motor.performance_determination_test.frequency,
+#             'nominal_t': motor.performance_determination_test.nominal_t,
+#             'file_1': motor.performance_determination_test.file_1.url if motor.performance_determination_test.file_1 else None,
+#             'file_2': motor.performance_determination_test.file_2.url if motor.performance_determination_test.file_2 else None,
+#             'file_3': motor.performance_determination_test.file_3.url if motor.performance_determination_test.file_3 else None,
+#             'file_4': motor.performance_determination_test.file_4.url if motor.performance_determination_test.file_4 else None
+#         }
+#
+#         return JsonResponse(response_data)
