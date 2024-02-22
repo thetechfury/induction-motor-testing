@@ -8,7 +8,6 @@ from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
 from openpyxl import load_workbook
-from xhtml2pdf import pisa
 
 from core_settings import settings
 from motor_testing.forms import (
@@ -18,6 +17,7 @@ from motor_testing.forms import (
 from motor_testing.models import InductionMotor, PerformanceTest, ElectricResistanceTest, TemperatureRiseTest, \
     PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, \
     PerformanceTestParameters
+import pdfkit
 
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
@@ -191,20 +191,12 @@ class ReportView(LoginRequiredMixin, TemplateView):
 
 class GeneratePDF(View):
     def get(self, request, *args, **kwargs):
-        template = get_template('exp.html')
-        html = template.render(
-            {'induction_motor': InductionMotor.objects.get(id=self.kwargs['id'])})  # Pass any context variables here
+        # pdfkit.from_string(html_string, output_file, configuration=config)
 
-        # Create a PDF file
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="output.pdf"'
+        config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+        pdfkit.from_url('http://google.com', 'out.pdf', configuration=config)
 
-        # Generate PDF
-        pisa_status = pisa.CreatePDF(html, dest=response)
-        if pisa_status.err:
-            return HttpResponse('PDF generation error!', status=500)
-
-        return response
+        return JsonResponse({})
 
 
 class DeleteReportView(LoginRequiredMixin, View):
