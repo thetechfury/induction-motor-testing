@@ -13,7 +13,7 @@ urlpatterns = [
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("accounts/login/", views.LoginView.as_view(authentication_form=UserLoginForm), name="login"),
     path("", include("motor_testing.urls")),
-    path("pdf/", PDFTemplateView.as_view(template_name="index.html", filename="index.pdf"), name="pdf"),
+    # path("pdf/", PDFTemplateView.as_view(template_name="index.html", filename="index.pdf"), name="pdf"),
 
 
 ]

@@ -3,17 +3,21 @@ from django.db import DatabaseError
 from django.forms import formset_factory, model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import get_template
 from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
+from openpyxl import load_workbook
+from xhtml2pdf import pisa
+
+from core_settings import settings
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm
 )
 from motor_testing.models import InductionMotor, PerformanceTest, ElectricResistanceTest, TemperatureRiseTest, \
-    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest
-from django.template.loader import get_template
-from xhtml2pdf import pisa
+    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, \
+    PerformanceTestParameters
 
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
@@ -112,7 +116,7 @@ class TestsView(LoginRequiredMixin, View):
                 instance=inductionMotorReport.electric_resistance_test)
             temperature_rise_form = TemperatureRiseTestForm(instance=inductionMotorReport.temperature_rise_test)
             performance_determination_form = PerformanceDeterminationTestForm(request.POST, request.FILES,
-                initial={'parent': inductionMotorReport})
+                                                                              initial={'parent': inductionMotorReport})
             no_load_form = NoLoadTestForm(instance=inductionMotorReport.no_load_test)
             withstand_voltage_form = WithstandVoltageACTestForm(instance=inductionMotorReport.withstand_voltage_ac_test)
             insulation_resistance_form = InsulationResistanceTestForm(
@@ -333,10 +337,14 @@ class InsulationFormSaveView(View):
 
         motor.insulation_resistance_test.description = request.POST.get('insulation_resistance_test-description')
         motor.insulation_resistance_test.voltage = request.POST.get('insulation_resistance_test-voltage')
-        motor.insulation_resistance_test.insulation_resistance = request.POST.get('insulation_resistance_test-insulation_resistance')
-        motor.insulation_resistance_test.time_in_seconds = request.POST.get('insulation_resistance_test-time_in_seconds')
-        motor.insulation_resistance_test.ambient_temperature_C = request.POST.get('insulation_resistance_test-ambient_temperature_C')
-        motor.insulation_resistance_test.humidity_percentage = request.POST.get('insulation_resistance_test-humidity_percentage')
+        motor.insulation_resistance_test.insulation_resistance = request.POST.get(
+            'insulation_resistance_test-insulation_resistance')
+        motor.insulation_resistance_test.time_in_seconds = request.POST.get(
+            'insulation_resistance_test-time_in_seconds')
+        motor.insulation_resistance_test.ambient_temperature_C = request.POST.get(
+            'insulation_resistance_test-ambient_temperature_C')
+        motor.insulation_resistance_test.humidity_percentage = request.POST.get(
+            'insulation_resistance_test-humidity_percentage')
         motor.insulation_resistance_test.save()
 
         response_data = {
@@ -351,41 +359,103 @@ class InsulationFormSaveView(View):
         return JsonResponse(response_data)
 
 
-# class PerformanceDeterminationFormSave(View):
-#     def post(self, request, *args, **kwargs):
-#         motor_id = kwargs['id']
-#         motor = get_object_or_404(InductionMotor, id=motor_id)
-#
-#         if not hasattr(motor, 'performance_determination'):
-#             motor.performance_determination_test.set(induction_motor=motor)
-#
-#         motor.performance_determination_test.voltage = request.POST.get('performance_determination_test-voltage')
-#         motor.performance_determination_test.frequency = request.POST.get('performance_determination_test-frequency')
-#         motor.performance_determination_test.nominal_t = request.POST.get('performance_determination_test-nominal_t')
-#
-#         # Parse and save Excel data if files are provided
-#         excel_files = [request.FILES.get(f'performance_determination_test-file_{i}') for i in range(1, 5)]
-#         for index, file in enumerate(excel_files):
-#             if file:
-#                 # Assuming the Excel file has headers
-#                 df = pd.read_excel(file)
-#                 # Assuming your Excel data structure matches the fields in your model
-#                 for _, row in df.iterrows():
-#                     motor.performance_determination_test.load = row['Load (%)']
-#                     motor.performance_determination_test.current = row['Current (A)']
-#                     motor.performance_determination_test.slip = row['Slip (%)']
-#                     motor.performance_determination_test.speed = row['Speed (rpm)']
-#                     motor.performance_determination_test.efficiency = row['Efficiency (%)']
-#                     motor.performance_determination_test.cos = row['COS Ø']
-#                     motor.performance_determination_test.save()
-#         response_data = {
-#             'voltage': motor.performance_determination_test.voltage,
-#             'frequency': motor.performance_determination_test.frequency,
-#             'nominal_t': motor.performance_determination_test.nominal_t,
-#             'file_1': motor.performance_determination_test.file_1.url if motor.performance_determination_test.file_1 else None,
-#             'file_2': motor.performance_determination_test.file_2.url if motor.performance_determination_test.file_2 else None,
-#             'file_3': motor.performance_determination_test.file_3.url if motor.performance_determination_test.file_3 else None,
-#             'file_4': motor.performance_determination_test.file_4.url if motor.performance_determination_test.file_4 else None
-#         }
-#
-#         return JsonResponse(response_data)
+class PerformanceDeterminationFormSave(View):
+
+    def handle_file(self, file, parameter):
+        file_path = settings.MEDIA_ROOT / file.name
+
+        with open(file_path, 'wb') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
+        wb = load_workbook(file_path)
+        sheet = wb.active
+
+        total_sum_current = 0
+        count_current = 0
+        total_sum_slip = 0
+        count_slip = 0
+        total_sum_speed = 0
+        count_speed = 0
+        total_sum_efficiency = 0
+        count_efficiency = 0
+        total_sum_cos = 0
+        count_cos = 0
+
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            try:
+                current = row[1]
+                slip = row[2]
+                speed = row[3]
+                efficiency = row[4]
+                cos = row[5]
+                total_sum_current += current
+                count_current += 1
+                total_sum_slip += slip
+                count_slip += 1
+                total_sum_speed += speed
+                count_speed += 1
+                total_sum_efficiency += efficiency
+                count_efficiency += 1
+                total_sum_cos += cos
+                count_cos += 1
+            except IndexError:
+                pass
+        if count_current > 0:
+            average_current = total_sum_current / count_current
+            parameter.current = average_current
+        if count_slip > 0:
+            average_slip = total_sum_slip / count_slip
+            parameter.slip = average_slip
+        if count_speed > 0:
+            average_speed = total_sum_speed / count_speed
+            parameter.speed = average_speed
+        if count_efficiency > 0:
+            average_efficiency = total_sum_efficiency / count_efficiency
+            parameter.efficiency = average_efficiency
+        if count_cos > 0:
+            average_cos = total_sum_cos / count_cos
+            parameter.cos = average_cos
+        parameter.save()
+
+    def post(self, request, *args, **kwargs):
+        motor_id = kwargs['id']
+        motor = get_object_or_404(InductionMotor, id=motor_id)
+
+        if not hasattr(motor, 'performance_determination'):
+            motor.performance_determination_test = PerformanceDeterminationTest.objects.get_or_create(induction_motor=motor)
+            if not hasattr(motor.performance_determination_test, 'parameters'):
+                motor.performance_determination_test.parameters = PerformanceTestParameters.objects.create(performance_determination_test=motor.performance_determination_test)
+
+        motor.performance_determination_test.voltage = request.POST.get('performance_determination_test-voltage')
+        motor.performance_determination_test.frequency = request.POST.get('performance_determination_test-frequency')
+        motor.performance_determination_test.nominal_t = request.POST.get('performance_determination_test-nominal_t')
+        motor.performance_determination_test.save()
+        file_1 = request.FILES.get('performance_determination_test-file_1')
+        file_2 = request.FILES.get('performance_determination_test-file_2')
+        file_3 = request.FILES.get('performance_determination_test-file_3')
+        file_4 = request.FILES.get('performance_determination_test-file_4')
+        if file_1:
+            self.handle_file(file_1, motor.performance_determination_test)
+        elif file_2:
+            self.handle_file(file_2, motor.performance_determination_test)
+        elif file_3:
+            self.handle_file(file_3, motor.performance_determination_test)
+        elif file_4:
+            self.handle_file(file_4, motor.performance_determination_test)
+
+        response_data = {
+            'voltage': motor.performance_determination_test.voltage,
+            'frequency': motor.performance_determination_test.frequency,
+            'nominal_t': motor.performance_determination_test.nominal_t,
+        }
+        if file_1:
+            response_data['file_1'] = str(settings.MEDIA_ROOT / file_1.name or None)
+        if file_2:
+            response_data['file_2'] = str(settings.MEDIA_ROOT / file_2.name or None)
+        if file_3:
+            response_data['file_3'] = str(settings.MEDIA_ROOT / file_3.name or None)
+        if file_4:
+            response_data['file_4'] = str(settings.MEDIA_ROOT / file_4.name or None)
+
+        return JsonResponse(response_data)

@@ -26,7 +26,7 @@ class TemperatureRiseTestAdmin(admin.ModelAdmin):
 
 @register(PerformanceDeterminationTest)
 class PerformanceDeterminationTestAdmin(admin.ModelAdmin):
-    list_display = ('induction_motor', 'voltage', 'frequency', 'nominal_t', 'load', 'current', 'slip', 'speed', 'efficiency', 'cos')
+    list_display = ('induction_motor', 'voltage', 'frequency', 'nominal_t')
 
 
 @register(NoLoadTest)
