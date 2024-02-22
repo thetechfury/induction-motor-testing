@@ -147,22 +147,22 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th scope="col">Sr. #</th>
-                                        <th scope="col">Test Name</th>
-                                        <th scope="col">Routine</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Special</th>
+                                        <th class="text-center" scope="col">Sr. #</th>
+                                        <th class="text-center" scope="col">Test Name</th>
+                                        <th class="text-center" scope="col">Routine</th>
+                                        <th class="text-center" scope="col">Type</th>
+                                        <th class="text-center" scope="col">Special</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {{ formset.management_form }}
                                     {% for form in formset %}
                                         <tr>
-                                            <th scope="row">{{ forloop.counter }}</th>
-                                            <td>{{ form.test_type }}</td>
-                                            <td>{{ form.routine }}</td>
-                                            <td>{{ form.type }}</td>
-                                            <td>{{ form.special }}</td>
+                                            <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                                            <td class="text-center w-25">{{ form.test_type }}</td>
+                                            <td class="text-center">{{ form.routine }}</td>
+                                            <td class="text-center">{{ form.type }}</td>
+                                            <td class="text-center">{{ form.special }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -177,7 +177,7 @@
 
                     <div class="d-grid gap-2 d-md-flex justify-content-center mt-5">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
 
                 </form>
