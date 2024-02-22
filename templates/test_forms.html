@@ -123,10 +123,10 @@
                                 <form class="row g-3" action="" method="post" novalidate>
                                     {% csrf_token %}
                                     {% for field in performance_determination_test %}
-                                        <div class="col-md-12">
-                                            <div class="form-floating">
-                                                {{ field }}
-                                            </div>
+                                        <div class="col-md-2">
+                                            {{ field.label_tag }}
+                                        </div><div class="col-md-10">
+                                            {{ field }}
                                         </div>
                                     {% endfor %}
                                     <div class="text-center">
