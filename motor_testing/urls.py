@@ -13,5 +13,5 @@ urlpatterns = [
     path("withstand-form/<int:id>", WithStandVoltageFormSaveView.as_view(), name="withstand-form"),
     path("insulation-form/<int:id>", InsulationFormSaveView.as_view(), name="insulation-form"),
     # path("performance-form/<int:id>", PerformanceDeterminationFormSave.as_view(), name="performance-form"),
-    # path('pdf/<int:id>', GeneratePDF.as_view(), name='pdf'),
+    path('pdf/<int:id>', GeneratePDF.as_view(), name='pdf'),
 ]
