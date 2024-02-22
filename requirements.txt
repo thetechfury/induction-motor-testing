@@ -1,2 +1,3 @@
 django==5.0.2
 xhtml2pdf==0.2.15
+django-wkhtmltopdf==3.4.0
