@@ -38,7 +38,7 @@ class PerformanceTestForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['test_type'].widget.attrs["class"] = "form-control"
-        # self.fields['test_type'].widget.attrs['disabled'] = True
+        self.fields['test_type'].widget.attrs['disabled'] = True
         # Set widgets for routine, type, and special fields
         self.fields['routine'].widget = forms.CheckboxInput(attrs={'class': 'form-check-input'})
         self.fields['type'].widget = forms.CheckboxInput(attrs={'class': 'form-check-input'})

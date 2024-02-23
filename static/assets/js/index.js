@@ -1,12 +1,3 @@
-function disableTestTypeFields() {
-    document.getElementById("id_form-0-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-1-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-2-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-3-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-4-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-5-test_type").setAttribute("disabled", "");
-}
-
 function enableTestTypeFields() {
     document.getElementById("id_form-0-test_type").removeAttribute("disabled");
     document.getElementById("id_form-1-test_type").removeAttribute("disabled");
@@ -21,7 +12,6 @@ document.getElementById('main-modal').addEventListener('show.bs.modal', function
     document.querySelector('#motor_identification').classList.add('active');
     document.querySelector('#v-pills-profile').classList.remove('show', 'active');
     document.querySelector('#performed_tests').classList.remove('active');
-    disableTestTypeFields();
 })
 
 document.getElementById('edit-modal').addEventListener('show.bs.modal', function (event) {
@@ -29,7 +19,6 @@ document.getElementById('edit-modal').addEventListener('show.bs.modal', function
     document.querySelector('#edit_motor_identification').classList.add('active');
     document.querySelector('#edit-v-pills-profile').classList.remove('show', 'active');
     document.querySelector('#edit_performed_tests').classList.remove('active');
-    disableTestTypeFields();
 })
 
 document.getElementById("main-form").addEventListener("submit", function (event) {
