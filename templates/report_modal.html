@@ -157,9 +157,15 @@
                                         <tr>
                                             <th class="text-center" scope="row">{{ forloop.counter }}</th>
                                             <td class="text-center w-25">{{ form.test_type }}</td>
-                                            <td class="text-center">{{ form.routine }}</td>
-                                            <td class="text-center">{{ form.type }}</td>
-                                            <td class="text-center">{{ form.special }}</td>
+                                            <td class="round">{{ form.routine }}
+                                                <label for="id_form-{{ forloop.counter0 }}-routine"></label>
+                                            </td>
+                                            <td class="round text-center">{{ form.type }}
+                                                <label for="id_form-{{ forloop.counter0 }}-type"></label>
+                                            </td>
+                                            <td class="round text-center">{{ form.special }}
+                                                <label for="id_form-{{ forloop.counter0 }}-special"></label>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
