@@ -11,16 +11,22 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Please submit the forms below</h5>
-                        <div class="mb-1 clearfix">
-                <span>
-                <button type="button" class="btn btn-success rounded-pill float-lg-start"><a
-                        href="{% url 'report' 1 %}" class="text-white" target="_blank">Generate Report</a></button>
-                    </span>
-                            <span>
-                <button type="button" class="btn btn-warning rounded-pill float-lg-end" data-bs-toggle="modal"
-                        data-bs-target="#edit-modal" id="update-modal">Update This Record</button>
-                    </span>
+                        <div class="d-flex justify-content-between">
+                            <div class="datatable-search datatable-top mt-2">
+                                <a href="{% url 'home' %}" type="button" class="btn btn-primary">Back to Home</a>
+                            </div>
+                            <div class="text-center datatable-top mt-2">
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#edit-modal" id="update-modal">Update This Record
+                                </button>
+                            </div>
+                        </div>
+
+                        <h5 class="card-title">Please fill and save the forms below.</h5>
+                        <div class="mb-3 clearfix">
+                            <button type="button" class="btn btn-success">
+                                <a href="{% url 'report' 1 %}" class="text-white" target="_blank">Generate Report</a>
+                            </button>
                         </div>
                         <!-- Default Tabs -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -120,12 +126,15 @@
                             </div>
                             <div class="tab-pane fade" id="performance" role="tabpanel"
                                  aria-labelledby="performance-tab">
-                                <form id="performance-form" class="row g-3" action="{% url 'performance-form' inductionMotorReport.id %}" method="post" novalidate enctype="multipart/form-data">
+                                <form id="performance-form" class="row g-3"
+                                      action="{% url 'performance-form' inductionMotorReport.id %}" method="post"
+                                      novalidate enctype="multipart/form-data">
                                     {% csrf_token %}
                                     {% for field in performance_determination_test %}
                                         <div class="col-md-2">
                                             {{ field.label_tag }}
-                                        </div><div class="col-md-10">
+                                        </div>
+                                        <div class="col-md-10">
                                             {{ field }}
                                         </div>
                                     {% endfor %}
@@ -170,7 +179,9 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="insulation" role="tabpanel" aria-labelledby="insulation-tab">
-                                <form id="insulation-form" class="row g-3" action="{% url 'insulation-form' inductionMotorReport.id %}" method="post" novalidate>
+                                <form id="insulation-form" class="row g-3"
+                                      action="{% url 'insulation-form' inductionMotorReport.id %}" method="post"
+                                      novalidate>
                                     {% csrf_token %}
                                     {% for field in insulation_resistance_test %}
                                         <div class="col-md-12">

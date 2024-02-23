@@ -33,44 +33,6 @@ document.getElementById('edit-modal').addEventListener('show.bs.modal', function
 })
 
 document.getElementById("main-form").addEventListener("submit", function (event) {
-    // Flag to track if any field is empty
-    var anyFieldEmpty = false;
-
-    // Check the first input field
-    var serialNumberField = document.getElementById("id_serial_number");
-    var serialNumberErrorMessage = serialNumberField.nextElementSibling;
-    if (serialNumberField.value.trim() === "") {
-        serialNumberErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        serialNumberErrorMessage.style.display = "none";
-    }
-
-    // Check the second input field
-    var customerNameField = document.getElementById("id_customer_name");
-    var customerNameErrorMessage = customerNameField.nextElementSibling;
-    if (customerNameField.value.trim() === "") {
-        customerNameErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        customerNameErrorMessage.style.display = "none";
-    }
-
-    // Check the third input field
-    var salesOrderNumberField = document.getElementById("id_sales_order_number");
-    var salesOrderNumberErrorMessage = salesOrderNumberField.nextElementSibling;
-    if (salesOrderNumberField.value.trim() === "") {
-        salesOrderNumberErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        salesOrderNumberErrorMessage.style.display = "none";
-    }
-
-    // If any field is empty, prevent form submission
-    if (anyFieldEmpty) {
-        event.preventDefault();
-    }
-
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
     var atLeastOneChecked = false;
 
@@ -92,7 +54,7 @@ document.getElementById("main-form").addEventListener("submit", function (event)
         document.getElementById("error-message").style.display = "none";
     }
 
-    if (!anyFieldEmpty && atLeastOneChecked) {
+    if (atLeastOneChecked) {
        enableTestTypeFields()
         var myModal = document.getElementById('main-modal');
         var modal = bootstrap.Modal.getInstance(myModal);
@@ -101,44 +63,6 @@ document.getElementById("main-form").addEventListener("submit", function (event)
 });
 
 document.getElementById("edit-form").addEventListener("submit", function (event) {
-    // Flag to track if any field is empty
-    var anyFieldEmpty = false;
-
-    // Check the first input field
-    var serialNumberField = document.getElementById("id_serial_number");
-    var serialNumberErrorMessage = serialNumberField.nextElementSibling;
-    if (serialNumberField.value.trim() === "") {
-        serialNumberErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        serialNumberErrorMessage.style.display = "none";
-    }
-
-    // Check the second input field
-    var customerNameField = document.getElementById("id_customer_name");
-    var customerNameErrorMessage = customerNameField.nextElementSibling;
-    if (customerNameField.value.trim() === "") {
-        customerNameErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        customerNameErrorMessage.style.display = "none";
-    }
-
-    // Check the third input field
-    var salesOrderNumberField = document.getElementById("id_sales_order_number");
-    var salesOrderNumberErrorMessage = salesOrderNumberField.nextElementSibling;
-    if (salesOrderNumberField.value.trim() === "") {
-        salesOrderNumberErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        salesOrderNumberErrorMessage.style.display = "none";
-    }
-
-    // If any field is empty, prevent form submission
-    if (anyFieldEmpty) {
-        event.preventDefault();
-    }
-
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
     var atLeastOneChecked = false;
 
@@ -160,7 +84,7 @@ document.getElementById("edit-form").addEventListener("submit", function (event)
         document.getElementById("edit-error-message").style.display = "none";
     }
 
-    if (!anyFieldEmpty && atLeastOneChecked) {
+    if (atLeastOneChecked) {
         enableTestTypeFields()
         var myModal = document.getElementById('edit-modal');
         var modal = bootstrap.Modal.getInstance(myModal);
@@ -171,18 +95,12 @@ document.getElementById("edit-form").addEventListener("submit", function (event)
 document.getElementById('main-modal').addEventListener('hidden.bs.modal', function (event) {
     document.getElementById("main-form").reset();
     // Display None for error messages
-    document.getElementById("id_serial_number").nextElementSibling.style.display = "none";
-    document.getElementById("id_customer_name").nextElementSibling.style.display = "none";
-    document.getElementById("id_sales_order_number").nextElementSibling.style.display = "none";
     document.getElementById("error-message").style.display = "none";
 })
 
 document.getElementById('edit-modal').addEventListener('hidden.bs.modal', function (event) {
     document.getElementById("edit-form").reset();
     // Display None for error messages
-    document.getElementById("id_serial_number").nextElementSibling.style.display = "none";
-    document.getElementById("id_customer_name").nextElementSibling.style.display = "none";
-    document.getElementById("id_sales_order_number").nextElementSibling.style.display = "none";
     document.getElementById("edit-error-message").style.display = "none";
 })
 
