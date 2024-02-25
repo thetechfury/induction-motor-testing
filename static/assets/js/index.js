@@ -1,12 +1,3 @@
-function disableTestTypeFields() {
-    document.getElementById("id_form-0-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-1-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-2-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-3-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-4-test_type").setAttribute("disabled", "");
-    document.getElementById("id_form-5-test_type").setAttribute("disabled", "");
-}
-
 function enableTestTypeFields() {
     document.getElementById("id_form-0-test_type").removeAttribute("disabled");
     document.getElementById("id_form-1-test_type").removeAttribute("disabled");
@@ -21,7 +12,6 @@ document.getElementById('main-modal').addEventListener('show.bs.modal', function
     document.querySelector('#motor_identification').classList.add('active');
     document.querySelector('#v-pills-profile').classList.remove('show', 'active');
     document.querySelector('#performed_tests').classList.remove('active');
-    disableTestTypeFields();
 })
 
 document.getElementById('edit-modal').addEventListener('show.bs.modal', function (event) {
@@ -29,48 +19,9 @@ document.getElementById('edit-modal').addEventListener('show.bs.modal', function
     document.querySelector('#edit_motor_identification').classList.add('active');
     document.querySelector('#edit-v-pills-profile').classList.remove('show', 'active');
     document.querySelector('#edit_performed_tests').classList.remove('active');
-    disableTestTypeFields();
 })
 
 document.getElementById("main-form").addEventListener("submit", function (event) {
-    // Flag to track if any field is empty
-    var anyFieldEmpty = false;
-
-    // Check the first input field
-    var serialNumberField = document.getElementById("id_serial_number");
-    var serialNumberErrorMessage = serialNumberField.nextElementSibling;
-    if (serialNumberField.value.trim() === "") {
-        serialNumberErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        serialNumberErrorMessage.style.display = "none";
-    }
-
-    // Check the second input field
-    var customerNameField = document.getElementById("id_customer_name");
-    var customerNameErrorMessage = customerNameField.nextElementSibling;
-    if (customerNameField.value.trim() === "") {
-        customerNameErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        customerNameErrorMessage.style.display = "none";
-    }
-
-    // Check the third input field
-    var salesOrderNumberField = document.getElementById("id_sales_order_number");
-    var salesOrderNumberErrorMessage = salesOrderNumberField.nextElementSibling;
-    if (salesOrderNumberField.value.trim() === "") {
-        salesOrderNumberErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        salesOrderNumberErrorMessage.style.display = "none";
-    }
-
-    // If any field is empty, prevent form submission
-    if (anyFieldEmpty) {
-        event.preventDefault();
-    }
-
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
     var atLeastOneChecked = false;
 
@@ -92,7 +43,7 @@ document.getElementById("main-form").addEventListener("submit", function (event)
         document.getElementById("error-message").style.display = "none";
     }
 
-    if (!anyFieldEmpty && atLeastOneChecked) {
+    if (atLeastOneChecked) {
        enableTestTypeFields()
         var myModal = document.getElementById('main-modal');
         var modal = bootstrap.Modal.getInstance(myModal);
@@ -101,44 +52,6 @@ document.getElementById("main-form").addEventListener("submit", function (event)
 });
 
 document.getElementById("edit-form").addEventListener("submit", function (event) {
-    // Flag to track if any field is empty
-    var anyFieldEmpty = false;
-
-    // Check the first input field
-    var serialNumberField = document.getElementById("id_serial_number");
-    var serialNumberErrorMessage = serialNumberField.nextElementSibling;
-    if (serialNumberField.value.trim() === "") {
-        serialNumberErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        serialNumberErrorMessage.style.display = "none";
-    }
-
-    // Check the second input field
-    var customerNameField = document.getElementById("id_customer_name");
-    var customerNameErrorMessage = customerNameField.nextElementSibling;
-    if (customerNameField.value.trim() === "") {
-        customerNameErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        customerNameErrorMessage.style.display = "none";
-    }
-
-    // Check the third input field
-    var salesOrderNumberField = document.getElementById("id_sales_order_number");
-    var salesOrderNumberErrorMessage = salesOrderNumberField.nextElementSibling;
-    if (salesOrderNumberField.value.trim() === "") {
-        salesOrderNumberErrorMessage.style.display = "block";
-        anyFieldEmpty = true;
-    } else {
-        salesOrderNumberErrorMessage.style.display = "none";
-    }
-
-    // If any field is empty, prevent form submission
-    if (anyFieldEmpty) {
-        event.preventDefault();
-    }
-
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
     var atLeastOneChecked = false;
 
@@ -160,7 +73,7 @@ document.getElementById("edit-form").addEventListener("submit", function (event)
         document.getElementById("edit-error-message").style.display = "none";
     }
 
-    if (!anyFieldEmpty && atLeastOneChecked) {
+    if (atLeastOneChecked) {
         enableTestTypeFields()
         var myModal = document.getElementById('edit-modal');
         var modal = bootstrap.Modal.getInstance(myModal);
@@ -171,18 +84,12 @@ document.getElementById("edit-form").addEventListener("submit", function (event)
 document.getElementById('main-modal').addEventListener('hidden.bs.modal', function (event) {
     document.getElementById("main-form").reset();
     // Display None for error messages
-    document.getElementById("id_serial_number").nextElementSibling.style.display = "none";
-    document.getElementById("id_customer_name").nextElementSibling.style.display = "none";
-    document.getElementById("id_sales_order_number").nextElementSibling.style.display = "none";
     document.getElementById("error-message").style.display = "none";
 })
 
 document.getElementById('edit-modal').addEventListener('hidden.bs.modal', function (event) {
     document.getElementById("edit-form").reset();
     // Display None for error messages
-    document.getElementById("id_serial_number").nextElementSibling.style.display = "none";
-    document.getElementById("id_customer_name").nextElementSibling.style.display = "none";
-    document.getElementById("id_sales_order_number").nextElementSibling.style.display = "none";
     document.getElementById("edit-error-message").style.display = "none";
 })
 
