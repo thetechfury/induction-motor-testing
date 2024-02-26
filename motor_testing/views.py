@@ -22,6 +22,7 @@ from motor_testing.models import InductionMotor, PerformanceTest, ElectricResist
 import pdfkit
 from django_pdfkit import PDFView
 
+
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
     form_class = InitialForm
     model = InductionMotor
@@ -43,7 +44,8 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         search_query = self.request.GET.get('search')
         queryset = InductionMotor.objects.filter(status=InductionMotor.ACTIVE)
         if search_query:
-            queryset = InductionMotor.objects.filter(serial_number__icontains=search_query)
+            queryset = InductionMotor.objects.filter(serial_number__icontains=search_query,
+                                                     status=InductionMotor.ACTIVE)
         return queryset.order_by("-updated_on")
 
     def get_formset(self):
