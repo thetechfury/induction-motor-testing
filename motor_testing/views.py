@@ -195,13 +195,18 @@ class ReportView(TemplateView):
 
 class GeneratePDF(PDFView):
     def get(self, request, *args, **kwargs):
-        report_url = request.build_absolute_uri(reverse('report', kwargs={'id': kwargs['id']}))
 
         config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
-
-        pdf = pdfkit.from_url(report_url, 'output.pdf', configuration=config)
-        response = HttpResponse(pdf, content_type='application/pdf')
-        return response
+        induction_motor = InductionMotor.objects.get(id=kwargs['id'])
+        report_url = request.build_absolute_uri(reverse('report', kwargs={'id': kwargs['id']}))
+        report_link = f'./generatedReports/{induction_motor.customer_name}-{induction_motor.serial_number}.pdf'
+        pdf = pdfkit.from_url(report_url, report_link, configuration=config)
+        if pdf:
+            InductionMotor.objects.filter(id=kwargs['id']).update(report_link=report_link)
+        with open(report_link, 'rb') as pdf:
+            response = HttpResponse(pdf.read(), content_type='application/pdf')
+            response['Content-Disposition'] = 'inline;filename=mypdf.pdf'
+            return response
 
 
 class DeleteReportView(LoginRequiredMixin, View):
