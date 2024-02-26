@@ -440,12 +440,16 @@ class PerformanceDeterminationFormSave(View):
         motor_id = kwargs['id']
         motor = get_object_or_404(InductionMotor, id=motor_id)
 
-        if not hasattr(motor, 'performance_determination'):
+        if not hasattr(motor, 'performance_determination_test'):
             motor.performance_determination_test = PerformanceDeterminationTest(induction_motor=motor)
         performance_determination_test = motor.performance_determination_test
-        performance_determination_test.voltage = request.POST.get('performance_determination_test-voltage')
-        performance_determination_test.frequency = request.POST.get('performance_determination_test-frequency')
-        performance_determination_test.nominal_t = request.POST.get('performance_determination_test-nominal_t')
+        default = Decimal('0.00')
+        voltage = request.POST.get('performance_determination_test-voltage')
+        frequency = request.POST.get('performance_determination_test-frequency')
+        nominal_t = request.POST.get('performance_determination_test-nominal_t')
+        performance_determination_test.voltage = voltage if voltage else default
+        performance_determination_test.frequency = frequency if frequency else default
+        performance_determination_test.nominal_t = nominal_t if nominal_t else default
         performance_determination_test.save()
         parameters = PerformanceTestParameters(performance_determination_test=performance_determination_test)
         file_1 = request.FILES.get('performance_determination_test-file_1')
