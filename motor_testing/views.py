@@ -180,7 +180,7 @@ class TestsView(LoginRequiredMixin, View):
         return render(self.request, "test_forms.html", {"edit_form": form, "error": "error", "edit_formset": formset})
 
 
-class ReportView(LoginRequiredMixin, TemplateView):
+class ReportView(TemplateView):
     template_name = "index.html"
 
     def get_context_data(self, **kwargs):
@@ -191,12 +191,12 @@ class ReportView(LoginRequiredMixin, TemplateView):
 
 class GeneratePDF(View):
     def get(self, request, *args, **kwargs):
-        # pdfkit.from_string(html_string, output_file, configuration=config)
 
         config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
-        pdfkit.from_url('http://google.com', 'out.pdf', configuration=config)
-
-        return JsonResponse({})
+        pdf = pdfkit.from_url(request.build_absolute_uri(reverse('report', kwargs={'id': kwargs['id']})), 'out.pdf', configuration=config)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        return response
 
 
 class DeleteReportView(LoginRequiredMixin, View):
@@ -449,44 +449,5 @@ class PerformanceDeterminationFormSave(View):
             response_data['file_3'] = str(settings.MEDIA_ROOT / file_3.name or None)
         if file_4:
             response_data['file_4'] = str(settings.MEDIA_ROOT / file_4.name or None)
-
-        return JsonResponse(response_data)
-
-class PerformanceDeterminationFormSave(View):
-    def post(self, request, *args, **kwargs):
-        motor_id = kwargs['id']
-        motor = get_object_or_404(InductionMotor, id=motor_id)
-
-        if not hasattr(motor, 'performance_determination'):
-            motor.performance_determination_test.set(induction_motor=motor)
-
-        motor.performance_determination_test.voltage = request.POST.get('performance_determination_test-voltage')
-        motor.performance_determination_test.frequency = request.POST.get('performance_determination_test-frequency')
-        motor.performance_determination_test.nominal_t = request.POST.get('performance_determination_test-nominal_t')
-
-        # Parse and save Excel data if files are provided
-        excel_files = [request.FILES.get(f'performance_determination_test-file_{i}') for i in range(1, 5)]
-        for index, file in enumerate(excel_files):
-            if file:
-                # Assuming the Excel file has headers
-                df = pd.read_excel(file)
-                # Assuming your Excel data structure matches the fields in your model
-                for _, row in df.iterrows():
-                    motor.performance_determination_test.load = row['Load (%)']
-                    motor.performance_determination_test.current = row['Current (A)']
-                    motor.performance_determination_test.slip = row['Slip (%)']
-                    motor.performance_determination_test.speed = row['Speed (rpm)']
-                    motor.performance_determination_test.efficiency = row['Efficiency (%)']
-                    motor.performance_determination_test.cos = row['COS Ø']
-                    motor.performance_determination_test.save()
-        response_data = {
-            'voltage': motor.performance_determination_test.voltage,
-            'frequency': motor.performance_determination_test.frequency,
-            'nominal_t': motor.performance_determination_test.nominal_t,
-            'file_1': motor.performance_determination_test.file_1.url if motor.performance_determination_test.file_1 else None,
-            'file_2': motor.performance_determination_test.file_2.url if motor.performance_determination_test.file_2 else None,
-            'file_3': motor.performance_determination_test.file_3.url if motor.performance_determination_test.file_3 else None,
-            'file_4': motor.performance_determination_test.file_4.url if motor.performance_determination_test.file_4 else None
-        }
 
         return JsonResponse(response_data)
