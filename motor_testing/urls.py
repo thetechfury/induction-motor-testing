@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .views import InductionMotorListingsView, TestsView, ReportView, GeneratePDF, DeleteReportView, ElectricFormSaveView, TemperatureFormSaveView, NoLoadFormSaveView, WithStandVoltageFormSaveView, InsulationFormSaveView,PerformanceDeterminationFormSave
 from .views import InductionMotorListingsView, TestsView, ReportView, GeneratePDF, DeleteReportView, \
     ElectricFormSaveView, TemperatureFormSaveView, NoLoadFormSaveView, WithStandVoltageFormSaveView, \
     InsulationFormSaveView, PerformanceDeterminationFormSave

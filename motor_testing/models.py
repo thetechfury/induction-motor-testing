@@ -149,7 +149,7 @@ class TemperatureRiseTest(TimeStampedModel):
 class PerformanceDeterminationTest(TimeStampedModel):
     """  3.3. Performance Determination Test Report """
 
-    induction_motor = models.ForeignKey(InductionMotor, on_delete=models.CASCADE,
+    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE,
                                         related_name="performance_determination_test")
     voltage = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
@@ -160,6 +160,10 @@ class PerformanceDeterminationTest(TimeStampedModel):
     nominal_t = models.DecimalField(
         max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+
+
+class PerformanceTestParameters(models.Model):
+    performance_determination_test = models.ForeignKey(PerformanceDeterminationTest, on_delete=models.CASCADE, related_name="parameters")
     load = models.PositiveSmallIntegerField(blank=True, null=True)
     current = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
@@ -176,6 +180,7 @@ class PerformanceDeterminationTest(TimeStampedModel):
     cos = models.DecimalField(
         max_digits=4, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+
 
 
 class NoLoadTest(TimeStampedModel):
