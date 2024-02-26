@@ -49,7 +49,7 @@
                                 <td class="text-center">{{ obj.sales_order_number }}</td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                        <a href="{% url 'report' obj.id %}" type="button" class="btn btn-outline-info">
+                                        <a href="{% url 'pdf' obj.id %}" type="button" class="btn btn-outline-info">
                                             <i class="bi bi-eye"></i></a>
                                         <a type="button" class="btn btn-outline-primary"
                                            href="{% url 'tests' obj.id %}">
