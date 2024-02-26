@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import DatabaseError
 from django.forms import formset_factory, model_to_dict
@@ -219,13 +221,17 @@ class ElectricFormSaveView(View):
         if not hasattr(motor, 'electric_resistance_test'):
             motor.electric_resistance_test = ElectricResistanceTest.objects.get_or_create(induction_motor=motor)
 
-        motor.electric_resistance_test.resistance_ohm_1 = request.POST.get('electric_resistance_test-resistance_ohm_1')
-        motor.electric_resistance_test.resistance_ohm_2 = request.POST.get('electric_resistance_test-resistance_ohm_2')
-        motor.electric_resistance_test.resistance_ohm_3 = request.POST.get('electric_resistance_test-resistance_ohm_3')
-        motor.electric_resistance_test.ambient_temperature_C = request.POST.get(
-            'electric_resistance_test-ambient_temperature_C')
-        motor.electric_resistance_test.unbalance_percentage = request.POST.get(
-            'electric_resistance_test-unbalance_percentage')
+        default = Decimal('0.00')
+        resistance_ohm_1 = request.POST.get('electric_resistance_test-resistance_ohm_1')
+        resistance_ohm_2 = request.POST.get('electric_resistance_test-resistance_ohm_2')
+        resistance_ohm_3 = request.POST.get('electric_resistance_test-resistance_ohm_3')
+        ambient_temperature_C = request.POST.get('electric_resistance_test-ambient_temperature_C')
+        unbalance_percentage = request.POST.get('electric_resistance_test-unbalance_percentage')
+        motor.electric_resistance_test.resistance_ohm_1 = resistance_ohm_1 if resistance_ohm_1 else default
+        motor.electric_resistance_test.resistance_ohm_2 = resistance_ohm_2 if resistance_ohm_2 else default
+        motor.electric_resistance_test.resistance_ohm_3 = resistance_ohm_3 if resistance_ohm_3 else default
+        motor.electric_resistance_test.ambient_temperature_C = ambient_temperature_C if ambient_temperature_C else default
+        motor.electric_resistance_test.unbalance_percentage = unbalance_percentage if unbalance_percentage else default
         motor.electric_resistance_test.save()
 
         response_data = {
@@ -248,11 +254,17 @@ class TemperatureFormSaveView(View):
         if not hasattr(motor, 'temperature_rise_test'):
             motor.temperature_rise_test = TemperatureRiseTest.objects.get_or_create(induction_motor=motor)
 
-        motor.temperature_rise_test.voltage = request.POST.get('temperature_rise_test-voltage')
-        motor.temperature_rise_test.winding = request.POST.get('temperature_rise_test-winding')
-        motor.temperature_rise_test.frequency = request.POST.get('temperature_rise_test-frequency')
-        motor.temperature_rise_test.de_bearing = request.POST.get('temperature_rise_test-de_bearing')
-        motor.temperature_rise_test.nde_bearing = request.POST.get('temperature_rise_test-nde_bearing')
+        default = Decimal('0.00')
+        voltage = request.POST.get('temperature_rise_test-voltage')
+        winding = request.POST.get('temperature_rise_test-winding')
+        frequency = request.POST.get('temperature_rise_test-frequency')
+        de_bearing = request.POST.get('temperature_rise_test-de_bearing')
+        nde_bearing = request.POST.get('temperature_rise_test-nde_bearing')
+        motor.temperature_rise_test.voltage = voltage if voltage else default
+        motor.temperature_rise_test.winding = winding if winding else default
+        motor.temperature_rise_test.frequency = frequency if frequency else default
+        motor.temperature_rise_test.de_bearing = de_bearing if de_bearing else default
+        motor.temperature_rise_test.nde_bearing = nde_bearing if nde_bearing else default
         motor.temperature_rise_test.save()
 
         response_data = {
@@ -275,12 +287,19 @@ class NoLoadFormSaveView(View):
         if not hasattr(motor, 'no_load_test'):
             motor.no_load_test = NoLoadTest.objects.get_or_create(induction_motor=motor)
 
-        motor.no_load_test.voltage = request.POST.get('no_load_test-voltage')
-        motor.no_load_test.current = request.POST.get('no_load_test-current')
-        motor.no_load_test.power = request.POST.get('no_load_test-power')
-        motor.no_load_test.frequency = request.POST.get('no_load_test-frequency')
-        motor.no_load_test.speed = request.POST.get('no_load_test-speed')
-        motor.no_load_test.direction_of_rotation = request.POST.get('no_load_test-direction_of_rotation')
+        default = Decimal('0.00')
+        voltage = request.POST.get('no_load_test-voltage')
+        current = request.POST.get('no_load_test-current')
+        power = request.POST.get('no_load_test-power')
+        frequency = request.POST.get('no_load_test-frequency')
+        speed = request.POST.get('no_load_test-speed')
+        direction_of_rotation = request.POST.get('no_load_test-direction_of_rotation')
+        motor.no_load_test.voltage = voltage if voltage else default
+        motor.no_load_test.current = current if current else default
+        motor.no_load_test.power = power if power else default
+        motor.no_load_test.frequency = frequency if frequency else default
+        motor.no_load_test.speed = speed if speed else default
+        motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
         motor.no_load_test.save()
 
         response_data = {
@@ -304,9 +323,12 @@ class WithStandVoltageFormSaveView(View):
         if not hasattr(motor, 'withstand_voltage_ac_test'):
             motor.withstand_voltage_ac_test = WithstandVoltageACTest.objects.get_or_create(induction_motor=motor)
 
-        motor.withstand_voltage_ac_test.description = request.POST.get('withstand_voltage_ac_test-description')
-        motor.withstand_voltage_ac_test.voltage_kv = request.POST.get('withstand_voltage_ac_test-voltage_kv')
-        motor.withstand_voltage_ac_test.time_in_seconds = request.POST.get('withstand_voltage_ac_test-time_in_seconds')
+        description = request.POST.get('withstand_voltage_ac_test-description')
+        voltage_kv = request.POST.get('withstand_voltage_ac_test-voltage_kv')
+        time_in_seconds = request.POST.get('withstand_voltage_ac_test-time_in_seconds')
+        motor.withstand_voltage_ac_test.description = description if description else ''
+        motor.withstand_voltage_ac_test.voltage_kv = voltage_kv if voltage_kv else Decimal('0.00')
+        motor.withstand_voltage_ac_test.time_in_seconds = time_in_seconds if time_in_seconds else 0
         motor.withstand_voltage_ac_test.save()
 
         response_data = {
@@ -327,16 +349,19 @@ class InsulationFormSaveView(View):
         if not hasattr(motor, 'insulation_resistance_test'):
             motor.insulation_resistance_test = InsulationResistanceTest.objects.get_or_create(induction_motor=motor)
 
-        motor.insulation_resistance_test.description = request.POST.get('insulation_resistance_test-description')
-        motor.insulation_resistance_test.voltage = request.POST.get('insulation_resistance_test-voltage')
-        motor.insulation_resistance_test.insulation_resistance = request.POST.get(
-            'insulation_resistance_test-insulation_resistance')
-        motor.insulation_resistance_test.time_in_seconds = request.POST.get(
-            'insulation_resistance_test-time_in_seconds')
-        motor.insulation_resistance_test.ambient_temperature_C = request.POST.get(
-            'insulation_resistance_test-ambient_temperature_C')
-        motor.insulation_resistance_test.humidity_percentage = request.POST.get(
-            'insulation_resistance_test-humidity_percentage')
+        default = Decimal('0.00')
+        description = request.POST.get('insulation_resistance_test-description')
+        voltage = request.POST.get('insulation_resistance_test-voltage')
+        insulation_resistance = request.POST.get('insulation_resistance_test-insulation_resistance')
+        time_in_seconds = request.POST.get('insulation_resistance_test-time_in_seconds')
+        ambient_temperature_C = request.POST.get('insulation_resistance_test-ambient_temperature_C')
+        humidity_percentage = request.POST.get('insulation_resistance_test-humidity_percentage')
+        motor.insulation_resistance_test.description = description if description else ''
+        motor.insulation_resistance_test.voltage = voltage if voltage else default
+        motor.insulation_resistance_test.insulation_resistance = insulation_resistance if insulation_resistance else default
+        motor.insulation_resistance_test.time_in_seconds = time_in_seconds if time_in_seconds else 0
+        motor.insulation_resistance_test.ambient_temperature_C = ambient_temperature_C if ambient_temperature_C else default
+        motor.insulation_resistance_test.humidity_percentage = humidity_percentage if humidity_percentage else default
         motor.insulation_resistance_test.save()
 
         response_data = {
