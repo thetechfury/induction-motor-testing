@@ -43,7 +43,7 @@
                         <tbody>
                         {% for obj in inductionmotor_list %}
                             <tr>
-                                <td class="text-center">{{ obj.id }}</td>
+                                <td class="text-center">{{ page_obj.start_index|add:forloop.counter0 }}</td>
                                 <td class="text-center">{{ obj.serial_number }}</td>
                                 <td class="text-center">{{ obj.customer_name }}</td>
                                 <td class="text-center">{{ obj.sales_order_number }}</td>
