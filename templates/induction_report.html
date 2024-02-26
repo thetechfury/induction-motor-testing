@@ -4,13 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style_doc.css' %}"/>
-    <link
-            rel="stylesheet"
-            type="text/css"
-            href="{% static 'assets/css/print-style.css' %}"
-            media="print"
-    />
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/induction_report.css' %}"/>
     <title>Document</title>
 </head>
 <body>
@@ -18,56 +12,55 @@
     <div class="border-1 page-1">
         <header>
             <div class="main-heading">
-                <img class="border-1" src="{% static 'assets/img/logo_uet.png' %}" alt=""/>
+                <img class="border-1" src="{% static 'assets/img/image_2024_02_26T10_42_48_518Z.png' %}" alt=""/>
                 <h1>
                     Test Report <br/>
                     Three Phase Induction Motor
                 </h1>
-                <h2 class="border-1">Motor's Serial Number 1081350993</h2>
+                <h2 class="border-1"><b>Motor's Serial Number <br> {{ induction_motor.serial_number }}</b></h2>
             </div>
             <div class="second-heading border-1">
-                <div>WEG México S.A. de C.V.</div>
-                <div>Quality Control - Medium Voltage Laboratory</div>
+                <span>University of Engineering Technology</span>
+                <span>MOTOR TESTING LAB</span>
             </div>
             <div class="third-heading">
-                Carretera Jorobas-Tula km 3.5, - 54680, Huehuetoca - Estado de
-                México - México
+                University Rd. Kala Shah Kaku, Sheikhupura, Punjab
             </div>
         </header>
         <section class="main-section">
             <div class="section-1">
                 <h1 class="text">
-                    <span class="title">Customer:</span> WEG MIDDLE EAST FZE
+                    <span class="title">Customer:</span> {{ induction_motor.customer_name}}
                 </h1>
                 <h1 class="text">
-                    <span class="title">Sales Order:</span> 51998940
+                    <span class="title">Sales Order:</span> {{ induction_motor.sales_order_number }}
                 </h1>
             </div>
             <h1 class="main-title">1. Motor Identification</h1>
             <div class="section-2">
                 <table>
                     <tr>
-                        <td>TAG: -</td>
+                        <td>TAG: {{ induction_motor.tag }}</td>
                     </tr>
                     <tr>
-                        <td>Material: 17081049</td>
-                        <td>Enclosure: IP65</td>
-                        <td>Insulation Class: F</td>
+                        <td>Material: {{ induction_motor.material }}</td>
+                        <td>Enclosure: {{ induction_motor.enclosure }}</td>
+                        <td>Insulation Class: {{ induction_motor.insulation_class }}</td>
                     </tr>
                     <tr>
-                        <td>Frame: 315S/M</td>
-                        <td>Altitude (m): 1000</td>
-                        <td>Temperature Rise (K): 70</td>
+                        <td>Frame: {{ induction_motor.frame}}</td>
+                        <td>Altitude (m): {{ induction_motor.altitude_M }}</td>
+                        <td>Temperature Rise (C): {{ induction_motor.temperature_rise_K }}</td>
                     </tr>
                     <tr>
-                        <td>Mounting: B3T</td>
-                        <td>Duty Cycle: S1</td>
-                        <td>Ambient Temperature (°C): 50</td>
+                        <td>Mounting: {{ induction_motor.mounting }}</td>
+                        <td>Duty Cycle: {{ induction_motor.duty_cycle }}</td>
+                        <td>Ambient Temperature (°C): {{ induction_motor.ambient_temperature_C }}</td>
                     </tr>
                     <tr>
-                        <td>Drawing: -</td>
-                        <td>Design: N</td>
-                        <td>Service Factor: 1.15</td>
+                        <td>Drawing: {{ induction_motor.drawing }}</td>
+                        <td>Design: {{ induction_motor.design }}</td>
+                        <td>Service Factor: {{ induction_motor.service_factor }}</td>
                     </tr>
                 </table>
                 <table class="table-border">
@@ -81,13 +74,13 @@
                         <th>Eff. (%)</th>
                     </tr>
                     <tr>
-                        <td>400</td>
-                        <td>276</td>
-                        <td>160</td>
-                        <td>60</td>
-                        <td>1790</td>
-                        <td>0.87</td>
-                        <td>96.2</td>
+                        <td>{{ induction_motor.voltage }}</td>
+                        <td>{{ induction_motor.current }}</td>
+                        <td>{{ induction_motor.power }}</td>
+                        <td>{{ induction_motor.frequency }}</td>
+                        <td>{{ induction_motor.speed }}</td>
+                        <td>{{ induction_motor.p_f }}</td>
+                        <td>{{ induction_motor.efficiency }}</td>
                     </tr>
                 </table>
             </div>
@@ -156,7 +149,6 @@
                     <li>Resistance (mOhms): 12.61 / 12.56 / 12.70</li>
                     <li>Ambient Temperature (°C): 24.5</li>
                     <li>Unbalance (%): 1.14</li>
-                    <li>R20°C (mOhms): 12.39 / 12.34 / 12.48</li>
                 </ul>
                 <h1 class="text">
               <span class="title"
@@ -166,10 +158,10 @@
                 <ul class="section-ul-2">
                     <li>Voltage (V): 400.0</li>
                     <li>Frequency (Hz): 60.0</li>
-                    <li>Winding (Resistance Method) (K): 48.9</li>
-                    <li>DE Bearing (K): 34.3</li>
+                    <li>Winding (Resistance Method) (C): 48.9</li>
+                    <li>DE Bearing (C): 34.3</li>
                     <li></li>
-                    <li>NDE Bearing (K): 29.3</li>
+                    <li>NDE Bearing (C): 29.3</li>
                 </ul>
                 <h1 class="text">
                     <span class="title">3.3. Performance Determination</span>
@@ -247,49 +239,7 @@
                         <td>60</td>
                     </tr>
                 </table>
-            </section>
-            <hr/>
-            <ul class="footer-ul">
-                <li>
-                    Confidential report. Reproduction of this document shall not be
-                    partial and depends on the written approval of the laboratory
-                </li>
-                <li>
-                    The results presented in this document refer exclusively to the
-                    electric motor subjected to the specified tests and do not extend
-                    to any batch; * WEG will keep the original document archived for
-                    at least five years.
-                </li>
-            </ul>
-        </section>
-        <footer class="footer-1">
-            <div>Report issued on 04/28/2023</div>
-        </footer>
-    </div>
-    <p class="page-number">Page 1 of 2</p>
-</div>
-<div class="page-main-2">
-    <div class="border-1 page-2">
-        <header>
-            <div class="main-heading">
-                <img class="border-1" src="{% static 'assets/img/logo_uet.png' %}" alt=""/>
-                <h1>
-                    Test Report <br/>
-                    Three Phase Induction Motor
-                </h1>
-                <h2 class="border-1">Motor's Serial Number 1081350993</h2>
-            </div>
-            <div class="second-heading border-1">
-                <div>WEG México S.A. de C.V.</div>
-                <div>Quality Control - Medium Voltage Laboratory</div>
-            </div>
-            <div class="third-heading">
-                Carretera Jorobas-Tula km 3.5, - 54680, Huehuetoca - Estado de
-                México - México
-            </div>
-        </header>
-        <section class="main-section">
-            <section class="section-4">
+                <br>
                 <h1 class="text">
                     <span class="title">3.6. Insulation Resistance</span>
                 </h1>
@@ -311,7 +261,47 @@
                     <li>Voltage (V): 400.0</li>
                     <li>Frequency (Hz): 60.0</li>
                 </ul>
-            </section>
+                </section>
+            <hr/>
+            <ul class="footer-ul">
+                <li>
+                    Confidential report. Reproduction of this document shall not be
+                    partial and depends on the written approval of the laboratory
+                </li>
+                <li>
+                    The results presented in this document refer exclusively to the
+                    electric motor subjected to the specified tests and do not extend
+                    to any batch; * WEG will keep the original document archived for
+                    at least five years.
+                </li>
+            </ul>
+        </section>
+        <footer class="footer-1">
+            <div>Report issued on 04/28/2023</div>
+        </footer>
+    </div>
+    <p class="page-number first-page" >Page 1 of 2</p>
+</div>
+<div class="page-main-2">
+    <div class="border-1 page-2">
+        <header>
+            <div class="main-heading">
+                <img class="border-1" src="{% static 'assets/img/image_2024_02_26T10_42_48_518Z.png' %}" alt=""/>
+                <h1>
+                    Test Report <br/>
+                    Three Phase Induction Motor
+                </h1>
+                <h2 class="border-1">Motor's Serial Number 1081350993</h2>
+            </div>
+            <div class="second-heading border-1">
+                <span>University of Engineering Technology </span>
+                <span>MOTOR TESTING LAB</span>
+            </div>
+            <div class="third-heading">
+                 University Rd. Kala Shah Kaku, Sheikhupura, Punjab
+            </div>
+        </header>
+        <section class="main-section">
             <h1 class="main-title">5. Result</h1>
             <section class="section-4">
                 <p>
@@ -321,6 +311,8 @@
                 </p>
             </section>
         </section>
+        <section class="section-4">
+            </section>
         <footer class="footer-2">
             <table class="table-border">
                 <tr>
@@ -334,7 +326,6 @@
                                 <p>Agnaldo Reus Medeiros Rodrigues</p>
                                 <p>Test Date: 4/18/2023</p>
                             </div>
-                            <img src="{% static 'assets/img/sign.png' %}" alt=""/>
                         </div>
                     </td>
                     <td>Inspector</td>
@@ -345,8 +336,7 @@
             </table>
         </footer>
     </div>
-    <p class="page-number">Page 1 of 2</p>
+    <p class="page-number">Page 2 of 2</p>
 </div>
-<script src="{% static 'assets/js/index.js' %}"></script>
 </body>
 </html>
