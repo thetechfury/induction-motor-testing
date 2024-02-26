@@ -1,5 +1,5 @@
 <div class="modal fade" id="main-modal" tabindex="-1" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-fullscreen">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="card-title p-0 text-center">New Induction Report</h1>
@@ -11,36 +11,36 @@
                         <div class="text-danger">{{ form.non_field_errors }}</div>
                     {% endif %}
 
-                    <div class="italic card-title p-0 text-center">Basic Information*</div>
-
                     <div class="col-md-4">
                         <div class="row">
-                            <div class="col-lg-4"><label for="id_serial_number" class="form-label">Motor's Serial
-                                Number*</label></div>
-                            <div class="col-lg-6">{{ form.serial_number }}</div>
+                            <div class="col-md-5">
+                                <label for="id_serial_number" class="col-form-label">Motor's Serial No*</label>
+                            </div>
+                            <div class="col-md-7">{{ form.serial_number }}</div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="row">
-                            <div class="col-lg-2"><label for="id_customer_name" class="form-label">Customer*</label>
+                            <div class="col-md-3">
+                                <label for="id_customer_name" class="col-form-label">Customer*</label>
                             </div>
-                            <div class="col-lg-6">{{ form.customer_name }}</div>
+                            <div class="col-md-9">{{ form.customer_name }}</div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="row">
-                            <div class="col-lg-3"><label for="id_sales_order_number" class="form-label">Sales
-                                Order*</label>
+                            <div class="col-md-4">
+                                <label for="id_sales_order_number" class="col-form-label">Sales Order*</label>
                             </div>
-                            <div class="col-lg-6">{{ form.sales_order_number }}</div>
+                            <div class="col-md-8">{{ form.sales_order_number }}</div>
                         </div>
                     </div>
 
                     <hr style="border-top: 2px solid #1559d3;">
 
-                    <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                    <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="motor_identification" data-bs-toggle="pill"
                                     data-bs-target="#v-pills-home" type="button" role="tab"
@@ -58,74 +58,75 @@
                     <div class="tab-content pt-2" id="v-pills-tabContent">
                         <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                              aria-labelledby="motor_identification">
-                            <div class="row g-3 p-2">
-                                <div class="italic card-title m-0 pt-0 text-center">Motor Identification</div>
+                            <div class="row g-3 px-3">
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_tag" class="form-label">TAG</label>
                                     {{ form.tag }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_material"
                                            class="form-label">{{ form.material.label }}</label>
                                     {{ form.material }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_frame" class="form-label">{{ form.frame.label }}</label>
                                     {{ form.frame }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_mounting"
                                            class="form-label">{{ form.mounting.label }}</label>
                                     {{ form.mounting }}</div>
-                                <div class="col-md-2">
+
+                                <div class="col-md-3">
                                     <label for="id_drawing" class="form-label">{{ form.drawing.label }}</label>
                                     {{ form.drawing }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_enclosure"
                                            class="form-label">{{ form.enclosure.label }}</label>
                                     {{ form.enclosure }}</div>
-
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_altitude_M" class="form-label">Altitude (m)</label>
                                     {{ form.altitude_M }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_duty_cycle" class="form-label">Duty Cycle</label>
                                     {{ form.duty_cycle }}</div>
-                                <div class="col-md-2">
+
+                                <div class="col-md-3">
                                     <label for="id_design" class="form-label">{{ form.design.label }}</label>
                                     {{ form.design }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_insulation_class" class="form-label">Insulation Class</label>
                                     {{ form.insulation_class }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_temperature_rise_K" class="form-label">Temperature Rise
                                         (K)</label>
                                     {{ form.temperature_rise_K }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_ambient_temperature_C" class="form-label">Ambient Temperature
                                         (°C)</label>
                                     {{ form.ambient_temperature_C }}</div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_service_factor" class="form-label">Service Factor</label>
                                     {{ form.service_factor }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_voltage" class="form-label">Voltage (V)</label>
                                     {{ form.voltage }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_current" class="form-label">Current (A)</label>
                                     {{ form.current }}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="id_power" class="form-label">Power (kW)</label>
                                     {{ form.power }}</div>
-                                <div class="col-md-1">
+
+                                <div class="col-md-3">
                                     <label for="id_frequency" class="form-label">Freq. (Hz)</label>
                                     {{ form.frequency }}</div>
-                                <div class="col-md-1">
+                                <div class="col-md-3">
                                     <label for="id_speed" class="form-label">Speed (rpm)</label>
                                     {{ form.speed }}</div>
-                                <div class="col-md-1">
+                                <div class="col-md-3">
                                     <label for="id_p_f" class="form-label">P.F.</label>
                                     {{ form.p_f }}</div>
-                                <div class="col-md-1">
+                                <div class="col-md-3">
                                     <label for="id_efficiency" class="form-label">Eff. (%)</label>
                                     {{ form.efficiency }}</div>
                             </div>
@@ -135,7 +136,6 @@
                              aria-labelledby="performed_tests">
                             <div class="row g-3 px-5">
                                 <div class="italic card-title m-0 pt-2 pb-0 text-center">
-                                    Performed Tests*
                                     <div id="error-message" class="text-danger" style="display: none;">
                                         Please select at least one test
                                     </div>
@@ -156,7 +156,7 @@
                                     {% for form in formset %}
                                         <tr>
                                             <th class="text-center" scope="row">{{ forloop.counter }}</th>
-                                            <td class="text-center w-25">{{ form.test_type }}</td>
+                                            <td class="text-center w-50">{{ form.test_type }}</td>
                                             <td class="round">{{ form.routine }}
                                                 <label for="id_form-{{ forloop.counter0 }}-routine"></label>
                                             </td>
@@ -172,17 +172,14 @@
                                 </table>
                             </div>
                         </div>
-
                     </div>
-
 
                     <hr style="border-top: 2px solid #1559d3;">
 
-                    <div class="d-grid gap-2 d-md-flex justify-content-center mt-5">
+                    <div class="d-grid gap-2 d-md-flex justify-content-center mt-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
-
                 </form>
             </div>
         </div>

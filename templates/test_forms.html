@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <div class="pagetitle">
-        <h1>Test Forms</h1>
+    <div class="pagetitle mb-3">
+        <div class="datatable-search datatable-top">
+            <a href="{% url 'home' %}" type="button" class="btn btn-primary">
+                <i class="bi bi-arrow-left-circle-fill"></i> Back to Home</a>
+        </div>
     </div><!-- End Page Title -->
 
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
-
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
-                            <div class="datatable-search datatable-top mt-2">
-                                <a href="{% url 'home' %}" type="button" class="btn btn-primary">Back to Home</a>
-                            </div>
+                            <h5 class="card-title">Please fill and save the forms below.</h5>
                             <div class="text-center datatable-top mt-2">
                                 <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                         data-bs-target="#edit-modal" id="update-modal">Update This Record
@@ -22,17 +22,17 @@
                             </div>
                         </div>
 
-                        <h5 class="card-title">Please fill and save the forms below.</h5>
                         <div class="mb-3 clearfix">
-                            <button type="button" class="btn btn-success">
-                                <a href="{% url 'pdf' inductionMotorReport.id %}" class="text-white" target="_blank">Generate Report</a>
-                            </button>
+                            <a href="{% url 'pdf' inductionMotorReport.id %}" class="text-white btn btn-success"
+                               target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Report
+                            </a>
+
                         </div>
                         <!-- Default Tabs -->
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <ul class="nav nav-pills justify-content-center" id="testFormTabs" role="tablist">
                             {% if electric_resistance_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="electric-tab" data-bs-toggle="tab"
+                                    <button class="nav-link" id="electric-tab" data-bs-toggle="tab"
                                             data-bs-target="#electric" type="button" role="tab" aria-controls="electric"
                                             aria-selected="true">Electric Resistance Test
                                     </button>
@@ -86,116 +86,135 @@
                             {% endif %}
                         </ul>
                         <div class="tab-content pt-2" id="myTabContent">
-                            <div class="tab-pane fade " id="electric" role="tabpanel"
-                                 aria-labelledby="electric-tab">
-                                <form id="electric-form" class="row g-3"
-                                      action="{% url 'electric-form' inductionMotorReport.id %}" method="post"
-                                      novalidate>
-                                    {% csrf_token %}
-                                    {% for field in electric_resistance_test %}
-                                        <div class="col-md-12">
-                                            <div class="form-floating">
-                                                {{ field }}
+                            {% if electric_resistance_test %}
+                                <div class="tab-pane fade" id="electric" role="tabpanel" aria-labelledby="electric-tab">
+                                    <form id="electric-form" class="row g-3"
+                                          action="{% url 'electric-form' inductionMotorReport.id %}" method="post"
+                                          novalidate>
+                                        {% csrf_token %}
+                                        {% for field in electric_resistance_test %}
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    {{ field }}
+                                                    {{ field.label_tag }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            {% endif %}
+
+                            {% if temperature_rise_test %}
+                                <div class="tab-pane fade" id="temperature" role="tabpanel"
+                                     aria-labelledby="temperature-tab">
+                                    <form id="temperature-form" class="row g-3"
+                                          action="{% url 'temperature-form' inductionMotorReport.id %}" method="post"
+                                          novalidate>
+                                        {% csrf_token %}
+                                        {% for field in temperature_rise_test %}
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    {{ field }}
+                                                    {{ field.label_tag }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            {% endif %}
+
+                            {% if performance_determination_test %}
+                                <div class="tab-pane fade" id="performance" role="tabpanel"
+                                     aria-labelledby="performance-tab">
+                                    <form id="performance-form" class="row g-3"
+                                          action="{% url 'performance-form' inductionMotorReport.id %}" method="post"
+                                          novalidate enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {% for field in performance_determination_test %}
+                                            <div class="col-md-2">
                                                 {{ field.label_tag }}
                                             </div>
-                                        </div>
-                                    {% endfor %}
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade" id="temperature" role="tabpanel"
-                                 aria-labelledby="temperature-tab">
-                                <form id="temperature-form" class="row g-3"
-                                      action="{% url 'temperature-form' inductionMotorReport.id %}" method="post"
-                                      novalidate>
-                                    {% csrf_token %}
-                                    {% for field in temperature_rise_test %}
-                                        <div class="col-md-12">
-                                            <div class="form-floating">
+                                            <div class="col-md-10">
                                                 {{ field }}
-                                                {{ field.label_tag }}
                                             </div>
+                                        {% endfor %}
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
-                                    {% endfor %}
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade" id="performance" role="tabpanel"
-                                 aria-labelledby="performance-tab">
-                                <form id="performance-form" class="row g-3"
-                                      action="{% url 'performance-form' inductionMotorReport.id %}" method="post"
-                                      novalidate enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% for field in performance_determination_test %}
-                                        <div class="col-md-2">
-                                            {{ field.label_tag }}
-                                        </div>
-                                        <div class="col-md-10">
-                                            {{ field }}
-                                        </div>
-                                    {% endfor %}
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
-                                <form id="noload-form" class="row g-3"
-                                      action="{% url 'noload-form' inductionMotorReport.id %}" method="post" novalidate>
-                                    {% csrf_token %}
-                                    {% for field in no_load_test %}
-                                        <div class="col-md-12">
-                                            <div class="form-floating">
-                                                {{ field }}
-                                                {{ field.label_tag }}
+                                    </form>
+                                </div>
+                            {% endif %}
+
+                            {% if no_load_test %}
+                                <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
+                                    <form id="noload-form" class="row g-3"
+                                          action="{% url 'noload-form' inductionMotorReport.id %}" method="post"
+                                          novalidate>
+                                        {% csrf_token %}
+                                        {% for field in no_load_test %}
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    {{ field }}
+                                                    {{ field.label_tag }}
+                                                </div>
                                             </div>
+                                        {% endfor %}
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
-                                    {% endfor %}
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade" id="withstand" role="tabpanel" aria-labelledby="withstand-tab">
-                                <form id="withstand-form" class="row g-3"
-                                      action="{% url 'withstand-form' inductionMotorReport.id %}" method="post"
-                                      novalidate>
-                                    {% csrf_token %}
-                                    {% for field in withstand_voltage_ac_test %}
-                                        <div class="col-md-12">
-                                            <div class="form-floating">
-                                                {{ field }}
-                                                {{ field.label_tag }}
+                                    </form>
+                                </div>
+                            {% endif %}
+
+                            {% if withstand_voltage_ac_test %}
+                                <div class="tab-pane fade" id="withstand" role="tabpanel"
+                                     aria-labelledby="withstand-tab">
+                                    <form id="withstand-form" class="row g-3"
+                                          action="{% url 'withstand-form' inductionMotorReport.id %}" method="post"
+                                          novalidate>
+                                        {% csrf_token %}
+                                        {% for field in withstand_voltage_ac_test %}
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    {{ field }}
+                                                    {{ field.label_tag }}
+                                                </div>
                                             </div>
+                                        {% endfor %}
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
-                                    {% endfor %}
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade" id="insulation" role="tabpanel" aria-labelledby="insulation-tab">
-                                <form id="insulation-form" class="row g-3"
-                                      action="{% url 'insulation-form' inductionMotorReport.id %}" method="post"
-                                      novalidate>
-                                    {% csrf_token %}
-                                    {% for field in insulation_resistance_test %}
-                                        <div class="col-md-12">
-                                            <div class="form-floating">
-                                                {{ field }}
-                                                {{ field.label_tag }}
+                                    </form>
+                                </div>
+                            {% endif %}
+
+                            {% if insulation_resistance_test %}
+                                <div class="tab-pane fade" id="insulation" role="tabpanel"
+                                     aria-labelledby="insulation-tab">
+                                    <form id="insulation-form" class="row g-3"
+                                          action="{% url 'insulation-form' inductionMotorReport.id %}" method="post"
+                                          novalidate>
+                                        {% csrf_token %}
+                                        {% for field in insulation_resistance_test %}
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    {{ field }}
+                                                    {{ field.label_tag }}
+                                                </div>
                                             </div>
+                                        {% endfor %}
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
-                                    {% endfor %}
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                            </div>
+                                    </form>
+                                </div>
+                            {% endif %}
                         </div><!-- End Default Tabs -->
                     </div>
                 </div>

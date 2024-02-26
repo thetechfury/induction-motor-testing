@@ -44,7 +44,7 @@ document.getElementById("main-form").addEventListener("submit", function (event)
     }
 
     if (atLeastOneChecked) {
-       enableTestTypeFields()
+        enableTestTypeFields()
         var myModal = document.getElementById('main-modal');
         var modal = bootstrap.Modal.getInstance(myModal);
         modal.hide();
@@ -106,4 +106,13 @@ function deleteRecord(deletedRowID) {
                 alert("error");
             });
     }
+}
+
+// Select the first form
+const firstTab = document.querySelector('#testFormTabs li:first-child');
+
+if (firstTab) {
+    firstTab.querySelector('button').click();
+} else {
+    console.error('The first li element was not found in the ul.');
 }
