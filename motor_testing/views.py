@@ -18,7 +18,7 @@ from motor_testing.models import InductionMotor, PerformanceTest, ElectricResist
     PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, \
     PerformanceTestParameters
 import pdfkit
-
+from django_pdfkit import PDFView
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
     form_class = InitialForm
@@ -181,7 +181,7 @@ class TestsView(LoginRequiredMixin, View):
 
 
 class ReportView(TemplateView):
-    template_name = "index.html"
+    template_name = "induction_report.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -189,13 +189,14 @@ class ReportView(TemplateView):
         return context
 
 
-class GeneratePDF(View):
+class GeneratePDF(PDFView):
     def get(self, request, *args, **kwargs):
+        report_url = request.build_absolute_uri(reverse('report', kwargs={'id': kwargs['id']}))
 
         config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
-        pdf = pdfkit.from_url(request.build_absolute_uri(reverse('report', kwargs={'id': kwargs['id']})), 'out.pdf', configuration=config)
+
+        pdf = pdfkit.from_url(report_url, 'output.pdf', configuration=config)
         response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
 
 
@@ -415,26 +416,25 @@ class PerformanceDeterminationFormSave(View):
         motor = get_object_or_404(InductionMotor, id=motor_id)
 
         if not hasattr(motor, 'performance_determination'):
-            motor.performance_determination_test = PerformanceDeterminationTest.objects.get_or_create(induction_motor=motor)
-            if not hasattr(motor.performance_determination_test, 'parameters'):
-                motor.performance_determination_test.parameters = PerformanceTestParameters.objects.create(performance_determination_test=motor.performance_determination_test)
-
-        motor.performance_determination_test.voltage = request.POST.get('performance_determination_test-voltage')
-        motor.performance_determination_test.frequency = request.POST.get('performance_determination_test-frequency')
-        motor.performance_determination_test.nominal_t = request.POST.get('performance_determination_test-nominal_t')
-        motor.performance_determination_test.save()
+            motor.performance_determination_test = PerformanceDeterminationTest(induction_motor=motor)
+        performance_determination_test = motor.performance_determination_test
+        performance_determination_test.voltage = request.POST.get('performance_determination_test-voltage')
+        performance_determination_test.frequency = request.POST.get('performance_determination_test-frequency')
+        performance_determination_test.nominal_t = request.POST.get('performance_determination_test-nominal_t')
+        performance_determination_test.save()
+        parameters = PerformanceTestParameters(performance_determination_test=performance_determination_test)
         file_1 = request.FILES.get('performance_determination_test-file_1')
         file_2 = request.FILES.get('performance_determination_test-file_2')
         file_3 = request.FILES.get('performance_determination_test-file_3')
         file_4 = request.FILES.get('performance_determination_test-file_4')
         if file_1:
-            self.handle_file(file_1, motor.performance_determination_test)
+            self.handle_file(file_1, parameters)
         elif file_2:
-            self.handle_file(file_2, motor.performance_determination_test)
+            self.handle_file(file_2, parameters)
         elif file_3:
-            self.handle_file(file_3, motor.performance_determination_test)
+            self.handle_file(file_3, parameters)
         elif file_4:
-            self.handle_file(file_4, motor.performance_determination_test)
+            self.handle_file(file_4, parameters)
 
         response_data = {
             'voltage': motor.performance_determination_test.voltage,
