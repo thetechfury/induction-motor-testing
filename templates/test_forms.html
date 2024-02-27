@@ -216,14 +216,70 @@
                                           action="{% url 'performance-form' inductionMotorReport.id %}" method="post"
                                           enctype="multipart/form-data">
                                         {% csrf_token %}
-                                        {% for field in performance_determination_test %}
-                                            <div class="col-md-2">
-                                                {{ field.label_tag }}
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_performance_determination_test-voltage"
+                                                    class="col-form-label">Voltage (V):</label>
+                                                </div>
+                                                <div class="col">{{ performance_determination_test.voltage }}</div>
                                             </div>
-                                            <div class="col-md-10">
-                                                {{ field }}
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_performance_determination_test-frequency"
+                                                    class="col-form-label">Frequency (Hz):</label>
+                                                </div>
+                                                <div class="col">{{ performance_determination_test.frequency }}</div>
                                             </div>
-                                        {% endfor %}
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_performance_determination_test-nominal_t"
+                                                    class="col-form-label">Nominal T. (N.m):</label>
+                                                </div>
+                                                <div class="col">{{ performance_determination_test.nominal_t }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 pt-md-5 ps-md-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col-md-3"><label for="id_performance_determination_test-file_1"
+                                                    class="col-form-label">File 1:</label>
+                                                </div>
+                                                <div class="col-md-5">{{ performance_determination_test.file_1 }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col-md-5"><label for="id_performance_determination_test-file_2"
+                                                    class="col-form-label">File 2:</label>
+                                                </div>
+                                                <div class="col-md-5">{{ performance_determination_test.file_2 }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 pt-md-5 ps-md-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col-md-3"><label for="id_performance_determination_test-file_3"
+                                                    class="col-form-label">File 3:</label>
+                                                </div>
+                                                <div class="col-md-5">{{ performance_determination_test.file_3 }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col-md-5"><label for="id_performance_determination_test-file_4"
+                                                    class="col-form-label">File 4:</label>
+                                                </div>
+                                                <div class="col-md-5">{{ performance_determination_test.file_4 }}</div>
+                                            </div>
+                                        </div>
+
                                         <div class="text-center py-5">
                                             <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
