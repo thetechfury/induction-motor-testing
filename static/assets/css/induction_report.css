@@ -3,6 +3,7 @@ body {
   padding: 0;
   max-width: 100vw;
   max-height: 120%;
+  font-family: "Times New Roman", Times, serif;
 }
 .main-section {
   height: 990px;
@@ -26,6 +27,9 @@ header,
 footer {
   background-color: #bde3f6;
   color: rgb(0, 0, 128);
+}
+.page-main-1 footer {
+  background-color: white;
 }
 .main-heading {
   display: block;
@@ -87,7 +91,7 @@ footer {
   padding-left: 8px;
   font-size: 14px;
   font-weight: bold;
-  letter-spacing: 1.5px;
+  letter-spacing: 2.5px;
 }
 .second-heading span:nth-child(1) {
   border-right: 1px solid #000000;
@@ -105,12 +109,12 @@ footer {
 
 .main-section .section-1,
 .main-section .section-3 {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .main-section .text {
   font-size: 13px;
-  margin-top: 10px;
+  margin-top: 3px;
   margin-bottom: 2px;
   letter-spacing: 1.5px;
 
@@ -232,7 +236,16 @@ hr {
 .footer-1 div {
   font-size: 12px;
   padding: 5px;
+  margin: 0;
   border: 1px solid #000000;
+  background-color: #bde3f6;
+  color: rgb(0, 0, 128);
+}
+.footer-1 .footer-ul {
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
 }
 .footer-1 div:nth-child(1) {
   margin-top: 4rem;

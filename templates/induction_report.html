@@ -21,7 +21,7 @@
             </div>
             <div class="second-heading border-1">
                 <span>University of Engineering Technology</span>
-                <span>MOTOR TESTING LAB</span>
+                <span>Motor Testing Lab</span>
             </div>
             <div class="third-heading">
                 University Rd. Kala Shah Kaku, Sheikhupura, Punjab
@@ -93,76 +93,185 @@
                         <th>Type</th>
                         <th>Special</th>
                     </tr>
-                    <tr>
-                        <td class="same-width-td">1. Electric Resistance</td>
-                        <td>X</td>
-                        <td>X</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td class="same-width-td">
-                            2. Temperature Rise - Nominal Condition
-                        </td>
-                        <td>-</td>
-                        <td>X</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td class="same-width-td">3. Performance Determination</td>
-                        <td>-</td>
-                        <td>X</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td class="same-width-td">4. No Load</td>
-                        <td>X</td>
-                        <td>X</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td class="same-width-td">5. Withstand Voltage</td>
-                        <td>X</td>
-                        <td>X</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td class="same-width-td">6. Insulation Resistance</td>
-                        <td>X</td>
-                        <td>X</td>
-                        <td>-</td>
-                    </tr>
+                        <tr>
+                            <td class="same-width-td">1. Electric Resistance</td>
+                        {% for selected_test in all_tests %}
+                            {% if selected_test.test_type == 'electric_resistance_test' %}
+                                {% if selected_test.routine == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.type == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.special == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="same-width-td">
+                                2. Temperature Rise - Nominal Condition
+                            </td>
+                            {% for selected_test in all_tests %}
+                            {% if selected_test.test_type == 'temperature_rise_test' %}
+                                {% if selected_test.routine == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.type == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.special == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="same-width-td">3. Performance Determination</td>
+                            {% for selected_test in all_tests %}
+                            {% if selected_test.test_type == 'performance_determination_test' %}
+                                {% if selected_test.routine == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.type == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.special == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="same-width-td">4. No Load</td>
+                            {% for selected_test in all_tests %}
+                            {% if selected_test.test_type == 'no_load_test' %}
+                                {% if selected_test.routine == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.type == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.special == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="same-width-td">5. Withstand Voltage</td>
+                            {% for selected_test in all_tests %}
+                            {% if selected_test.test_type == 'withstand_voltage_ac_test' %}
+                                {% if selected_test.routine == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.type == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.special == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="same-width-td">6. Insulation Resistance</td>
+                            {% for selected_test in all_tests %}
+                            {% if selected_test.test_type == 'insulation_resistance_test' %}
+                                {% if selected_test.routine == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.type == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.special == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
                 </table>
             </section>
             <h1 class="main-title">3. Tests</h1>
             <section class="section-4">
+            {% for selected_test in selected_tests %}
+                {% if selected_test.test_type == 'electric_resistance_test' %}
                 <h1 class="text">
                     <span class="title">3.1. Electric Resistance</span>
                 </h1>
                 <ul class="section-ul">
-                    <li>Resistance (mOhms): 12.61 / 12.56 / 12.70</li>
-                    <li>Ambient Temperature (°C): 24.5</li>
-                    <li>Unbalance (%): 1.14</li>
+                    <li>Resistance (mOhms): {{ induction_motor.electric_resistance_test.resistance_ohm_1 }}
+                        / {{ induction_motor.electric_resistance_test.resistance_ohm_2 }}
+                        / {{ induction_motor.electric_resistance_test.resistance_ohm_3 }}</li>
+                    <li>Ambient Temperature
+                        (°C): {{ induction_motor.electric_resistance_test.ambient_temperature_C }}</li>
+                    <li>Unbalance (%): {{ induction_motor.electric_resistance_test.unbalance_percentage }}</li>
                 </ul>
+                {% endif %}
+            {% endfor %}
+            {% for selected_test in selected_tests %}
+                {% if selected_test.test_type == 'temperature_rise_test' %}
                 <h1 class="text">
               <span class="title"
               >3.2. Temperature Rise - Nominal Condition - Direct</span
               >
                 </h1>
                 <ul class="section-ul-2">
-                    <li>Voltage (V): 400.0</li>
-                    <li>Frequency (Hz): 60.0</li>
-                    <li>Winding (Resistance Method) (C): 48.9</li>
-                    <li>DE Bearing (C): 34.3</li>
+                    <li>Voltage (V): {{ induction_motor.temperature_rise_test.voltage }}</li>
+                    <li>Frequency (Hz): {{ induction_motor.temperature_rise_test.winding }}</li>
+                    <li>Winding (Resistance Method) (C): {{ induction_motor.temperature_rise_test.frequency }}</li>
+                    <li>DE Bearing (C): {{ induction_motor.temperature_rise_test.de_bearing }}</li>
                     <li></li>
-                    <li>NDE Bearing (C): 29.3</li>
+                    <li>NDE Bearing (C): {{ induction_motor.temperature_rise_test.nde_bearing }}</li>
                 </ul>
+            {% endif %}
+            {% endfor %}
+            {% for selected_test in selected_tests %}
+                {% if selected_test.test_type == 'performance_determination_test' %}
                 <h1 class="text">
                     <span class="title">3.3. Performance Determination</span>
                 </h1>
                 <ul class="section-ul">
-                    <li>Voltage (V): 400.0</li>
-                    <li>Frequency (Hz): 60.0</li>
-                    <li>Nominal T. (N.m): 853.04</li>
+                    <li>Voltage (V): {{ induction_motor.performance_determination_test.voltage }}</li>
+                    <li>Frequency (Hz): {{ induction_motor.performance_determination_test.frequency }}</li>
+                    <li>Nominal T. (N.m): {{ induction_motor.performance_determination_test.nominal_t }}</li>
                 </ul>
                 <table class="table-border">
                     <tr>
@@ -173,50 +282,60 @@
                         <th>Efficiency (%)</th>
                         <th>Cos Ø</th>
                     </tr>
-                    <tr>
-                        <td>25</td>
-                        <td>108.97</td>
-                        <td>0.0013</td>
-                        <td>1797.6</td>
-                        <td>94.16</td>
-                        <td>0.56</td>
-                    </tr>
-                    <tr>
-                        <td>50</td>
-                        <td>156.57</td>
-                        <td>0.0027</td>
-                        <td>1795.1</td>
-                        <td>96.26</td>
-                        <td>0.77</td>
-                    </tr>
-                    <tr>
-                        <td>75</td>
-                        <td>213.34</td>
-                        <td>0.0041</td>
-                        <td>1792.5</td>
-                        <td>96.64</td>
-                        <td>0.84</td>
-                    </tr>
-                    <tr>
-                        <td>100</td>
-                        <td>276.76</td>
-                        <td>0.0056</td>
-                        <td>1789.8</td>
-                        <td>96.56</td>
-                        <td>0.86</td>
-                    </tr>
+                    {% for parameter in parameters %}
+                        <tr>
+                            <td>{{ parameter.load }}</td>
+                            <td>{{ parameter.current }}</td>
+                            <td>{{ parameter.slip }}</td>
+                            <td>{{ parameter.speed }}</td>
+                            <td>{{ parameter.efficiency }}</td>
+                            <td>{{ parameter.cos }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+                    {#                    <tr>#}
+                    {#                        <td>50</td>#}
+                    {#                        <td>156.57</td>#}
+                    {#                        <td>0.0027</td>#}
+                    {#                        <td>1795.1</td>#}
+                    {#                        <td>96.26</td>#}
+                    {#                        <td>0.77</td>#}
+                    {#                    </tr>#}
+                    {#                    <tr>#}
+                    {#                        <td>75</td>#}
+                    {#                        <td>213.34</td>#}
+                    {#                        <td>0.0041</td>#}
+                    {#                        <td>1792.5</td>#}
+                    {#                        <td>96.64</td>#}
+                    {#                        <td>0.84</td>#}
+                    {#                    </tr>#}
+                    {#                    <tr>#}
+                    {#                        <td>100</td>#}
+                    {#                        <td>276.76</td>#}
+                    {#                        <td>0.0056</td>#}
+                    {#                        <td>1789.8</td>#}
+                    {#                        <td>96.56</td>#}
+                    {#                        <td>0.86</td>#}
+                    {#                    </tr>#}
                 </table>
+            {% for selected_test in selected_tests %}
+                {% if selected_test.test_type == 'no_load_test' %}
                 <h1 class="text">
                     <span class="title">3.4. No Load</span>
                 </h1>
                 <ul class="section-ul-3">
-                    <li>Voltage (V): 400.9</li>
-                    <li>Current (A): 85.02</li>
-                    <li>Power (W): 2263.33</li>
-                    <li>Frequency (Hz): 60.0</li>
-                    <li>Speed (rpm): 1800</li>
-                    <li>Direction of Rotation: Clockwise</li>
+                    <li>Voltage (V): {{ induction_motor.no_load_test.voltage }}</li>
+                    <li>Current (A): {{ induction_motor.no_load_test.current }}</li>
+                    <li>Power (W): {{ induction_motor.no_load_test.power }}</li>
+                    <li>Frequency (Hz): {{ induction_motor.no_load_test.frequency }}</li>
+                    <li>Speed (rpm): {{ induction_motor.no_load_test.speed }}</li>
+                    <li>Direction of Rotation: {{ induction_motor.no_load_test.direction_of_rotation }}</li>
                 </ul>
+            {% endif %}
+            {% endfor %}
+            {% for selected_test in selected_tests %}
+                {% if selected_test.test_type == 'withstand_voltage_ac_test' %}
                 <h1 class="text">
                     <span class="title">3.5. Withstand Voltage AC</span>
                 </h1>
@@ -227,12 +346,16 @@
                         <th>Time (s)</th>
                     </tr>
                     <tr>
-                        <td>Winding</td>
-                        <td>1.8</td>
-                        <td>60</td>
+                        <td>{{ induction_motor.withstand_voltage_ac_test.description }}</td>
+                        <td>{{ induction_motor.withstand_voltage_ac_test.voltage_kv }}</td>
+                        <td>{{ induction_motor.withstand_voltage_ac_test.time_in_seconds }}</td>
                     </tr>
                 </table>
+            {% endif %}
+            {% endfor %}
                 <br>
+            {% for selected_test in selected_tests %}
+                {% if selected_test.test_type == 'insulation_resistance_test' %}
                 <h1 class="text">
                     <span class="title">3.6. Insulation Resistance</span>
                 </h1>
@@ -244,17 +367,22 @@
                         <th>Time (s)</th>
                     </tr>
                     <tr>
-                        <td>Winding</td>
-                        <td>500.0</td>
-                        <td>22700.0</td>
-                        <td>60</td>
+                        <td>{{ induction_motor.insulation_resistance_test.description }}</td>
+                        <td>{{ induction_motor.insulation_resistance_test.voltage }}</td>
+                        <td>{{ induction_motor.insulation_resistance_test.insulation_resistance }}</td>
+                        <td>{{ induction_motor.insulation_resistance_test.time_in_seconds }}</td>
                     </tr>
                 </table>
                 <ul class="section-ul-4">
-                    <li>Voltage (V): 400.0</li>
-                    <li>Frequency (Hz): 60.0</li>
+                    <li>Ambient Temperature
+                        (°C): {{ induction_motor.insulation_resistance_test.ambient_temperature_C }}</li>
+                    <li>Humidity (%): {{ induction_motor.insulation_resistance_test.humidity_percentage }}</li>
                 </ul>
+            {% endif %}
+            {% endfor %}
             </section>
+        </section>
+        <footer class="footer-1">
             <hr/>
             <ul class="footer-ul">
                 <li>
@@ -268,9 +396,7 @@
                     at least five years.
                 </li>
             </ul>
-        </section>
-        <footer class="footer-1">
-            <div>Report issued on 04/28/2023</div>
+            <div>Report issued on {{ induction_motor.updated_on }}</div>
         </footer>
     </div>
     <p class="page-number first-page">Page 1 of 2</p>
@@ -288,7 +414,7 @@
             </div>
             <div class="second-heading border-1">
                 <span>University of Engineering Technology </span>
-                <span>MOTOR TESTING LAB</span>
+                <span>Motor Testing Lab</span>
             </div>
             <div class="third-heading">
                 University Rd. Kala Shah Kaku, Sheikhupura, Punjab
@@ -362,7 +488,7 @@
                     <td>Inspector</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Report issued on 04/28/2023</td>
+                    <td colspan="2">Report issued on {{ induction_motor.updated_on }}</td>
                 </tr>
             </table>
         </footer>
