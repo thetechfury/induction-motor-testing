@@ -259,3 +259,7 @@ hr {
 .page-2 .main-section{
   height: 900px;
 }
+
+.lock-rotor, .lock-rotor th, .lock-rotor td{
+  border:1px solid black;
+}
