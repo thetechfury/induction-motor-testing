@@ -123,7 +123,7 @@ footer {
   font-size: 15px;
   padding-left: 10px;
   margin-bottom: 0;
-  margin-top: 0;
+  margin-top: 8px;
 }
 .main-section .section-1,
 .main-section .section-3,
@@ -258,4 +258,8 @@ hr {
 
 .page-2 .main-section{
   height: 900px;
+}
+
+.lock-rotor, .lock-rotor th, .lock-rotor td{
+  border:1px solid black;
 }
