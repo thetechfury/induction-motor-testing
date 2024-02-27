@@ -244,3 +244,30 @@ class InsulationResistanceTest(TimeStampedModel):
     humidity_percentage = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+
+
+class LockRotorTest(TimeStampedModel):
+    """ 3.7. Lock Rotor Test Report """
+
+    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="lock_rotor_test")
+    voltage = models.DecimalField(
+        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    frequency = models.DecimalField(
+        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    current = models.DecimalField(
+        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    power = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    vibration = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    noise = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    temperature = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
