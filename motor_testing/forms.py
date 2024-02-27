@@ -32,7 +32,7 @@ class InitialForm(ModelForm):
 class PerformanceTestForm(ModelForm):
     class Meta:
         model = PerformanceTest
-        exclude = ('motor', 'page_number', 'status', )
+        exclude = ('motor', 'page_number', 'status',)
         readonly_fields = ['test_type']
 
     def __init__(self, *args, **kwargs):
@@ -58,31 +58,27 @@ class SearchForm(forms.Form):
 class ElectricResistanceTestForm(forms.ModelForm):
     prefix = 'electric_resistance_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = ElectricResistanceTest
-        fields = ['resistance_ohm_1', 'resistance_ohm_2', 'resistance_ohm_3', 'ambient_temperature_C', 'unbalance_percentage']
-        widgets = {
-            'resistance_ohm_1': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Resistance Value 1 (mOhms)'}),
-            'resistance_ohm_2': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Resistance Value 2 (mOhms)'}),
-            'resistance_ohm_3': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Resistance Value 3 (mOhms)'}),
-            'ambient_temperature_C': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ambient Temperature (Celsius)'}),
-            'unbalance_percentage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Unbalance Percentage (%)'}),
-        }
+        exclude = ('induction_motor',)
 
 
 class TemperatureRiseTestForm(forms.ModelForm):
     prefix = 'temperature_rise_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = TemperatureRiseTest
-        fields = ['voltage', 'winding', 'frequency', 'de_bearing', 'nde_bearing']
-        widgets = {
-            'voltage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
-            'winding': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Winding (V)'}),
-            'frequency': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Frequency (Hz)'}),
-            'de_bearing': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'De-Bearing (V)'}),
-            'nde_bearing': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'NDe-Bearing (V)'}),
-        }
+        exclude = ('induction_motor',)
 
 
 class PerformanceDeterminationTestForm(forms.ModelForm):
@@ -146,51 +142,37 @@ class PerformanceDeterminationTestForm(forms.ModelForm):
 class NoLoadTestForm(forms.ModelForm):
     prefix = 'no_load_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = NoLoadTest
-        fields = ['voltage', 'current', 'power', 'frequency', 'speed', 'direction_of_rotation']
-        widgets = {
-            'voltage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
-            'current': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Current (A)'}),
-            'power': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Power (W)'}),
-            'frequency': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Frequency (Hz)'}),
-            'speed': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Speed (rpm)'}),
-            'direction_of_rotation': forms.Select(attrs={'class': 'form-select', 'placeholder': 'Direction of Rotation'}),
-        }
-        labels = {
-            'voltage': 'Voltage (V)',
-            'current': 'Current (A)',
-            'power': 'Power (W)',
-            'frequency': 'Frequency (Hz)',
-            'speed': 'Speed (rpm)',
-            'direction_of_rotation': 'Direction of Rotation',
-        }
+        exclude = ('induction_motor',)
 
 
 class WithstandVoltageACTestForm(forms.ModelForm):
     prefix = 'withstand_voltage_ac_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = WithstandVoltageACTest
-        fields = ['description', 'voltage_kv', 'time_in_seconds']
-        widgets = {
-            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description'}),
-            'voltage_kv': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
-            'time_in_seconds': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Time (s)'}),
-        }
+        exclude = ('induction_motor',)
 
 
 class InsulationResistanceTestForm(forms.ModelForm):
     prefix = 'insulation_resistance_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = InsulationResistanceTest
-        fields = ['description', 'voltage', 'insulation_resistance', 'time_in_seconds', 'ambient_temperature_C', 'humidity_percentage']
-        widgets = {
-            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description'}),
-            'voltage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
-            'insulation_resistance': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Insulation Resistance (MΩ)'}),
-            'time_in_seconds': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Time (s)'}),
-            'ambient_temperature_C': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ambient Temperature (C)'}),
-            'humidity_percentage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Humidity (%)'}),
-        }
+        exclude = ('induction_motor',)
