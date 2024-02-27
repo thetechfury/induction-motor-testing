@@ -1,14 +1,15 @@
 from decimal import Decimal
 
+import pdfkit
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import DatabaseError
 from django.forms import formset_factory, model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.template.loader import get_template
 from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
+from django_pdfkit import PDFView
 from openpyxl import load_workbook
 
 from core_settings import settings
@@ -19,8 +20,6 @@ from motor_testing.forms import (
 from motor_testing.models import InductionMotor, PerformanceTest, ElectricResistanceTest, TemperatureRiseTest, \
     PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, \
     PerformanceTestParameters
-import pdfkit
-from django_pdfkit import PDFView
 
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
@@ -195,7 +194,6 @@ class ReportView(TemplateView):
 
 class GeneratePDF(PDFView):
     def get(self, request, *args, **kwargs):
-
         config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
         induction_motor = InductionMotor.objects.get(id=kwargs['id'])
         report_url = request.build_absolute_uri(reverse('report', kwargs={'id': kwargs['id']}))
