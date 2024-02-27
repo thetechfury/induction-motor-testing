@@ -82,6 +82,7 @@ class TemperatureRiseTestForm(forms.ModelForm):
 
 
 class PerformanceDeterminationTestForm(forms.ModelForm):
+    file_format = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
     file_1 = forms.FileField()
     file_2 = forms.FileField()
     file_3 = forms.FileField()
@@ -92,6 +93,10 @@ class PerformanceDeterminationTestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
+        self.fields['file_1'].widget.attrs["accept"] = self.file_format
+        self.fields['file_2'].widget.attrs["accept"] = self.file_format
+        self.fields['file_3'].widget.attrs["accept"] = self.file_format
+        self.fields['file_4'].widget.attrs["accept"] = self.file_format
 
     class Meta:
         model = PerformanceDeterminationTest
