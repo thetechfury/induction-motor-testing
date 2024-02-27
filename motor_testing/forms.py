@@ -168,14 +168,11 @@ class WithstandVoltageACTestForm(forms.ModelForm):
 class InsulationResistanceTestForm(forms.ModelForm):
     prefix = 'insulation_resistance_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = InsulationResistanceTest
-        fields = ['description', 'voltage', 'insulation_resistance', 'time_in_seconds', 'ambient_temperature_C', 'humidity_percentage']
-        widgets = {
-            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description'}),
-            'voltage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
-            'insulation_resistance': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Insulation Resistance (MΩ)'}),
-            'time_in_seconds': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Time (s)'}),
-            'ambient_temperature_C': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ambient Temperature (C)'}),
-            'humidity_percentage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Humidity (%)'}),
-        }
+        exclude = ('induction_motor',)

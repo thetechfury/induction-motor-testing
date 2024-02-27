@@ -345,14 +345,68 @@
                                     <form id="insulation-form" class="row g-3"
                                           action="{% url 'insulation-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
-                                        {% for field in insulation_resistance_test %}
-                                            <div class="col-md-12">
-                                                <div class="form-floating">
-                                                    {{ field }}
-                                                    {{ field.label_tag }}
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_insulation_resistance_test-description"
+                                                    class="col-form-label">Description:</label>
+                                                </div>
+                                                <div class="col">{{ insulation_resistance_test.description }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_insulation_resistance_test-voltage"
+                                                    class="col-form-label">Voltage (V):</label>
+                                                </div>
+                                                <div class="col">{{ insulation_resistance_test.voltage }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col">
+                                                    <label for="id_insulation_resistance_test-time_in_seconds"
+                                                    class="col-form-label">Time (s):</label>
+                                                </div>
+                                                <div class="col">{{ insulation_resistance_test.time_in_seconds }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col">
+                                                    <label for="id_insulation_resistance_test-insulation_resistance"
+                                                    class="col-form-label">Insulation Res. (Mohms):</label>
+                                                </div>
+                                                <div class="col">{{ insulation_resistance_test.insulation_resistance }}
                                                 </div>
                                             </div>
-                                        {% endfor %}
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col">
+                                                    <label for="id_insulation_resistance_test-ambient_temperature_C"
+                                                    class="col-form-label">Ambient Temperature (°C):</label>
+                                                </div>
+                                                <div class="col">{{ insulation_resistance_test.ambient_temperature_C }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col">
+                                                    <label for="id_insulation_resistance_test-humidity_percentage"
+                                                    class="col-form-label">Humidity (%):</label>
+                                                </div>
+                                                <div class="col">{{ insulation_resistance_test.humidity_percentage }}
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="text-center py-5">
                                             <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
