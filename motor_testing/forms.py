@@ -155,14 +155,14 @@ class NoLoadTestForm(forms.ModelForm):
 class WithstandVoltageACTestForm(forms.ModelForm):
     prefix = 'withstand_voltage_ac_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = WithstandVoltageACTest
-        fields = ['description', 'voltage_kv', 'time_in_seconds']
-        widgets = {
-            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description'}),
-            'voltage_kv': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
-            'time_in_seconds': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Time (s)'}),
-        }
+        exclude = ('induction_motor',)
 
 
 class InsulationResistanceTestForm(forms.ModelForm):
