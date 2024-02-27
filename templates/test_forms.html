@@ -236,14 +236,61 @@
                                     <form id="noload-form" class="row g-3"
                                           action="{% url 'noload-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
-                                        {% for field in no_load_test %}
-                                            <div class="col-md-12">
-                                                <div class="form-floating">
-                                                    {{ field }}
-                                                    {{ field.label_tag }}
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_no_load_test-voltage"
+                                                    class="col-form-label">Voltage (V):</label>
                                                 </div>
+                                                <div class="col">{{ no_load_test.voltage }}</div>
                                             </div>
-                                        {% endfor %}
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_no_load_test-current"
+                                                    class="col-form-label">Current (A):</label>
+                                                </div>
+                                                <div class="col">{{ no_load_test.current }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_no_load_test-power"
+                                                    class="col-form-label">Power (W):</label>
+                                                </div>
+                                                <div class="col">{{ no_load_test.power }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_no_load_test-frequency"
+                                                    class="col-form-label">Frequency (Hz):</label>
+                                                </div>
+                                                <div class="col">{{ no_load_test.frequency }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_no_load_test-speed"
+                                                    class="col-form-label">Speed (rpm):</label>
+                                                </div>
+                                                <div class="col">{{ no_load_test.speed }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_no_load_test-direction_of_rotation"
+                                                    class="col-form-label">Direction of Rotation:</label>
+                                                </div>
+                                                <div class="col">{{ no_load_test.direction_of_rotation }}</div>
+                                            </div>
+                                        </div>
+
                                         <div class="text-center py-5">
                                             <button type="submit" class="btn btn-primary">Save</button>
                                         </div>

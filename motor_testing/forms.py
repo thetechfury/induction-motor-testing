@@ -142,25 +142,14 @@ class PerformanceDeterminationTestForm(forms.ModelForm):
 class NoLoadTestForm(forms.ModelForm):
     prefix = 'no_load_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = NoLoadTest
-        fields = ['voltage', 'current', 'power', 'frequency', 'speed', 'direction_of_rotation']
-        widgets = {
-            'voltage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
-            'current': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Current (A)'}),
-            'power': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Power (W)'}),
-            'frequency': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Frequency (Hz)'}),
-            'speed': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Speed (rpm)'}),
-            'direction_of_rotation': forms.Select(attrs={'class': 'form-select', 'placeholder': 'Direction of Rotation'}),
-        }
-        labels = {
-            'voltage': 'Voltage (V)',
-            'current': 'Current (A)',
-            'power': 'Power (W)',
-            'frequency': 'Frequency (Hz)',
-            'speed': 'Speed (rpm)',
-            'direction_of_rotation': 'Direction of Rotation',
-        }
+        exclude = ('induction_motor',)
 
 
 class WithstandVoltageACTestForm(forms.ModelForm):
