@@ -28,6 +28,9 @@ footer {
   background-color: #bde3f6;
   color: rgb(0, 0, 128);
 }
+.page-main-1 footer {
+  background-color: white;
+}
 .main-heading {
   display: block;
   justify-content: space-between;
@@ -233,7 +236,16 @@ hr {
 .footer-1 div {
   font-size: 12px;
   padding: 5px;
+  margin: 0;
   border: 1px solid #000000;
+  background-color: #bde3f6;
+  color: rgb(0, 0, 128);
+}
+.footer-1 .footer-ul {
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
 }
 .footer-1 div:nth-child(1) {
   margin-top: 4rem;
