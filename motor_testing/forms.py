@@ -32,7 +32,7 @@ class InitialForm(ModelForm):
 class PerformanceTestForm(ModelForm):
     class Meta:
         model = PerformanceTest
-        exclude = ('motor', 'page_number', 'status', )
+        exclude = ('motor', 'page_number', 'status',)
         readonly_fields = ['test_type']
 
     def __init__(self, *args, **kwargs):
@@ -65,22 +65,20 @@ class ElectricResistanceTestForm(forms.ModelForm):
 
     class Meta:
         model = ElectricResistanceTest
-        exclude = ('induction_motor', )
+        exclude = ('induction_motor',)
 
 
 class TemperatureRiseTestForm(forms.ModelForm):
     prefix = 'temperature_rise_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = TemperatureRiseTest
-        fields = ['voltage', 'winding', 'frequency', 'de_bearing', 'nde_bearing']
-        widgets = {
-            'voltage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Voltage (V)'}),
-            'winding': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Winding (V)'}),
-            'frequency': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Frequency (Hz)'}),
-            'de_bearing': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'De-Bearing (V)'}),
-            'nde_bearing': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'NDe-Bearing (V)'}),
-        }
+        exclude = ('induction_motor',)
 
 
 class PerformanceDeterminationTestForm(forms.ModelForm):
