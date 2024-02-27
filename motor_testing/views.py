@@ -118,8 +118,9 @@ class TestsView(LoginRequiredMixin, View):
             electric_resistance_form = ElectricResistanceTestForm(
                 instance=inductionMotorReport.electric_resistance_test)
             temperature_rise_form = TemperatureRiseTestForm(instance=inductionMotorReport.temperature_rise_test)
-            performance_determination_form = PerformanceDeterminationTestForm(request.POST, request.FILES,
-                                                                              initial={'parent': inductionMotorReport})
+            performance_determination_form = PerformanceDeterminationTestForm(
+                instance=inductionMotorReport.performance_determination_test
+            )
             no_load_form = NoLoadTestForm(instance=inductionMotorReport.no_load_test)
             withstand_voltage_form = WithstandVoltageACTestForm(instance=inductionMotorReport.withstand_voltage_ac_test)
             insulation_resistance_form = InsulationResistanceTestForm(
@@ -397,7 +398,7 @@ class InsulationFormSaveView(View):
 
 class PerformanceDeterminationFormSave(View):
 
-    def handle_file(self, file, parameter):
+    def handle_file(self, file, obj, load=0):
         file_path = settings.MEDIA_ROOT / file.name
 
         with open(file_path, 'wb') as destination:
@@ -437,21 +438,36 @@ class PerformanceDeterminationFormSave(View):
                 count_cos += 1
             except IndexError:
                 pass
+
+        parameter = PerformanceTestParameters.objects.get_or_create(
+            performance_determination_test=obj, load=load
+        )[0]
         if count_current > 0:
             average_current = total_sum_current / count_current
-            parameter.current = average_current
+            parameter.current = round(average_current, 2)
+        else:
+            parameter.current = Decimal('0.00')
         if count_slip > 0:
             average_slip = total_sum_slip / count_slip
-            parameter.slip = average_slip
+            parameter.slip = round(average_slip, 4)
+        else:
+            parameter.slip = Decimal('0.0000')
         if count_speed > 0:
             average_speed = total_sum_speed / count_speed
-            parameter.speed = average_speed
+            parameter.speed = round(average_speed, 2)
+        else:
+            parameter.speed = Decimal('0.00')
         if count_efficiency > 0:
             average_efficiency = total_sum_efficiency / count_efficiency
-            parameter.efficiency = average_efficiency
+            parameter.efficiency = round(average_efficiency, 2)
+        else:
+            parameter.efficiency = Decimal('0.00')
         if count_cos > 0:
             average_cos = total_sum_cos / count_cos
-            parameter.cos = average_cos
+            parameter.cos = round(average_cos, 2)
+        else:
+            parameter.cos = Decimal('0.00')
+        parameter.load = load
         parameter.save()
 
     def post(self, request, *args, **kwargs):
@@ -469,19 +485,19 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
         performance_determination_test.save()
-        parameters = PerformanceTestParameters(performance_determination_test=performance_determination_test)
+        parent_obj = performance_determination_test
         file_1 = request.FILES.get('performance_determination_test-file_1')
         file_2 = request.FILES.get('performance_determination_test-file_2')
         file_3 = request.FILES.get('performance_determination_test-file_3')
         file_4 = request.FILES.get('performance_determination_test-file_4')
         if file_1:
-            self.handle_file(file_1, parameters)
-        elif file_2:
-            self.handle_file(file_2, parameters)
-        elif file_3:
-            self.handle_file(file_3, parameters)
-        elif file_4:
-            self.handle_file(file_4, parameters)
+            self.handle_file(file_1, parent_obj, 25)
+        if file_2:
+            self.handle_file(file_2, parent_obj, 50)
+        if file_3:
+            self.handle_file(file_3, parent_obj, 75)
+        if file_4:
+            self.handle_file(file_4, parent_obj, 100)
 
         response_data = {
             'voltage': motor.performance_determination_test.voltage,
