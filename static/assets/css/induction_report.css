@@ -134,7 +134,22 @@ footer {
   margin-right: auto;
   font-size: 14px;
 }
-
+.main-section .section-5 {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 14px;
+}
+.main-section .section-5 table {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 14px;
+  justify-content: center
+}
+.main-section .section-5 table th {
+  background-color: #bde3f6;
+}
 table {
   width: 100%;
 }
