@@ -58,16 +58,14 @@ class SearchForm(forms.Form):
 class ElectricResistanceTestForm(forms.ModelForm):
     prefix = 'electric_resistance_test'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     class Meta:
         model = ElectricResistanceTest
-        fields = ['resistance_ohm_1', 'resistance_ohm_2', 'resistance_ohm_3', 'ambient_temperature_C', 'unbalance_percentage']
-        widgets = {
-            'resistance_ohm_1': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Resistance Value 1 (mOhms)'}),
-            'resistance_ohm_2': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Resistance Value 2 (mOhms)'}),
-            'resistance_ohm_3': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Resistance Value 3 (mOhms)'}),
-            'ambient_temperature_C': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ambient Temperature (Celsius)'}),
-            'unbalance_percentage': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Unbalance Percentage (%)'}),
-        }
+        exclude = ('induction_motor', )
 
 
 class TemperatureRiseTestForm(forms.ModelForm):
