@@ -271,3 +271,10 @@ class LockRotorTest(TimeStampedModel):
     temperature = models.DecimalField(
         max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+
+
+class Result(TimeStampedModel):
+    """ 3.8. Result """
+
+    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="result")
+    description = models.CharField(max_length=250, blank=True, null=True)

@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 
 from motor_testing.models import InductionMotor, ElectricResistanceTest, TemperatureRiseTest, \
-    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, PerformanceTest
+    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, PerformanceTest, \
+    LockRotorTest, Result
 
 
 class UserLoginForm(AuthenticationForm):
@@ -139,4 +140,30 @@ class InsulationResistanceTestForm(forms.ModelForm):
 
     class Meta:
         model = InsulationResistanceTest
+        exclude = ('induction_motor',)
+
+
+class LockRotorTestForm(forms.ModelForm):
+    prefix = 'lock_rotor_test'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
+    class Meta:
+        model = LockRotorTest
+        exclude = ('induction_motor',)
+
+
+class ResultForm(forms.ModelForm):
+    prefix = 'result'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
+    class Meta:
+        model = Result
         exclude = ('induction_motor',)
