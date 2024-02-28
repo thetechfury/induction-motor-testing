@@ -494,10 +494,14 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.voltage = voltage if voltage else default
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
-        performance_determination_test.performance_25 = file_1 if file_1 else None
-        performance_determination_test.performance_50 = file_2 if file_2 else None
-        performance_determination_test.performance_75 = file_3 if file_3 else None
-        performance_determination_test.performance_100 = file_4 if file_4 else None
+        if file_1:
+            performance_determination_test.performance_25 = file_1
+        if file_2:
+            performance_determination_test.performance_50 = file_2
+        if file_3:
+            performance_determination_test.performance_75 = file_3
+        if file_4:
+            performance_determination_test.performance_100 = file_4
         performance_determination_test.save()
         parent_obj = performance_determination_test
         if file_1:
@@ -514,13 +518,5 @@ class PerformanceDeterminationFormSave(View):
             'frequency': motor.performance_determination_test.frequency,
             'nominal_t': motor.performance_determination_test.nominal_t,
         }
-        # if file_1:
-        #     response_data['file_1'] = str(settings.MEDIA_ROOT / file_1.name or None)
-        # if file_2:
-        #     response_data['file_2'] = str(settings.MEDIA_ROOT / file_2.name or None)
-        # if file_3:
-        #     response_data['file_3'] = str(settings.MEDIA_ROOT / file_3.name or None)
-        # if file_4:
-        #     response_data['file_4'] = str(settings.MEDIA_ROOT / file_4.name or None)
 
         return JsonResponse(response_data)

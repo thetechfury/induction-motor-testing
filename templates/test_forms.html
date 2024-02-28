@@ -214,7 +214,7 @@
                                      aria-labelledby="performance-tab">
                                     <form id="performance-form" class="row g-3"
                                           action="{% url 'performance-form' inductionMotorReport.id %}" method="post"
-                                          enctype="multipart/form-data">
+                                          enctype="multipart/form-data" novalidate>
                                         {% csrf_token %}
 
                                         <div class="col-md-4 pt-5">
@@ -659,10 +659,10 @@
                         $('#id_performance_determination_test-voltage').val(data.voltage);
                         $('#id_performance_determination_test-frequency').val(data.frequency);
                         $('#id_performance_determination_test-nominal_t').val(data.nominal_t);
-                        $('#id_performance_determination_test-file_1').val(data.file_1);
-                        $('#id_performance_determination_test-file_2').val(data.file_2);
-                        $('#id_performance_determination_test-file_3').val(data.file_3);
-                        $('#id_performance_determination_test-file_4').val(data.file_4);
+                        {#$('#id_performance_determination_test-file_1').val(data.file_1);#}
+                        {#$('#id_performance_determination_test-file_2').val(data.file_2);#}
+                        {#$('#id_performance_determination_test-file_3').val(data.file_3);#}
+                        {#$('#id_performance_determination_test-file_4').val(data.file_4);#}
                         // Optionally, display a success message or perform other actions
                         alert('Form data saved successfully!');
                     },
