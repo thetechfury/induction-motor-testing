@@ -3,7 +3,8 @@ from decimal import Decimal
 
 import pdfkit
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import DatabaseError
+from django.db import DatabaseError, models
+from django.db.models import Case, When
 from django.forms import formset_factory, model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -46,7 +47,9 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         if search_query:
             queryset = InductionMotor.objects.filter(serial_number__icontains=search_query,
                                                      status=InductionMotor.ACTIVE)
-        return queryset.order_by("-updated_on")
+        return queryset.annotate(
+            report_status=Case(When(result__isnull=False, then=models.Value(True)), default=False)
+        ).order_by("-updated_on")
 
     def get_formset(self):
         PerformanceTestFormSet = formset_factory(PerformanceTestForm, extra=0)

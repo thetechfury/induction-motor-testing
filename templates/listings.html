@@ -34,9 +34,11 @@
                         <thead>
                         <tr>
                             <th class="text-center" scope="col">Sr. No.</th>
-                            <th class="text-center" scope="col">Motor's Serial Number</th>
+                            <th class="text-center" scope="col">Motor's Serial No</th>
                             <th class="text-center" scope="col">Customer</th>
                             <th class="text-center" scope="col">Sales Order</th>
+                            <th class="text-center" scope="col">Date Created</th>
+                            <th class="text-center" scope="col">Report Status</th>
                             <th class="text-center" scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -47,6 +49,16 @@
                                 <td class="text-center">{{ obj.serial_number }}</td>
                                 <td class="text-center">{{ obj.customer_name }}</td>
                                 <td class="text-center">{{ obj.sales_order_number }}</td>
+                                <td class="text-center">{{ obj.created_on }}</td>
+                                <td class="text-center">
+                                    {% if report_status %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i> Generated</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-exclamation-triangle me-1"></i> Not Generated</span>
+                                    {% endif %}
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Basic outlined example">
                                         <a href="{% url 'pdf' obj.id %}" type="button" class="btn btn-outline-info">
