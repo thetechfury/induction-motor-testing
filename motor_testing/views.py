@@ -1,3 +1,4 @@
+import os
 from decimal import Decimal
 
 import pdfkit
@@ -101,9 +102,13 @@ class TestsView(LoginRequiredMixin, View):
     def get_performance_files(self, obj):
         return {
             'file_25': obj.performance_25 if obj.performance_25 else None,
+            'file_25_name': os.path.basename(obj.performance_25.name) if obj.performance_25 else None,
             'file_50': obj.performance_50 if obj.performance_50 else None,
+            'file_50_name': os.path.basename(obj.performance_50.name) if obj.performance_50 else None,
             'file_75': obj.performance_75 if obj.performance_75 else None,
-            'file_100': obj.performance_100 if obj.performance_100 else None
+            'file_75_name': os.path.basename(obj.performance_75.name) if obj.performance_75 else None,
+            'file_100': obj.performance_100 if obj.performance_100 else None,
+            'file_100_name': os.path.basename(obj.performance_100.name) if obj.performance_100 else None
         }
 
     def get(self, request, *args, **kwargs):

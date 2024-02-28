@@ -250,15 +250,17 @@
                                                     <label for="id_performance_determination_test-file_1"
                                                     class="col-form-label">Performance Load 25%:</label>
                                                 </div>
-                                                <div class="col-md-5">
+                                                <div class="col-md-5 {% if not files.file_25 %}empty{% endif %}">
                                                     {{ performance_determination_test.file_1 }}
                                                     {% if files.file_25 %}
                                                         <span class="pt-3">
+                                                            <span class="fst-italic">{{ files.file_25_name }} - </span>
                                                             <a href="{{ files.file_25.url }}"
                                                                class="text-decoration-none">
-                                                                 Download File <i class="bi bi-download"></i>
-                                                            </a>
+                                                                 Download File <i class="bi bi-download"></i></a>
                                                         </span>
+                                                    {% else %}
+                                                        <span class="fst-italic">Please upload the excel file.</span>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -269,15 +271,17 @@
                                                 <div class="col-md-5"><label for="id_performance_determination_test-file_2"
                                                     class="col-form-label">Performance Load 50%:</label>
                                                 </div>
-                                                <div class="col-md-5">
+                                                <div class="col-md-5 {% if not files.file_50 %}empty{% endif %}">
                                                     {{ performance_determination_test.file_2 }}
                                                     {% if files.file_50 %}
                                                         <span class="pt-3">
+                                                        <span class="fst-italic">{{ files.file_50_name }} - </span>
                                                             <a href="{{ files.file_50.url }}"
                                                                class="text-decoration-none">
-                                                                 Download File <i class="bi bi-download"></i>
-                                                            </a>
+                                                                 Download File <i class="bi bi-download"></i></a>
                                                         </span>
+                                                    {% else %}
+                                                        <span class="fst-italic">Please upload the excel file.</span>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -288,15 +292,18 @@
                                                 <div class="col-md-5"><label for="id_performance_determination_test-file_3"
                                                     class="col-form-label">Performance Load 75%:</label>
                                                 </div>
-                                                <div class="col-md-5">
+                                                <div class="col-md-5 {% if not files.file_75 %}empty{% endif %}">
                                                     {{ performance_determination_test.file_3 }}
                                                     {% if files.file_75 %}
                                                         <span class="pt-3">
+                                                            <span class="fst-italic">{{ files.file_75_name }} - </span>
                                                             <a href="{{ files.file_75.url }}"
                                                                class="text-decoration-none">
                                                                  Download File <i class="bi bi-download"></i>
                                                             </a>
                                                         </span>
+                                                    {% else %}
+                                                        <span class="fst-italic">Please upload the excel file.</span>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -307,15 +314,18 @@
                                                 <div class="col-md-5"><label for="id_performance_determination_test-file_4"
                                                     class="col-form-label">Performance Load 100%:</label>
                                                 </div>
-                                                <div class="col-md-5">
+                                                <div class="col-md-5 {% if not files.file_100 %}empty{% endif %}">
                                                     {{ performance_determination_test.file_4 }}
                                                     {% if files.file_100 %}
                                                         <span class="pt-3">
+                                                           <span class="fst-italic">{{ files.file_100_name }} - </span>
                                                            <a href="{{ files.file_100.url }}"
                                                                class="text-decoration-none">
                                                                  Download File <i class="bi bi-download"></i>
                                                             </a>
                                                         </span>
+                                                    {% else %}
+                                                        <span class="fst-italic">Please upload the excel file.</span>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -646,27 +656,28 @@
         $(document).ready(function () {
             $('#performance-form').submit(function (e) {
                 e.preventDefault();
-                var formData = new FormData(this);
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        console.log(data);
-                        // Update form fields with saved data
-                        $('#id_performance_determination_test-voltage').val(data.voltage);
-                        $('#id_performance_determination_test-frequency').val(data.frequency);
-                        $('#id_performance_determination_test-nominal_t').val(data.nominal_t);
-                        {#$('#id_performance_determination_test-file_1').val(data.file_1);#}
-                        {#$('#id_performance_determination_test-file_2').val(data.file_2);#}
-                        {#$('#id_performance_determination_test-file_3').val(data.file_3);#}
-                        {#$('#id_performance_determination_test-file_4').val(data.file_4);#}
-                        // Optionally, display a success message or perform other actions
-                        alert('Form data saved successfully!');
-                    },
-                });
+                if (!$(document).find('.empty').length > 0) {
+                     var formData = new FormData(this);
+                    $.ajax({
+                        type: 'POST',
+                        url: $(this).attr('action'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            console.log(data);
+                            // Update form fields with saved data
+                            $('#id_performance_determination_test-voltage').val(data.voltage);
+                            $('#id_performance_determination_test-frequency').val(data.frequency);
+                            $('#id_performance_determination_test-nominal_t').val(data.nominal_t);
+                            alert('Form data saved successfully!');
+                        },
+                    });
+                }
+
+                else {
+                    alert("Please upload the remaining Performance Load File")
+                }
             });
         });
     </script>
