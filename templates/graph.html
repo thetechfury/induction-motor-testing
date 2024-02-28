@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="pagetitle">
+        <h1>Listings</h1>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-body">
+                    <h5 class="card-title">Report <span>/Today</span></h5>
+                    <button class="btn btn-outline-primary" id="downloadBtn">Download Graph as Image</button>
+                    <script type="text/javascript" src="{% static 'assets/js/chart.js' %}"></script>
+                    <br><br>
+                    <div class="align-center" id="chart_div"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script>
+        google.charts.load('current', {'packages': ['line', 'corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var button = document.getElementById('change-chart');
+            var chartDiv = document.getElementById('chart_div');
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Speed [RPM]');
+            data.addColumn('number', "Torque [lb.in]");
+            data.addColumn('number', "Amplitude [Hz]");
+            data.addColumn('number', "Efficiency [%]");
+            data.addColumn('number', "Watts OUT");
+            data.addColumn('number', "Horsepower [HP]");
+
+            data.addRows([
+                [0, - .5, 5.7, 12, 10.3, 0.02],
+                [50, .4, 8.7, 7.3, 23.6, 0.04],
+                [100, .5, 12, 4.2, 36.2, 0.10],
+                [150, 2.9, 15.3, 1.9, 53.8, 0.14],
+                [200, 6.3, 18.6, 17.3, 63.3, 0.20],
+            ]);
+
+            var materialOptions = {
+                chart: {
+                    title: 'Motor Performance against RPM'
+                },
+                width: 1405,
+                height: 500,
+                series: {
+                    // Gives each series an axis name that matches the Y-axis below.
+                    0: {axis: 'Torque'},
+                    1: {axis: 'Efficiency'},
+                    2: {axis: 'Watts'},
+                    3: {axis: 'Amps'},
+                    4: {axis: 'Horsepower'},
+                },
+                axes: {
+                    // Adds labels to each axis; they don't have to match the axis names.
+                    y: {
+                        Torque: {label: 'Torque [lb.in]'},
+                        Amps: {label: 'Amps 1'},
+                        Efficiency: {label: 'Efficiency'},
+                        Watts: {label: 'Watts OUT'},
+                        Horsepower: {label: 'Horsepower [HP]'},
+                    }
+                }
+            };
+
+            function drawMaterialChart() {
+                var materialChart = new google.charts.Line(chartDiv);
+                materialChart.draw(data, materialOptions);
+                button.innerText = 'Change to Classic';
+                button.onclick = drawClassicChart;
+            }
+
+            drawMaterialChart();
+
+        }
+    </script>
+    <script>
+        // Function to download the chart as an image
+        function downloadChartAsImage() {
+            // Get the chart container element
+            var chartContainer = document.getElementById('chart_div');
+
+            // Use html2canvas to capture the chart container as an image
+            html2canvas(chartContainer).then(function (canvas) {
+                // Convert the canvas to a data URL
+                var dataURL = canvas.toDataURL('image/png');
+
+                // Create a temporary anchor element to trigger the download
+                var link = document.createElement('a');
+                link.download = 'chart_image.png';
+                link.href = dataURL;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+
+        // Add event listener to the download button
+        document.getElementById('downloadBtn').addEventListener('click', downloadChartAsImage);
+    </script>
+{% endblock %}

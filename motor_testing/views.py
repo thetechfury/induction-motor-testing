@@ -520,3 +520,8 @@ class PerformanceDeterminationFormSave(View):
         }
 
         return JsonResponse(response_data)
+
+
+class ChartView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'graph.html')

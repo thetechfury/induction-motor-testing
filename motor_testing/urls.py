@@ -3,7 +3,7 @@ from django.urls import path
 from .views import InductionMotorListingsView, TestsView, ReportView, GeneratePDF, DeleteReportView, ElectricFormSaveView, TemperatureFormSaveView, NoLoadFormSaveView, WithStandVoltageFormSaveView, InsulationFormSaveView,PerformanceDeterminationFormSave
 from .views import InductionMotorListingsView, TestsView, ReportView, GeneratePDF, DeleteReportView, \
     ElectricFormSaveView, TemperatureFormSaveView, NoLoadFormSaveView, WithStandVoltageFormSaveView, \
-    InsulationFormSaveView, PerformanceDeterminationFormSave
+    InsulationFormSaveView, PerformanceDeterminationFormSave, ChartView
 
 urlpatterns = [
     path("home/", InductionMotorListingsView.as_view(), name="home"),
@@ -17,4 +17,5 @@ urlpatterns = [
     path("insulation-form/<int:id>", InsulationFormSaveView.as_view(), name="insulation-form"),
     path("performance-form/<int:id>", PerformanceDeterminationFormSave.as_view(), name="performance-form"),
     path('pdf/<int:id>', GeneratePDF.as_view(), name='pdf'),
+    path('chart/<int:id>', ChartView.as_view(), name='chart'),
 ]
