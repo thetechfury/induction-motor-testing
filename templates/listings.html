@@ -51,7 +51,7 @@
                                 <td class="text-center">{{ obj.sales_order_number }}</td>
                                 <td class="text-center">{{ obj.created_on }}</td>
                                 <td class="text-center">
-                                    {% if report_status %}
+                                    {% if obj.report_status %}
                                         <span class="badge bg-success">
                                             <i class="bi bi-check-circle me-1"></i> Generated</span>
                                     {% else %}

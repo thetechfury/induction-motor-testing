@@ -4,7 +4,7 @@ from decimal import Decimal
 import pdfkit
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import DatabaseError, models
-from django.db.models import Case, When
+from django.db.models import Case, When, BooleanField
 from django.forms import formset_factory, model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -48,7 +48,8 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
             queryset = InductionMotor.objects.filter(serial_number__icontains=search_query,
                                                      status=InductionMotor.ACTIVE)
         return queryset.annotate(
-            report_status=Case(When(result__isnull=False, then=models.Value(True)), default=False)
+            report_status=Case(When(
+                report_link__isnull=False, then=models.Value(True)), default=False, output_field=BooleanField())
         ).order_by("-updated_on")
 
     def get_formset(self):
