@@ -514,3 +514,8 @@ class PerformanceDeterminationFormSave(View):
             response_data['file_4'] = str(settings.MEDIA_ROOT / file_4.name or None)
 
         return JsonResponse(response_data)
+
+
+class ChartView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'graph.html')
