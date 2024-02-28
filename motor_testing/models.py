@@ -160,6 +160,10 @@ class PerformanceDeterminationTest(TimeStampedModel):
     nominal_t = models.DecimalField(
         max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+    performance_25 = models.FileField(blank=True, null=True, upload_to='uploads/25/')
+    performance_50 = models.FileField(blank=True, null=True, upload_to='uploads/50/')
+    performance_75 = models.FileField(blank=True, null=True, upload_to='uploads/75/')
+    performance_100 = models.FileField(blank=True, null=True, upload_to='uploads/100/')
 
 
 class PerformanceTestParameters(models.Model):

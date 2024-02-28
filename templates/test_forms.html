@@ -246,37 +246,78 @@
 
                                         <div class="col-md-6 pt-md-5 ps-md-5">
                                             <div class="row" style="text-align: right">
-                                                <div class="col-md-3"><label for="id_performance_determination_test-file_1"
-                                                    class="col-form-label">File 1:</label>
+                                                <div class="col-md-5">
+                                                    <label for="id_performance_determination_test-file_1"
+                                                    class="col-form-label">Performance Load 25%:</label>
                                                 </div>
-                                                <div class="col-md-5">{{ performance_determination_test.file_1 }}</div>
+                                                <div class="col-md-5">
+                                                    {{ performance_determination_test.file_1 }}
+                                                    {% if files.file_25 %}
+                                                        <span class="pt-3">
+                                                            <a href="{{ files.file_25.url }}"
+                                                               class="text-decoration-none">
+                                                                 Download File <i class="bi bi-download"></i>
+                                                            </a>
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 pt-5">
                                             <div class="row" style="text-align: right">
                                                 <div class="col-md-5"><label for="id_performance_determination_test-file_2"
-                                                    class="col-form-label">File 2:</label>
+                                                    class="col-form-label">Performance Load 50%:</label>
                                                 </div>
-                                                <div class="col-md-5">{{ performance_determination_test.file_2 }}</div>
+                                                <div class="col-md-5">
+                                                    {{ performance_determination_test.file_2 }}
+                                                    {% if files.file_50 %}
+                                                        <span class="pt-3">
+                                                            <a href="{{ files.file_50.url }}"
+                                                               class="text-decoration-none">
+                                                                 Download File <i class="bi bi-download"></i>
+                                                            </a>
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 pt-md-5 ps-md-5">
                                             <div class="row" style="text-align: right">
-                                                <div class="col-md-3"><label for="id_performance_determination_test-file_3"
-                                                    class="col-form-label">File 3:</label>
+                                                <div class="col-md-5"><label for="id_performance_determination_test-file_3"
+                                                    class="col-form-label">Performance Load 75%:</label>
                                                 </div>
-                                                <div class="col-md-5">{{ performance_determination_test.file_3 }}</div>
+                                                <div class="col-md-5">
+                                                    {{ performance_determination_test.file_3 }}
+                                                    {% if files.file_75 %}
+                                                        <span class="pt-3">
+                                                            <a href="{{ files.file_75.url }}"
+                                                               class="text-decoration-none">
+                                                                 Download File <i class="bi bi-download"></i>
+                                                            </a>
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 pt-5">
                                             <div class="row" style="text-align: right">
                                                 <div class="col-md-5"><label for="id_performance_determination_test-file_4"
-                                                    class="col-form-label">File 4:</label>
+                                                    class="col-form-label">Performance Load 100%:</label>
                                                 </div>
-                                                <div class="col-md-5">{{ performance_determination_test.file_4 }}</div>
+                                                <div class="col-md-5">
+                                                    {{ performance_determination_test.file_4 }}
+                                                    {% if files.file_100 %}
+                                                        <span class="pt-3">
+                                                           <a href="{{ files.file_100.url }}"
+                                                               class="text-decoration-none">
+                                                                 Download File <i class="bi bi-download"></i>
+                                                            </a>
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
 

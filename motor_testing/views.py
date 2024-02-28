@@ -98,6 +98,14 @@ class TestsView(LoginRequiredMixin, View):
     def get_object(self):
         return InductionMotor.objects.filter(id=self.kwargs['pk'], status=InductionMotor.ACTIVE).first()
 
+    def get_performance_files(self, obj):
+        return {
+            'file_25': obj.performance_25 if obj.performance_25 else None,
+            'file_50': obj.performance_50 if obj.performance_50 else None,
+            'file_75': obj.performance_75 if obj.performance_75 else None,
+            'file_100': obj.performance_100 if obj.performance_100 else None
+        }
+
     def get(self, request, *args, **kwargs):
         inductionMotorReport = self.get_object()
         ElectricResistanceTest.objects.get_or_create(induction_motor=inductionMotorReport)
@@ -137,16 +145,14 @@ class TestsView(LoginRequiredMixin, View):
             }
 
             context = {}
-
             for key, form in forms.items():
                 if form.prefix in test_types:
                     context[form.prefix] = form
 
             context['inductionMotorReport'] = inductionMotorReport
-
             context['edit_form'] = InitialForm(initial=model_to_dict(inductionMotorReport))
             context['edit_formset'] = self.get_performance_tests_forms(inductionMotorReport)
-
+            context['files'] = self.get_performance_files(inductionMotorReport.performance_determination_test)
             return render(request, "test_forms.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -481,15 +487,19 @@ class PerformanceDeterminationFormSave(View):
         voltage = request.POST.get('performance_determination_test-voltage')
         frequency = request.POST.get('performance_determination_test-frequency')
         nominal_t = request.POST.get('performance_determination_test-nominal_t')
-        performance_determination_test.voltage = voltage if voltage else default
-        performance_determination_test.frequency = frequency if frequency else default
-        performance_determination_test.nominal_t = nominal_t if nominal_t else default
-        performance_determination_test.save()
-        parent_obj = performance_determination_test
         file_1 = request.FILES.get('performance_determination_test-file_1')
         file_2 = request.FILES.get('performance_determination_test-file_2')
         file_3 = request.FILES.get('performance_determination_test-file_3')
         file_4 = request.FILES.get('performance_determination_test-file_4')
+        performance_determination_test.voltage = voltage if voltage else default
+        performance_determination_test.frequency = frequency if frequency else default
+        performance_determination_test.nominal_t = nominal_t if nominal_t else default
+        performance_determination_test.performance_25 = file_1 if file_1 else None
+        performance_determination_test.performance_50 = file_2 if file_2 else None
+        performance_determination_test.performance_75 = file_3 if file_3 else None
+        performance_determination_test.performance_100 = file_4 if file_4 else None
+        performance_determination_test.save()
+        parent_obj = performance_determination_test
         if file_1:
             self.handle_file(file_1, parent_obj, 25)
         if file_2:
@@ -504,13 +514,13 @@ class PerformanceDeterminationFormSave(View):
             'frequency': motor.performance_determination_test.frequency,
             'nominal_t': motor.performance_determination_test.nominal_t,
         }
-        if file_1:
-            response_data['file_1'] = str(settings.MEDIA_ROOT / file_1.name or None)
-        if file_2:
-            response_data['file_2'] = str(settings.MEDIA_ROOT / file_2.name or None)
-        if file_3:
-            response_data['file_3'] = str(settings.MEDIA_ROOT / file_3.name or None)
-        if file_4:
-            response_data['file_4'] = str(settings.MEDIA_ROOT / file_4.name or None)
+        # if file_1:
+        #     response_data['file_1'] = str(settings.MEDIA_ROOT / file_1.name or None)
+        # if file_2:
+        #     response_data['file_2'] = str(settings.MEDIA_ROOT / file_2.name or None)
+        # if file_3:
+        #     response_data['file_3'] = str(settings.MEDIA_ROOT / file_3.name or None)
+        # if file_4:
+        #     response_data['file_4'] = str(settings.MEDIA_ROOT / file_4.name or None)
 
         return JsonResponse(response_data)
