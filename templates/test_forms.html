@@ -656,6 +656,9 @@
         $(document).ready(function () {
             $('#performance-form').submit(function (e) {
                 e.preventDefault();
+                $('input[type="file"]').on('change', function () {
+                    $(this).parent().removeClass('empty')
+                })
                 if (!$(document).find('.empty').length > 0) {
                      var formData = new FormData(this);
                     $.ajax({
