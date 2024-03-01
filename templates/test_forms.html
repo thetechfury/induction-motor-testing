@@ -8,6 +8,8 @@
                 <i class="bi bi-arrow-left-circle-fill"></i> Back to Home</a>
         </div>
         <div class="mb-3 clearfix">
+            <a href="{% url 'chart' inductionMotorReport.id %}" class="text-white btn btn-primary"
+               target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a>
             <a href="{% url 'pdf' inductionMotorReport.id %}" class="text-white btn btn-success"
                target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Report</a>
         </div>
