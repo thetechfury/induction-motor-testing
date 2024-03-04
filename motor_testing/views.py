@@ -223,7 +223,7 @@ class ReportView(TemplateView):
 
 class GeneratePDF(PDFView):
     def get(self, request, *args, **kwargs):
-        config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+        config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
         induction_motor = InductionMotor.objects.get(id=kwargs['id'])
         report_url = request.build_absolute_uri(reverse('report', kwargs={'id': kwargs['id']}))
         report_link = f'./generatedReports/{induction_motor.customer_name}-{induction_motor.serial_number}.pdf'

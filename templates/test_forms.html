@@ -530,6 +530,89 @@
     </section>
 {% endblock %}
 {% block scripts %}
+<script>
+    function validateForm() {
+        // Get the <tbody> element by its id
+        var tbody = document.getElementById('edit-formset-body');
+
+        // Get all checkboxes inside the <tbody>
+        var checkboxes = tbody.querySelectorAll('input[type="checkbox"]');
+
+        // Check if any checkbox is checked
+        var isChecked = false;
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                isChecked = true;
+            }
+        });
+
+        // If no checkbox is checked, alert the user and do not proceed
+        if (!isChecked) {
+            alert("Please select at least one checkbox.");
+
+            // Change button color to red
+          // Change button color to red
+ // Add border around the button
+    var button = document.getElementById('edit_performed_tests');
+    button.style.border = "2px solid red";
+
+            return false;
+        }
+
+        // If validation passes, close the modal programmatically
+        $('#edit-modal').modal('hide');
+        return true;
+    }
+</script>
+   <script>
+$(document).ready(function () {
+    $('form').submit(function (e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var currentFormId = '#' + $(this).attr('id'); // Get the ID of the current form
+        var currentTab = $(this).closest('.tab-pane'); // Find the current tab containing the form
+        var currentTabButton = $('a[aria-controls="' + currentTab.attr('id') + '"]'); // Find the button corresponding to the current tab
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            success: function (data) {
+                console.log(data);
+                // Update form fields with saved data
+                $(currentFormId + ' input[type="text"]').each(function() {
+                    var fieldName = $(this).attr('name');
+                    $(this).val(data[fieldName]);
+                });
+
+                // Optionally, display a success message or perform other actions
+                alert('Form data saved successfully!');
+
+                // Switch to the next tab
+                var nextTab = currentTab.next('.tab-pane');
+                var nextTabButton = $('a[aria-controls="' + nextTab.attr('id') + '"]');
+                if (nextTab.length > 0) { // Check if there is a next tab
+                    currentTab.removeClass('active show'); // Hide the current tab
+                    nextTab.addClass('active show'); // Show the next tab
+
+                    // Activate the button corresponding to the next tab
+                    currentTabButton.removeClass('active');
+                    nextTabButton.addClass('active');
+                } else {
+                    // Optionally, do something if there is no next tab
+                    console.log('No next tab found.');
+                }
+            },
+            error: function (xhr, errmsg, err) {
+                // Handle errors if any
+                console.log(errmsg);
+            }
+        });
+    });
+});
+
+    </script>
+
 
 
     <script>

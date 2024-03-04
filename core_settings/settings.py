@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'motor_testing',
-    'wkhtmltopdf',
     "debug_toolbar",
 ]
 

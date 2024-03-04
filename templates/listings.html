@@ -60,11 +60,13 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-center">
+                                       {% if obj.report_status %}
                                     <div class="btn-group" role="group" aria-label="Basic outlined example">
                                         <a href="{% url 'pdf' obj.id %}" type="button" class="btn btn-outline-info">
                                             <i class="bi bi-eye"></i></a>
                                         <a href="{% url 'chart' obj.id %}" type="button" class="btn btn-outline-primary">
                                             <i class="bi bi-pie-chart-fill"></i></a>
+                                        {% endif %}
                                         <a type="button" class="btn btn-outline-warning"
                                            href="{% url 'tests' obj.id %}">
                                             <i class="bi bi-pencil-square"></i></a>
