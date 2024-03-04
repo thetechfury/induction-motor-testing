@@ -1281,3 +1281,24 @@ h6 {
     opacity: 1;
   }
 
+.hover-button::after {
+  content: attr(data-name); /* Inserts the value of the data-name attribute */
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0; /* Initially hidden */
+  pointer-events: none; /* Ensure it doesn't interfere with button events */
+  transition: opacity 0.3s ease;
+  color:black;
+}
+
+.hover-button:hover::after {
+  opacity: 1; /* Show the text on hover */
+}
