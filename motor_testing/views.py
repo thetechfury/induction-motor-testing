@@ -17,11 +17,11 @@ from openpyxl import load_workbook
 from core_settings import settings
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
-    NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm
+    NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm, LockRotorTestForm
 )
 from motor_testing.models import InductionMotor, PerformanceTest, ElectricResistanceTest, TemperatureRiseTest, \
     PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, \
-    PerformanceTestParameters
+    PerformanceTestParameters, LockRotorTest
 
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
@@ -103,17 +103,17 @@ class TestsView(LoginRequiredMixin, View):
     def get_object(self):
         return InductionMotor.objects.filter(id=self.kwargs['pk'], status=InductionMotor.ACTIVE).first()
 
-    def get_performance_files(self, obj):
-        return {
-            'file_25': obj.performance_25 if obj.performance_25 else None,
-            'file_25_name': os.path.basename(obj.performance_25.name) if obj.performance_25 else None,
-            'file_50': obj.performance_50 if obj.performance_50 else None,
-            'file_50_name': os.path.basename(obj.performance_50.name) if obj.performance_50 else None,
-            'file_75': obj.performance_75 if obj.performance_75 else None,
-            'file_75_name': os.path.basename(obj.performance_75.name) if obj.performance_75 else None,
-            'file_100': obj.performance_100 if obj.performance_100 else None,
-            'file_100_name': os.path.basename(obj.performance_100.name) if obj.performance_100 else None
-        }
+    # def get_performance_files(self, obj):
+    #     return {
+    #         'file_25': obj.performance_25 if obj.performance_25 else None,
+    #         'file_25_name': os.path.basename(obj.performance_25.name) if obj.performance_25 else None,
+    #         'file_50': obj.performance_50 if obj.performance_50 else None,
+    #         'file_50_name': os.path.basename(obj.performance_50.name) if obj.performance_50 else None,
+    #         'file_75': obj.performance_75 if obj.performance_75 else None,
+    #         'file_75_name': os.path.basename(obj.performance_75.name) if obj.performance_75 else None,
+    #         'file_100': obj.performance_100 if obj.performance_100 else None,
+    #         'file_100_name': os.path.basename(obj.performance_100.name) if obj.performance_100 else None
+    #     }
 
     def get(self, request, *args, **kwargs):
         inductionMotorReport = self.get_object()
@@ -123,6 +123,7 @@ class TestsView(LoginRequiredMixin, View):
         NoLoadTest.objects.get_or_create(induction_motor=inductionMotorReport)
         WithstandVoltageACTest.objects.get_or_create(induction_motor=inductionMotorReport)
         InsulationResistanceTest.objects.get_or_create(induction_motor=inductionMotorReport)
+        LockRotorTest.objects.get_or_create(induction_motor=inductionMotorReport)
         if not inductionMotorReport:
             return render(request, "registration/404.html")
         else:
@@ -143,6 +144,9 @@ class TestsView(LoginRequiredMixin, View):
             insulation_resistance_form = InsulationResistanceTestForm(
                 instance=inductionMotorReport.insulation_resistance_test
             )
+            lock_rotor_test_form = LockRotorTestForm(
+                instance=inductionMotorReport.lock_rotor_test
+            )
 
             forms = {
                 'electric_resistance_form': electric_resistance_form,
@@ -150,7 +154,8 @@ class TestsView(LoginRequiredMixin, View):
                 'performance_determination_form': performance_determination_form,
                 'no_load_form': no_load_form,
                 'withstand_voltage_form': withstand_voltage_form,
-                'insulation_resistance_form': insulation_resistance_form
+                'insulation_resistance_form': insulation_resistance_form,
+                'lock_rotor_test_form': lock_rotor_test_form
             }
 
             context = {}
@@ -161,7 +166,7 @@ class TestsView(LoginRequiredMixin, View):
             context['inductionMotorReport'] = inductionMotorReport
             context['edit_form'] = InitialForm(initial=model_to_dict(inductionMotorReport))
             context['edit_formset'] = self.get_performance_tests_forms(inductionMotorReport)
-            context['files'] = self.get_performance_files(inductionMotorReport.performance_determination_test)
+            # context['files'] = self.get_performance_files(inductionMotorReport.performance_determination_test)
             return render(request, "test_forms.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -410,6 +415,33 @@ class InsulationFormSaveView(View):
 
         return JsonResponse(response_data)
 
+class LockRotorFormSave(View):
+    def post(self, request, *args, **kwargs):
+        motor_id = kwargs['id']
+        motor = get_object_or_404(InductionMotor, id=motor_id)
+
+        # Check if the InductionMotor instance has an associated LockRotorTest
+        if not hasattr(motor, 'lock_rotor_test'):
+            motor.lock_rotor_test = LockRotorTest.objects.create(induction_motor=motor)
+
+        default = Decimal('0.00')
+        vibration = request.POST.get('lock_rotor_test-vibration')
+        noise = request.POST.get('lock_rotor_test-noise')
+        temperature = request.POST.get('lock_rotor_test-temperature')
+
+        # Update LockRotorTest object
+        motor.lock_rotor_test.vibration = vibration if vibration else default
+        motor.lock_rotor_test.noise = noise if noise else default
+        motor.lock_rotor_test.temperature = temperature if temperature else default
+        motor.lock_rotor_test.save()
+
+        response_data = {
+            'vibration': vibration,
+            'noise': noise,
+            'temperature': temperature
+        }
+
+        return JsonResponse(response_data)
 
 class PerformanceDeterminationFormSave(View):
 
@@ -503,24 +535,24 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.voltage = voltage if voltage else default
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
-        if file_1:
-            performance_determination_test.performance_25 = file_1
-        if file_2:
-            performance_determination_test.performance_50 = file_2
-        if file_3:
-            performance_determination_test.performance_75 = file_3
-        if file_4:
-            performance_determination_test.performance_100 = file_4
+        # if file_1:
+        #     performance_determination_test.performance_25 = file_1
+        # if file_2:
+        #     performance_determination_test.performance_50 = file_2
+        # if file_3:
+        #     performance_determination_test.performance_75 = file_3
+        # if file_4:
+        #     performance_determination_test.performance_100 = file_4
         performance_determination_test.save()
         parent_obj = performance_determination_test
-        if file_1:
-            self.handle_file(file_1, parent_obj, 25)
-        if file_2:
-            self.handle_file(file_2, parent_obj, 50)
-        if file_3:
-            self.handle_file(file_3, parent_obj, 75)
-        if file_4:
-            self.handle_file(file_4, parent_obj, 100)
+        # if file_1:
+        #     self.handle_file(file_1, parent_obj, 25)
+        # if file_2:
+        #     self.handle_file(file_2, parent_obj, 50)
+        # if file_3:
+        #     self.handle_file(file_3, parent_obj, 75)
+        # if file_4:
+        #     self.handle_file(file_4, parent_obj, 100)
 
         response_data = {
             'voltage': motor.performance_determination_test.voltage,

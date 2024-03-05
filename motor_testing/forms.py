@@ -83,25 +83,28 @@ class TemperatureRiseTestForm(forms.ModelForm):
 
 
 class PerformanceDeterminationTestForm(forms.ModelForm):
-    file_format = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-    file_1 = forms.FileField()
-    file_2 = forms.FileField()
-    file_3 = forms.FileField()
-    file_4 = forms.FileField()
+    # file_format = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+    # file_1 = forms.FileField()
+    # file_2 = forms.FileField()
+    # file_3 = forms.FileField()
+    # file_4 = forms.FileField()
     prefix = 'performance_determination_test'
-
+    #
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
-        self.fields['file_1'].widget.attrs["accept"] = self.file_format
-        self.fields['file_2'].widget.attrs["accept"] = self.file_format
-        self.fields['file_3'].widget.attrs["accept"] = self.file_format
-        self.fields['file_4'].widget.attrs["accept"] = self.file_format
+    #     self.fields['file_1'].widget.attrs["accept"] = self.file_format
+    #     self.fields['file_2'].widget.attrs["accept"] = self.file_format
+    #     self.fields['file_3'].widget.attrs["accept"] = self.file_format
+    #     self.fields['file_4'].widget.attrs["accept"] = self.file_format
 
     class Meta:
         model = PerformanceDeterminationTest
-        fields = ['voltage', 'frequency', 'nominal_t', 'file_1', 'file_2', 'file_3', 'file_4']
+        fields = ['voltage', 'frequency', 'nominal_t','is_current_date', 'test_date']
+        widgets = {
+            'test_date': forms.DateInput(attrs={'type': 'date'}),
+        }
 
 
 class NoLoadTestForm(forms.ModelForm):

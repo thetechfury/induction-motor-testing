@@ -1,6 +1,6 @@
 from django.contrib import admin
 from motor_testing.models import InductionMotor, ElectricResistanceTest, TemperatureRiseTest, \
-    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest
+    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, LockRotorTest
 from django.contrib.admin.decorators import register
 
 
@@ -42,3 +42,7 @@ class WithstandVoltageACTestAdmin(admin.ModelAdmin):
 @register(InsulationResistanceTest)
 class InsulationResistanceTestAdmin(admin.ModelAdmin):
     list_display = ('induction_motor', 'description', 'voltage', 'insulation_resistance', 'time_in_seconds', 'ambient_temperature_C', 'humidity_percentage')
+
+@register(LockRotorTest)
+class LockRotorTestAdmin(admin.ModelAdmin):
+    list_display = ('vibration', 'noise', 'temperature')

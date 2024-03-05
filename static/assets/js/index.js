@@ -5,6 +5,7 @@ function enableTestTypeFields() {
     document.getElementById("id_form-3-test_type").removeAttribute("disabled");
     document.getElementById("id_form-4-test_type").removeAttribute("disabled");
     document.getElementById("id_form-5-test_type").removeAttribute("disabled");
+    document.getElementById("id_form-6-test_type").removeAttribute("disabled");
 }
 
 document.getElementById('main-modal').addEventListener('show.bs.modal', function (event) {
@@ -111,8 +112,8 @@ function deleteRecord(deletedRowID) {
 // Select the first form
 const firstTab = document.querySelector('#testFormTabs li:first-child');
 
-if (firstTab) {
-    firstTab.querySelector('button').click();
-} else {
-    console.error('The first li element was not found in the ul.');
-}
+// if (firstTab) {
+//     firstTab.querySelector('button').click();
+// } else {
+//     console.error('The first li element was not found in the ul.');
+// }
