@@ -531,9 +531,10 @@
 {% endblock %}
 {% block scripts %}
 <script>
-    function validateForm() {
+    function validateForm(tbodyId) {
+        console.log(tbodyId)
         // Get the <tbody> element by its id
-        var tbody = document.getElementById('edit-formset-body');
+        var tbody = document.getElementById(tbodyId);
 
         // Get all checkboxes inside the <tbody>
         var checkboxes = tbody.querySelectorAll('input[type="checkbox"]');
@@ -571,7 +572,7 @@ $(document).ready(function () {
         var formData = $(this).serialize();
         var currentFormId = '#' + $(this).attr('id'); // Get the ID of the current form
         var currentTab = $(this).closest('.tab-pane'); // Find the current tab containing the form
-        var currentTabButton = $('a[aria-controls="' + currentTab.attr('id') + '"]'); // Find the button corresponding to the current tab
+        var currentTabButton = $('button.nav-link.active[aria-controls="' + currentTab.attr('id') + '"]'); // Find the button corresponding to the current tab
 
         $.ajax({
             type: 'POST',
@@ -590,13 +591,14 @@ $(document).ready(function () {
 
                 // Switch to the next tab
                 var nextTab = currentTab.next('.tab-pane');
-                var nextTabButton = $('a[aria-controls="' + nextTab.attr('id') + '"]');
+                var nextTabButton = $('button.nav-link[aria-controls="' + nextTab.attr('id') + '"]');
                 if (nextTab.length > 0) { // Check if there is a next tab
-                    currentTab.removeClass('active show'); // Hide the current tab
-                    nextTab.addClass('active show'); // Show the next tab
-
-                    // Activate the button corresponding to the next tab
+                    // Hide the current tab and remove its active class
+                    currentTab.removeClass('active show');
                     currentTabButton.removeClass('active');
+
+                    // Show the next tab and add its active class
+                    nextTab.addClass('active show');
                     nextTabButton.addClass('active');
                 } else {
                     // Optionally, do something if there is no next tab
@@ -610,7 +612,6 @@ $(document).ready(function () {
         });
     });
 });
-
     </script>
 
 
