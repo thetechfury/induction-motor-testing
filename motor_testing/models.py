@@ -78,6 +78,7 @@ class PerformanceTest(models.Model):
         ('no_load_test', 'No Load Test'),
         ('withstand_voltage_ac_test', 'Withstand Voltage AC Test'),
         ('insulation_resistance_test', 'Insulation Resistance Test'),
+        ('lock_rotor_test', 'Lock Rotor Test')
     )
 
     PENDING = "PENDING"
@@ -100,6 +101,8 @@ class PerformanceTest(models.Model):
 
     def __str__(self):
         return f'{self.motor.serial_number} - {self.test_type}'
+
+
 
 
 class ElectricResistanceTest(TimeStampedModel):
@@ -150,7 +153,7 @@ class PerformanceDeterminationTest(TimeStampedModel):
     """  3.3. Performance Determination Test Report """
 
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE,
-                                        related_name="performance_determination_test")
+                                           related_name="performance_determination_test")
     voltage = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
@@ -160,10 +163,9 @@ class PerformanceDeterminationTest(TimeStampedModel):
     nominal_t = models.DecimalField(
         max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
-    performance_25 = models.FileField(blank=True, null=True, upload_to='uploads/25/')
-    performance_50 = models.FileField(blank=True, null=True, upload_to='uploads/50/')
-    performance_75 = models.FileField(blank=True, null=True, upload_to='uploads/75/')
-    performance_100 = models.FileField(blank=True, null=True, upload_to='uploads/100/')
+    is_current_date = models.BooleanField(default=False, verbose_name="Use current date")
+    test_date = models.DateField(null=True, blank=True, verbose_name="Test Date")
+
 
 
 class PerformanceTestParameters(models.Model):
@@ -254,18 +256,6 @@ class LockRotorTest(TimeStampedModel):
     """ 3.7. Lock Rotor Test Report """
 
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="lock_rotor_test")
-    voltage = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
-    )
-    frequency = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
-    )
-    current = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
-    )
-    power = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
-    )
     vibration = models.DecimalField(
         max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
