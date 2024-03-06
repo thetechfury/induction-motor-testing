@@ -29,7 +29,8 @@ class InductionMotor(TimeStampedModel):
     serial_number = models.CharField(max_length=20)
     customer_name = models.CharField(max_length=100)
     sales_order_number = models.CharField(max_length=20)
-
+    director_cerad = models.CharField(max_length=50,default='')
+    lab_instructor = models.CharField(max_length=50,default='')
     # 1- Motor Identification
     tag = models.CharField(max_length=50, blank=True, null=True)
     material = models.CharField(max_length=50, blank=True, null=True)

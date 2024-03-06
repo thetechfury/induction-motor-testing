@@ -481,8 +481,16 @@
                     <td>
                         <div class="d-f">
                             <div>
-                                <p>MOTOR TESTING DEPARTMENT CERAD,KSK</p>
-                                <p>Test Date: {{ induction_motor.updated_on | date:"m/d/Y"  }}</p>
+                                <div>
+                                       <span style="text-align:left ">Director CERAD</span>
+                                        <span style="text-align:right;margin-left:200px">Lab Instructor</span>
+                                </div>
+                                <div>
+                                    <span style="text-align:left;margin-right:250px" ><i>{{ induction_motor.director_cerad}}</i></span>
+                                            <span ><i>{{ induction_motor.lab_instructor}}</i></span>
+
+                                    </div>
+<!--                                <p>Test Date: {{ induction_motor.updated_on | date:"m/d/Y"  }}</p>-->
                             </div>
                         </div>
                     </td>
