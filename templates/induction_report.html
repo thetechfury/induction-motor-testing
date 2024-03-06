@@ -392,11 +392,12 @@
                 <li>
                     The results presented in this document refer exclusively to the
                     electric motor subjected to the specified tests and do not extend
-                    to any batch; * WEG will keep the original document archived for
-                    at least five years.
+                    to any batch
                 </li>
+                <li> WEG will keep the original document archived for
+                    at least five years.</li>
             </ul>
-            <div>Report issued on {{ induction_motor.updated_on }}</div>
+            <div>Report issued on {{ induction_motor.updated_on | date:"m/d/Y"  }}</div>
         </footer>
     </div>
     <p class="page-number first-page">Page 1 of 2</p>
@@ -473,22 +474,23 @@
         <footer class="footer-2">
             <table class="table-border">
                 <tr>
-                    <th>WEG Motors</th>
+                    <th>UET TEST REOPRT</th>
                     <th>Customer</th>
                 </tr>
                 <tr>
                     <td>
                         <div class="d-f">
                             <div>
-                                <p>Agnaldo Reus Medeiros Rodrigues</p>
-                                <p>Test Date: 4/18/2023</p>
+                                <p>MOTOR TESTING DEPARTMENT CERAD,KSK</p>
+                                <p>Test Date: {{ induction_motor.updated_on | date:"m/d/Y"  }}</p>
                             </div>
                         </div>
                     </td>
                     <td>Inspector</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Report issued on {{ induction_motor.updated_on }}</td>
+                    <td colspan="2">Report issued on {{ induction_motor.updated_on | date:"m/d/Y"  }}</td>
+
                 </tr>
             </table>
         </footer>

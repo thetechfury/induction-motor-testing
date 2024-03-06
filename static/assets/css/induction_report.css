@@ -18,7 +18,7 @@ body {
 }
 .page-1,
 .page-2 {
-  margin: 0 2rem 1rem 2rem;
+  margin: 0 2rem 0.5rem 2rem;
 }
 .border-1 {
   border: 1px solid black;
@@ -246,6 +246,8 @@ hr {
   margin: 0;
   padding: 0;
   vertical-align: top;
+  padding-left: 10px;
+  padding-bottom: 5px;
 }
 .footer-1 div:nth-child(1) {
   margin-top: 4rem;
@@ -276,7 +278,8 @@ hr {
 .page-number {
   /*display: flex;*/
   /*flex-direction: row-reverse;*/
-  margin-right: 2rem;
+  /*margin-right: 3rem;*/
+  width: 14%;
   margin-top: 2px;
   float: right;
 }
@@ -292,3 +295,4 @@ hr {
 .lock-rotor, .lock-rotor th, .lock-rotor td{
   border:1px solid black;
 }
+

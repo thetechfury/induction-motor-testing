@@ -7,7 +7,8 @@
             <a href="{% url 'home' %}" type="button" class="btn btn-primary">
                 <i class="bi bi-arrow-left-circle-fill"></i> Back to Home</a>
         </div>
-        <div class="mb-3 clearfix">
+
+        <div class="mb-3 clearfix {% if all_test_completed %} d-block {% else %} d-none {% endif %} ">
             <a href="{% url 'chart' inductionMotorReport.id %}" class="text-white btn btn-primary"
                target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a>
             <a href="{% url 'pdf' inductionMotorReport.id %}" class="text-white btn btn-success"
@@ -31,9 +32,10 @@
 
                         <!-- Default Tabs -->
                         <ul class="nav nav-pills justify-content-center pt-5" id="testFormTabs" role="tablist">
+
                             {% if electric_resistance_test %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="electric-tab" data-bs-toggle="tab"
+                            <li class="nav-item " role="presentation">
+                                    <button class="nav-link {% if status.electric_resistance_test == 'COMPLETED' %}fullfilled {% endif %}" id="electric-tab" data-bs-toggle="tab"
                                             data-bs-target="#electric" type="button" role="tab" aria-controls="electric"
                                             aria-selected="true">Electric Resistance Test
                                     </button>
@@ -41,7 +43,7 @@
                             {% endif %}
                             {% if temperature_rise_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="temperature-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.temperature_rise_test == 'COMPLETED' %}fullfilled {% endif %}" id="temperature-tab" data-bs-toggle="tab"
                                             data-bs-target="#temperature" type="button" role="tab"
                                             aria-controls="temperature" aria-selected="false" tabindex="-1">Temperature
                                         Rise
@@ -51,7 +53,7 @@
                             {% endif %}
                             {% if performance_determination_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="performance-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.performance_determination_test == 'COMPLETED' %}fullfilled {% endif %}" id="performance-tab" data-bs-toggle="tab"
                                             data-bs-target="#performance" type="button" role="tab"
                                             aria-controls="performance" aria-selected="false" tabindex="-1">Performance
                                         Determination Test
@@ -60,7 +62,7 @@
                             {% endif %}
                             {% if no_load_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="noload-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.no_load_test == 'COMPLETED' %}fullfilled {% endif %}" id="noload-tab" data-bs-toggle="tab"
                                             data-bs-target="#noload"
                                             type="button" role="tab" aria-controls="noload" aria-selected="false"
                                             tabindex="-1">No Load Test
@@ -69,7 +71,7 @@
                             {% endif %}
                             {% if withstand_voltage_ac_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="withstand-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.withstand_voltage_ac_test == 'COMPLETED' %}fullfilled {% endif %}" id="withstand-tab" data-bs-toggle="tab"
                                             data-bs-target="#withstand" type="button" role="tab"
                                             aria-controls="withstand"
                                             aria-selected="false" tabindex="-1">Withstand Voltage AC Test
@@ -78,18 +80,28 @@
                             {% endif %}
                             {% if insulation_resistance_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="insulation-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.insulation_resistance_test == 'COMPLETED' %}fullfilled {% endif %}" id="insulation-tab" data-bs-toggle="tab"
                                             data-bs-target="#insulation" type="button" role="tab"
                                             aria-controls="insulation"
                                             aria-selected="false" tabindex="-1">Insulation Resistance Test
                                     </button>
                                 </li>
                             {% endif %}
+                                {% if lock_rotor_test %}
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {% if status.lock_rotor_test == 'COMPLETED' %}fullfilled {% endif %}" id="rotor-tab" data-bs-toggle="tab"
+                                            data-bs-target="#lock-rotor" type="button" role="tab"
+                                            aria-controls="lock-rotor"
+                                            aria-selected="false" tabindex="-1">Lock Rotor Test
+                                    </button>
+                                </li>
+                            {% endif %}
                         </ul>
                         <div class="tab-content pt-3 pe-5" id="myTabContent">
+
                             {% if electric_resistance_test %}
                                 <div class="tab-pane fade" id="electric" role="tabpanel" aria-labelledby="electric-tab">
-                                    <form id="electric-form" class="row g-3"
+                                    <form id="electric-form " class="row g-3"
                                           action="{% url 'electric-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
@@ -246,92 +258,92 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 pt-md-5 ps-md-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col-md-5">
-                                                    <label for="id_performance_determination_test-file_1"
-                                                    class="col-form-label">Performance Load 25%:</label>
-                                                </div>
-                                                <div class="col-md-5 {% if not files.file_25 %}empty{% endif %}">
-                                                    {{ performance_determination_test.file_1 }}
-                                                    {% if files.file_25 %}
-                                                        <span class="pt-3">
-                                                            <span class="fst-italic">{{ files.file_25_name }} - </span>
-                                                            <a href="{{ files.file_25.url }}"
-                                                               class="text-decoration-none">
-                                                                 Download File <i class="bi bi-download"></i></a>
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="fst-italic">Please upload the excel file.</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col-md-5"><label for="id_performance_determination_test-file_2"
-                                                    class="col-form-label">Performance Load 50%:</label>
-                                                </div>
-                                                <div class="col-md-5 {% if not files.file_50 %}empty{% endif %}">
-                                                    {{ performance_determination_test.file_2 }}
-                                                    {% if files.file_50 %}
-                                                        <span class="pt-3">
-                                                        <span class="fst-italic">{{ files.file_50_name }} - </span>
-                                                            <a href="{{ files.file_50.url }}"
-                                                               class="text-decoration-none">
-                                                                 Download File <i class="bi bi-download"></i></a>
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="fst-italic">Please upload the excel file.</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6 pt-md-5 ps-md-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col-md-5"><label for="id_performance_determination_test-file_3"
-                                                    class="col-form-label">Performance Load 75%:</label>
-                                                </div>
-                                                <div class="col-md-5 {% if not files.file_75 %}empty{% endif %}">
-                                                    {{ performance_determination_test.file_3 }}
-                                                    {% if files.file_75 %}
-                                                        <span class="pt-3">
-                                                            <span class="fst-italic">{{ files.file_75_name }} - </span>
-                                                            <a href="{{ files.file_75.url }}"
-                                                               class="text-decoration-none">
-                                                                 Download File <i class="bi bi-download"></i>
-                                                            </a>
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="fst-italic">Please upload the excel file.</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col-md-5"><label for="id_performance_determination_test-file_4"
-                                                    class="col-form-label">Performance Load 100%:</label>
-                                                </div>
-                                                <div class="col-md-5 {% if not files.file_100 %}empty{% endif %}">
-                                                    {{ performance_determination_test.file_4 }}
-                                                    {% if files.file_100 %}
-                                                        <span class="pt-3">
-                                                           <span class="fst-italic">{{ files.file_100_name }} - </span>
-                                                           <a href="{{ files.file_100.url }}"
-                                                               class="text-decoration-none">
-                                                                 Download File <i class="bi bi-download"></i>
-                                                            </a>
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="fst-italic">Please upload the excel file.</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
+{#                                        <div class="col-md-6 pt-md-5 ps-md-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col-md-5">#}
+{#                                                    <label for="id_performance_determination_test-file_1"#}
+{#                                                    class="col-form-label">Performance Load 25%:</label>#}
+{#                                                </div>#}
+{#                                                <div class="col-md-5 {% if not files.file_25 %}empty{% endif %}">#}
+{#                                                    {{ performance_determination_test.file_1 }}#}
+{#                                                    {% if files.file_25 %}#}
+{#                                                        <span class="pt-3">#}
+{#                                                            <span class="fst-italic">{{ files.file_25_name }} - </span>#}
+{#                                                            <a href="{{ files.file_25.url }}"#}
+{#                                                               class="text-decoration-none">#}
+{#                                                                 Download File <i class="bi bi-download"></i></a>#}
+{#                                                        </span>#}
+{#                                                    {% else %}#}
+{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
+{#                                                    {% endif %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="col-md-6 pt-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_2"#}
+{#                                                    class="col-form-label">Performance Load 50%:</label>#}
+{#                                                </div>#}
+{#                                                <div class="col-md-5 {% if not files.file_50 %}empty{% endif %}">#}
+{#                                                    {{ performance_determination_test.file_2 }}#}
+{#                                                    {% if files.file_50 %}#}
+{#                                                        <span class="pt-3">#}
+{#                                                        <span class="fst-italic">{{ files.file_50_name }} - </span>#}
+{#                                                            <a href="{{ files.file_50.url }}"#}
+{#                                                               class="text-decoration-none">#}
+{#                                                                 Download File <i class="bi bi-download"></i></a>#}
+{#                                                        </span>#}
+{#                                                    {% else %}#}
+{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
+{#                                                    {% endif %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="col-md-6 pt-md-5 ps-md-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_3"#}
+{#                                                    class="col-form-label">Performance Load 75%:</label>#}
+{#                                                </div>#}
+{#                                                <div class="col-md-5 {% if not files.file_75 %}empty{% endif %}">#}
+{#                                                    {{ performance_determination_test.file_3 }}#}
+{#                                                    {% if files.file_75 %}#}
+{#                                                        <span class="pt-3">#}
+{#                                                            <span class="fst-italic">{{ files.file_75_name }} - </span>#}
+{#                                                            <a href="{{ files.file_75.url }}"#}
+{#                                                               class="text-decoration-none">#}
+{#                                                                 Download File <i class="bi bi-download"></i>#}
+{#                                                            </a>#}
+{#                                                        </span>#}
+{#                                                    {% else %}#}
+{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
+{#                                                    {% endif %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="col-md-6 pt-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_4"#}
+{#                                                    class="col-form-label">Performance Load 100%:</label>#}
+{#                                                </div>#}
+{#                                                <div class="col-md-5 {% if not files.file_100 %}empty{% endif %}">#}
+{#                                                    {{ performance_determination_test.file_4 }}#}
+{#                                                    {% if files.file_100 %}#}
+{#                                                        <span class="pt-3">#}
+{#                                                           <span class="fst-italic">{{ files.file_100_name }} - </span>#}
+{#                                                           <a href="{{ files.file_100.url }}"#}
+{#                                                               class="text-decoration-none">#}
+{#                                                                 Download File <i class="bi bi-download"></i>#}
+{#                                                            </a>#}
+{#                                                        </span>#}
+{#                                                    {% else %}#}
+{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
+{#                                                    {% endif %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
 
                                         <div class="text-center py-5">
                                             <button type="submit" class="btn btn-primary">Save</button>
@@ -522,6 +534,47 @@
                                     </form>
                                 </div>
                             {% endif %}
+               {% if lock_rotor_test %}
+    <div class="tab-pane fade" id="lock-rotor" role="tabpanel" aria-labelledby="rotor-tab">
+        <form id="lock-rotor-test-form" class="row g-3" action="{% url 'lock-rotor-form' inductionMotorReport.id %}" method="post">
+            {% csrf_token %}
+
+            <div class="col-md-4 pt-5">
+                <div class="row" style="text-align: right">
+                    <div class="col">
+                        <label for="id_lock_rotor_test-vibration" class="col-form-label">Vibration:</label>
+                    </div>
+                    <div class="col">{{ lock_rotor_test.vibration }}</div>
+                </div>
+            </div>
+
+            <div class="col-md-4 pt-5">
+                <div class="row" style="text-align: right">
+                    <div class="col">
+                        <label for="id_lock_rotor_test-noise" class="col-form-label">Noise:</label>
+                    </div>
+                    <div class="col">{{ lock_rotor_test.noise }}</div>
+                </div>
+            </div>
+
+            <div class="col-md-4 pt-5">
+                <div class="row" style="text-align: right">
+                    <div class="col">
+                        <label for="id_lock_rotor_test-temperature" class="col-form-label">Temperature:</label>
+                    </div>
+                    <div class="col">{{ lock_rotor_test.temperature }}</div>
+                </div>
+            </div>
+
+            <!-- Include other form fields specific to lock rotor test here -->
+
+            <div class="text-center py-5">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+{% endif %}
+
                         </div><!-- End Default Tabs -->
                     </div>
                 </div>
@@ -530,160 +583,284 @@
     </section>
 {% endblock %}
 {% block scripts %}
+{#<script>#}
+{#    function validateForm(tbodyId) {#}
+{#        console.log(tbodyId)#}
+{#        // Get the <tbody> element by its id#}
+{#        var tbody = document.getElementById(tbodyId);#}
+{##}
+{#        // Get all checkboxes inside the <tbody>#}
+{#        var checkboxes = tbody.querySelectorAll('input[type="checkbox"]');#}
+{##}
+{#        // Check if any checkbox is checked#}
+{#        var isChecked = false;#}
+{#        checkboxes.forEach(function(checkbox) {#}
+{#            if (checkbox.checked) {#}
+{#                isChecked = true;#}
+{#            }#}
+{#        });#}
+{##}
+{#        // If no checkbox is checked, alert the user and do not proceed#}
+{#        if (!isChecked) {#}
+{#            alert("Please select at least one checkbox.");#}
+{##}
+{#            // Change button color to red#}
+{#          // Change button color to red#}
+{# // Add border around the button#}
+{#    var button = document.getElementById('edit_performed_tests');#}
+{#    button.style.border = "2px solid red";#}
+{##}
+{#            return false;#}
+{#        }#}
+{##}
+{#        // If validation passes, close the modal programmatically#}
+{#        $('#edit-modal').modal('hide');#}
+{#        return true;#}
+{#    }#}
+{#</script>#}
+     <script>
+$(document).ready(function () {
+
+ let nav_links = document.querySelectorAll('.fullfilled');
+ console.log(nav_links)
+    $('form').submit(function (e) {
+        e.preventDefault();
 
 
-    <script>
-        $(document).ready(function () {
-            $('#electric-form').submit(function (e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: formData,
-                    success: function (data) {
-                        console.log(data);
-                        // Update form fields with saved data
-                        $('#id_electric_resistance_test-resistance_ohm_1').val(data.resistance_ohm_1);
-                        $('#id_electric_resistance_test-resistance_ohm_2').val(data.resistance_ohm_2);
-                        $('#id_electric_resistance_test-resistance_ohm_3').val(data.resistance_ohm_3);
-                        $('#id_electric_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C);
-                        $('#id_electric_resistance_test-unbalance_percentage').val(data.unbalance_percentage);
+        var formData = $(this).serialize();
+        var currentFormId = '#' + $(this).attr('id'); // Get the ID of the current form
+        var currentTab = $(this).closest('.tab-pane'); // Find the current tab containing the form
+        var currentTabButton = $('button.nav-link.active[aria-controls="' + currentTab.attr('id') + '"]'); // Find the button corresponding to the current tab
 
-                        // Optionally, display a success message or perform other actions
-                        alert('Form data saved successfully!');
-                    },
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#temperature-form').submit(function (e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: formData,
-                    success: function (data) {
-                        console.log(data);
-                        // Update form fields with saved data
-                        $('#id_temperature_rise_test-voltage').val(data.voltage);
-                        $('#id_temperature_rise_test-winding').val(data.winding);
-                        $('#id_temperature_rise_test-frequency').val(data.frequency);
-                        $('#id_temperature_rise_test-de_bearing').val(data.de_bearing);
-                        $('#id_temperature_rise_test-nde_bearing').val(data.nde_bearing);
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            success: function (data) {
+             const status = data.status
+             if(data.all_test_completed){
+             window.location.reload();
 
-                        // Optionally, display a success message or perform other actions
-                        alert('Form data saved successfully!');
-                    },
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#noload-form').submit(function (e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: formData,
-                    success: function (data) {
-                        console.log(data);
-                        // Update form fields with saved data
-                        $('#id_no_load_test-voltage').val(data.voltage);
-                        $('#id_no_load_test-current').val(data.current);
-                        $('#id_no_load_test-power').val(data.power);
-                        $('#id_no_load_test-frequency').val(data.frequency);
-                        $('#id_no_load_test-speed').val(data.speed);
-                        $('#id_no_load_test-direction_of_rotation').val(data.direction_of_rotation);
-                        // Optionally, display a success message or perform other actions
-                        alert('Form data saved successfully!');
-                    },
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#withstand-form').submit(function (e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: formData,
-                    success: function (data) {
-                        console.log(data);
-                        // Update form fields with saved data
-                        $('#id_withstand_voltage_ac_test-description').val(data.description);
-                        $('#id_withstand_voltage_ac_test-voltage_kv').val(data.voltage_kv);
-                        $('#id_withstand_voltage_ac_test-time_in_seconds').val(data.time_in_seconds);
-                        // Optionally, display a success message or perform other actions
-                        alert('Form data saved successfully!');
-                    },
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#insulation-form').submit(function (e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: formData,
-                    success: function (data) {
-                        console.log(data);
-                        // Update form fields with saved data
-                        $('#id_insulation_resistance_test-description').val(data.description);
-                        $('#id_insulation_resistance_test-voltage').val(data.voltage);
-                        $('#id_insulation_resistance_test-insulation_resistance').val(data.insulation_resistance);
-                        $('#id_insulation_resistance_test-time_in_seconds').val(data.time_in_seconds);
-                        $('#id_insulation_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C);
-                        $('#id_insulation_resistance_test-humidity_percentage').val(data.humidity_percentage);
-                        // Optionally, display a success message or perform other actions
-                        alert('Form data saved successfully!');
-                    },
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#performance-form').submit(function (e) {
-                e.preventDefault();
-                $('input[type="file"]').on('change', function () {
-                    $(this).parent().removeClass('empty')
-                })
-                if (!$(document).find('.empty').length > 0) {
-                     var formData = new FormData(this);
-                    $.ajax({
-                        type: 'POST',
-                        url: $(this).attr('action'),
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (data) {
-                            console.log(data);
-                            // Update form fields with saved data
-                            $('#id_performance_determination_test-voltage').val(data.voltage);
-                            $('#id_performance_determination_test-frequency').val(data.frequency);
-                            $('#id_performance_determination_test-nominal_t').val(data.nominal_t);
-                            alert('Form data saved successfully!');
-                        },
-                    });
+             }
+            if(status === 'completed'){
+                currentTabButton.addClass('fullfilled');
                 }
+                console.log(data);
 
-                else {
-                    alert("Please upload the remaining Performance Load File")
+                // Update form fields with saved data
+                $(currentFormId + ' input[type="text"]').each(function() {
+                    var fieldName = $(this).attr('name');
+                    $(this).val(data[fieldName]);
+                });
+
+                // Optionally, display a success message or perform other actions
+                alert('Form data saved successfully!');
+
+                // Switch to the next tab
+                var nextTab = currentTab.next('.tab-pane');
+                var nextTabButton = $('button.nav-link[aria-controls="' + nextTab.attr('id') + '"]');
+
+                if (nextTab.length > 0) { // Check if there is a next tab
+                    // Hide the current tab and remove its active class
+                    currentTab.removeClass('active show');
+                    currentTabButton.removeClass('active');
+
+                    // Show the next tab and add its active class
+                    nextTab.addClass('active show');
+                    nextTabButton.addClass('active');
+                } else {
+                    // Optionally, do something if there is no next tab
+                    console.log('No next tab found.');
                 }
-            });
+            },
+            error: function (xhr, errmsg, err) {
+                // Handle errors if any
+                console.log(errmsg);
+            }
         });
+    });
+});
     </script>
+
+
+
+<!--  <script>-->
+<!--       $(document).ready(function ()-->
+<!--            $('#electric-form').submit(function (e)-->
+<!--                e.preventDefault();#}-->
+<!--                var formData = $(this).serialize();-->
+<!--                $.ajax(-->
+<!--                    type: 'POST',-->
+<!--                   url: $(this).attr('action'),-->
+<!--                    data: formData,-->
+<!--                    success: function (data)-->
+<!--                        console.log(data);-->
+<!--                        // Update form fields with saved data-->
+<!--                        $('#id_electric_resistance_test-resistance_ohm_1').val(data.resistance_ohm_1);-->
+<!--                        $('#id_electric_resistance_test-resistance_ohm_2').val(data.resistance_ohm_2);-->
+<!--                        $('#id_electric_resistance_test-resistance_ohm_3').val(data.resistance_ohm_3);-->
+<!--                        $('#id_electric_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C)';-->
+<!--                        $('#id_electric_resistance_test-unbalance_percentage').val(data.unbalance_percentage);-->
+
+<!--                        // Optionally, display a success message or perform other actions-->
+<!--                        alert('Form data saved successfully!');-->
+<!--                    },-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $('#temperature-form').submit(function (e) {#}
+{#                e.preventDefault();#}
+{#                var formData = $(this).serialize();#}
+{#                $.ajax({#}
+{#                    type: 'POST',#}
+{#                    url: $(this).attr('action'),#}
+{#                    data: formData,#}
+{#                    success: function (data) {#}
+{#                        console.log(data);#}
+{#                        // Update form fields with saved data#}
+{#                        $('#id_temperature_rise_test-voltage').val(data.voltage);#}
+{#                        $('#id_temperature_rise_test-winding').val(data.winding);#}
+{#                        $('#id_temperature_rise_test-frequency').val(data.frequency);#}
+{#                        $('#id_temperature_rise_test-de_bearing').val(data.de_bearing);#}
+{#                        $('#id_temperature_rise_test-nde_bearing').val(data.nde_bearing);#}
+{##}
+{#                        // Optionally, display a success message or perform other actions#}
+{#                        alert('Form data saved successfully!');#}
+{#                    },#}
+{#                });#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $('#noload-form').submit(function (e) {#}
+{#                e.preventDefault();#}
+{#                var formData = $(this).serialize();#}
+{#                $.ajax({#}
+{#                    type: 'POST',#}
+{#                    url: $(this).attr('action'),#}
+{#                    data: formData,#}
+{#                    success: function (data) {#}
+{#                        console.log(data);#}
+{#                        // Update form fields with saved data#}
+{#                        $('#id_no_load_test-voltage').val(data.voltage);#}
+{#                        $('#id_no_load_test-current').val(data.current);#}
+{#                        $('#id_no_load_test-power').val(data.power);#}
+{#                        $('#id_no_load_test-frequency').val(data.frequency);#}
+{#                        $('#id_no_load_test-speed').val(data.speed);#}
+{#                        $('#id_no_load_test-direction_of_rotation').val(data.direction_of_rotation);#}
+{#                        // Optionally, display a success message or perform other actions#}
+{#                        alert('Form data saved successfully!');#}
+{#                    },#}
+{#                });#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $('#withstand-form').submit(function (e) {#}
+{#                e.preventDefault();#}
+{#                var formData = $(this).serialize();#}
+{#                  console.log($(this).attr('action'));#}
+{#                $.ajax({#}
+{#                    type: 'POST',#}
+{#                    url: $(this).attr('action'),#}
+{#                    data: formData,#}
+{#                    success: function (data) {#}
+{#                        console.log(data);#}
+{#                        // Update form fields with saved data#}
+{#                        $('#id_withstand_voltage_ac_test-description').val(data.description);#}
+{#                        $('#id_withstand_voltage_ac_test-voltage_kv').val(data.voltage_kv);#}
+{#                        $('#id_withstand_voltage_ac_test-time_in_seconds').val(data.time_in_seconds);#}
+{#                        // Optionally, display a success message or perform other actions#}
+{#                        alert('Form data saved successfully!');#}
+{#                    },#}
+{#                });#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $('#insulation-form').submit(function (e) {#}
+{#                e.preventDefault();#}
+{#                var formData = $(this).serialize();#}
+{#                $.ajax({#}
+{#                    type: 'POST',#}
+{#                    url: $(this).attr('action'),#}
+{#                    data: formData,#}
+{#                    success: function (data) {#}
+{#                        console.log(data);#}
+{#                        // Update form fields with saved data#}
+{#                        $('#id_insulation_resistance_test-description').val(data.description);#}
+{#                        $('#id_insulation_resistance_test-voltage').val(data.voltage);#}
+{#                        $('#id_insulation_resistance_test-insulation_resistance').val(data.insulation_resistance);#}
+{#                        $('#id_insulation_resistance_test-time_in_seconds').val(data.time_in_seconds);#}
+{#                        $('#id_insulation_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C);#}
+{#                        $('#id_insulation_resistance_test-humidity_percentage').val(data.humidity_percentage);#}
+{#                        // Optionally, display a success message or perform other actions#}
+{#                        alert('Form data saved successfully!');#}
+{#                    },#}
+{#                });#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $('#performance-form').submit(function (e) {#}
+{#                e.preventDefault();#}
+{#                $('input[type="file"]').on('change', function () {#}
+{#                    $(this).parent().removeClass('empty')#}
+{#                })#}
+{#                if (!$(document).find('.empty').length > 0) {#}
+{#                     var formData = new FormData(this);#}
+{#                    $.ajax({#}
+{#                        type: 'POST',#}
+{#                        url: $(this).attr('action'),#}
+{#                        data: formData,#}
+{#                        processData: false,#}
+{#                        contentType: false,#}
+{#                        success: function (data) {#}
+{#                            console.log(data);#}
+{#                            // Update form fields with saved data#}
+{#                            $('#id_performance_determination_test-voltage').val(data.voltage);#}
+{#                            $('#id_performance_determination_test-frequency').val(data.frequency);#}
+{#                            $('#id_performance_determination_test-nominal_t').val(data.nominal_t);#}
+{#                            alert('Form data saved successfully!');#}
+{#                        },#}
+{#                    });#}
+{#                }#}
+{##}
+{#                else {#}
+{#                    alert("Please upload the remaining Performance Load File")#}
+{#                }#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#    <script>#}
+{#    $(document).ready(function () {#}
+{#        $('#lock-rotor-test-form').submit(function (e) {#}
+{#            e.preventDefault();#}
+{#            var formData = $(this).serialize();#}
+{#             console.log($(this).attr('action'));#}
+{#            $.ajax({#}
+{#                type: 'POST',#}
+{#                url: $(this).attr('action'),#}
+{#                data: formData,#}
+{#                success: function (data) {#}
+{##}
+{#                    // Update form fields with saved data#}
+{#                    $('#id_lock_rotor_test-vibration').val(data.vibration);#}
+{#                    $('#id_lock_rotor_test-noise').val(data.noise);#}
+{#                    $('#id_lock_rotor_test-temperature').val(data.temperature);#}
+{#                    // Optionally, display a success message or perform other actions#}
+{#                    alert('Form data saved successfully!');#}
+{#                },#}
+{#            });#}
+{#        });#}
+{#    });#}
+{#</script>#}
+
 {% endblock %}

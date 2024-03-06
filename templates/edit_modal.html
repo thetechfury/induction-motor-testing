@@ -151,7 +151,7 @@
                                         <th class="text-center" scope="col">Special</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="edit-formset-body">
                                     {{ edit_formset.management_form }}
                                     {% for form in edit_formset %}
                                         <tr>
@@ -178,7 +178,7 @@
 
                     <div class="d-grid gap-2 d-md-flex justify-content-center mt-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+<button type="submit" class="btn btn-primary" onclick="return validateForm('edit-formset-body')">Save</button>
                     </div>
                 </form>
             </div>
