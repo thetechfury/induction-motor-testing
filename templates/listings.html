@@ -62,16 +62,17 @@
                                 <td class="text-center">
                                        {% if obj.report_status %}
                                     <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                        <a href="{% url 'pdf' obj.id %}" type="button" class="btn btn-outline-info">
+                                        <a href="{% url 'pdf' obj.id %}" type="button" class="btn btn-outline-info hover-button" data-name="view">
                                             <i class="bi bi-eye"></i></a>
-                                        <a href="{% url 'chart' obj.id %}" type="button" class="btn btn-outline-primary">
+                                        <a href="{% url 'chart' obj.id %}" type="button" class="btn btn-outline-primary hover-button" data-name="chart">
                                             <i class="bi bi-pie-chart-fill"></i></a>
                                         {% endif %}
-                                        <a type="button" class="btn btn-outline-warning"
+                                        <a type="button" class="btn btn-outline-warning hover-button"
+                                           data-name="edit"
                                            href="{% url 'tests' obj.id %}">
                                             <i class="bi bi-pencil-square"></i></a>
                                         <button onclick="deleteRecord({{ obj.id }})" type="button"
-                                                class="btn btn-outline-danger">
+                                                class="btn btn-outline-danger hover-button" data-name="delete" >
                                             <i class="bi bi-trash3"></i></button>
                                     </div>
                                 </td>

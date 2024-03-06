@@ -1,12 +1,12 @@
 from django.contrib import admin
 from motor_testing.models import InductionMotor, ElectricResistanceTest, TemperatureRiseTest, \
-    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, LockRotorTest
+    PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, LockRotorTest, \
+    PerformanceTest
 from django.contrib.admin.decorators import register
 from .models import Configuration
 
 
 # Register your models here.
-
 
 
 @register(InductionMotor)
@@ -48,6 +48,8 @@ class InsulationResistanceTestAdmin(admin.ModelAdmin):
 @register(LockRotorTest)
 class LockRotorTestAdmin(admin.ModelAdmin):
     list_display = ('vibration', 'noise', 'temperature')
+
+admin.site.register(PerformanceTest)
 
 
 class ConfigAdmin(admin.ModelAdmin):

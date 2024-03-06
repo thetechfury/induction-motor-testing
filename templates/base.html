@@ -93,11 +93,14 @@
 <script>
     function validateForm(tbodyId) {
         console.log(tbodyId)
+
         // Get the <tbody> element by its id
         var tbody = document.getElementById(tbodyId);
 
         // Get all checkboxes inside the <tbody>
         var checkboxes = tbody.querySelectorAll('input[type="checkbox"]');
+        let required = document.querySelector('#test-required');
+
 
         // Check if any checkbox is checked
         var isChecked = false;
@@ -110,13 +113,13 @@
         // If no checkbox is checked, alert the user and do not proceed
         if (!isChecked) {
             alert("Please select at least one checkbox.");
-
+            required.classList.remove('d-none');
             // Change button color to red
           // Change button color to red
  // Add border around the button
-    var button = document.getElementById('edit_performed_tests');
-    button.style.border = "2px solid red";
-
+    var button = document.getElementById('performed_tests');
+    button.style.background = "red";
+    button.style.color = "white";
             return false;
         }
 

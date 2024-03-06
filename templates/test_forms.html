@@ -7,7 +7,8 @@
             <a href="{% url 'home' %}" type="button" class="btn btn-primary">
                 <i class="bi bi-arrow-left-circle-fill"></i> Back to Home</a>
         </div>
-        <div class="mb-3 clearfix">
+
+        <div class="mb-3 clearfix {% if all_test_completed %} d-block {% else %} d-none {% endif %} ">
             <a href="{% url 'chart' inductionMotorReport.id %}" class="text-white btn btn-primary"
                target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a>
             <a href="{% url 'pdf' inductionMotorReport.id %}" class="text-white btn btn-success"
@@ -31,9 +32,10 @@
 
                         <!-- Default Tabs -->
                         <ul class="nav nav-pills justify-content-center pt-5" id="testFormTabs" role="tablist">
+
                             {% if electric_resistance_test %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="electric-tab" data-bs-toggle="tab"
+                            <li class="nav-item " role="presentation">
+                                    <button class="nav-link {% if status.electric_resistance_test == 'COMPLETED' %}fullfilled {% endif %}" id="electric-tab" data-bs-toggle="tab"
                                             data-bs-target="#electric" type="button" role="tab" aria-controls="electric"
                                             aria-selected="true">Electric Resistance Test
                                     </button>
@@ -41,7 +43,7 @@
                             {% endif %}
                             {% if temperature_rise_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="temperature-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.temperature_rise_test == 'COMPLETED' %}fullfilled {% endif %}" id="temperature-tab" data-bs-toggle="tab"
                                             data-bs-target="#temperature" type="button" role="tab"
                                             aria-controls="temperature" aria-selected="false" tabindex="-1">Temperature
                                         Rise
@@ -51,7 +53,7 @@
                             {% endif %}
                             {% if performance_determination_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="performance-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.performance_determination_test == 'COMPLETED' %}fullfilled {% endif %}" id="performance-tab" data-bs-toggle="tab"
                                             data-bs-target="#performance" type="button" role="tab"
                                             aria-controls="performance" aria-selected="false" tabindex="-1">Performance
                                         Determination Test
@@ -60,7 +62,7 @@
                             {% endif %}
                             {% if no_load_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="noload-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.no_load_test == 'COMPLETED' %}fullfilled {% endif %}" id="noload-tab" data-bs-toggle="tab"
                                             data-bs-target="#noload"
                                             type="button" role="tab" aria-controls="noload" aria-selected="false"
                                             tabindex="-1">No Load Test
@@ -69,7 +71,7 @@
                             {% endif %}
                             {% if withstand_voltage_ac_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="withstand-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.withstand_voltage_ac_test == 'COMPLETED' %}fullfilled {% endif %}" id="withstand-tab" data-bs-toggle="tab"
                                             data-bs-target="#withstand" type="button" role="tab"
                                             aria-controls="withstand"
                                             aria-selected="false" tabindex="-1">Withstand Voltage AC Test
@@ -78,7 +80,7 @@
                             {% endif %}
                             {% if insulation_resistance_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="insulation-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.insulation_resistance_test == 'COMPLETED' %}fullfilled {% endif %}" id="insulation-tab" data-bs-toggle="tab"
                                             data-bs-target="#insulation" type="button" role="tab"
                                             aria-controls="insulation"
                                             aria-selected="false" tabindex="-1">Insulation Resistance Test
@@ -87,7 +89,7 @@
                             {% endif %}
                                 {% if lock_rotor_test %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="rotor-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {% if status.lock_rotor_test == 'COMPLETED' %}fullfilled {% endif %}" id="rotor-tab" data-bs-toggle="tab"
                                             data-bs-target="#lock-rotor" type="button" role="tab"
                                             aria-controls="lock-rotor"
                                             aria-selected="false" tabindex="-1">Lock Rotor Test
@@ -96,9 +98,10 @@
                             {% endif %}
                         </ul>
                         <div class="tab-content pt-3 pe-5" id="myTabContent">
+
                             {% if electric_resistance_test %}
                                 <div class="tab-pane fade" id="electric" role="tabpanel" aria-labelledby="electric-tab">
-                                    <form id="electric-form" class="row g-3"
+                                    <form id="electric-form " class="row g-3"
                                           action="{% url 'electric-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
@@ -615,10 +618,15 @@
 {#        return true;#}
 {#    }#}
 {#</script>#}
-   <script>
+     <script>
 $(document).ready(function () {
+
+ let nav_links = document.querySelectorAll('.fullfilled');
+ console.log(nav_links)
     $('form').submit(function (e) {
         e.preventDefault();
+
+
         var formData = $(this).serialize();
         var currentFormId = '#' + $(this).attr('id'); // Get the ID of the current form
         var currentTab = $(this).closest('.tab-pane'); // Find the current tab containing the form
@@ -629,7 +637,16 @@ $(document).ready(function () {
             url: $(this).attr('action'),
             data: formData,
             success: function (data) {
+             const status = data.status
+             if(data.all_test_completed){
+             window.location.reload();
+
+             }
+            if(status === 'completed'){
+                currentTabButton.addClass('fullfilled');
+                }
                 console.log(data);
+
                 // Update form fields with saved data
                 $(currentFormId + ' input[type="text"]').each(function() {
                     var fieldName = $(this).attr('name');
@@ -642,6 +659,7 @@ $(document).ready(function () {
                 // Switch to the next tab
                 var nextTab = currentTab.next('.tab-pane');
                 var nextTabButton = $('button.nav-link[aria-controls="' + nextTab.attr('id') + '"]');
+
                 if (nextTab.length > 0) { // Check if there is a next tab
                     // Hide the current tab and remove its active class
                     currentTab.removeClass('active show');
@@ -666,31 +684,31 @@ $(document).ready(function () {
 
 
 
-{#    <script>#}
-{#        $(document).ready(function () {#}
-{#            $('#electric-form').submit(function (e) {#}
-{#                e.preventDefault();#}
-{#                var formData = $(this).serialize();#}
-{#                $.ajax({#}
-{#                    type: 'POST',#}
-{#                    url: $(this).attr('action'),#}
-{#                    data: formData,#}
-{#                    success: function (data) {#}
-{#                        console.log(data);#}
-{#                        // Update form fields with saved data#}
-{#                        $('#id_electric_resistance_test-resistance_ohm_1').val(data.resistance_ohm_1);#}
-{#                        $('#id_electric_resistance_test-resistance_ohm_2').val(data.resistance_ohm_2);#}
-{#                        $('#id_electric_resistance_test-resistance_ohm_3').val(data.resistance_ohm_3);#}
-{#                        $('#id_electric_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C);#}
-{#                        $('#id_electric_resistance_test-unbalance_percentage').val(data.unbalance_percentage);#}
-{##}
-{#                        // Optionally, display a success message or perform other actions#}
-{#                        alert('Form data saved successfully!');#}
-{#                    },#}
-{#                });#}
-{#            });#}
-{#        });#}
-{#    </script>#}
+<!--  <script>-->
+<!--       $(document).ready(function ()-->
+<!--            $('#electric-form').submit(function (e)-->
+<!--                e.preventDefault();#}-->
+<!--                var formData = $(this).serialize();-->
+<!--                $.ajax(-->
+<!--                    type: 'POST',-->
+<!--                   url: $(this).attr('action'),-->
+<!--                    data: formData,-->
+<!--                    success: function (data)-->
+<!--                        console.log(data);-->
+<!--                        // Update form fields with saved data-->
+<!--                        $('#id_electric_resistance_test-resistance_ohm_1').val(data.resistance_ohm_1);-->
+<!--                        $('#id_electric_resistance_test-resistance_ohm_2').val(data.resistance_ohm_2);-->
+<!--                        $('#id_electric_resistance_test-resistance_ohm_3').val(data.resistance_ohm_3);-->
+<!--                        $('#id_electric_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C)';-->
+<!--                        $('#id_electric_resistance_test-unbalance_percentage').val(data.unbalance_percentage);-->
+
+<!--                        // Optionally, display a success message or perform other actions-->
+<!--                        alert('Form data saved successfully!');-->
+<!--                    },-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
 {#    <script>#}
 {#        $(document).ready(function () {#}
 {#            $('#temperature-form').submit(function (e) {#}
