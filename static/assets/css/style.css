@@ -1285,6 +1285,7 @@ h6 {
 position:relative;
 }
 
+
 .hover-button::after {
   content: attr(data-name); /* Inserts the value of the data-name attribute */
   position: absolute;
@@ -1309,12 +1310,12 @@ position:relative;
 }
 
 .fullfilled{
-color:white !important;
-background-color: #198754 !important;
+color:white !important ;
+background-color: #198754 !important ;
 margin-right:10px !important;
 margin-bottom:10px !important;
 }
-.clicked{
+.fullfilled.active{
 color:white !important;
 background-color:green !important;
 }
