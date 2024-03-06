@@ -151,7 +151,8 @@
                                         <th class="text-center" scope="col">Special</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="main-modal-rep">
+                                    <tbody id="main-modal-rep" >
+                                    <div class="alert alert-danger d-none " id="test-required" role="alert"> At Least select one Test</div>
                                     {{ formset.management_form }}
                                     {% for form in formset %}
                                         <tr>
