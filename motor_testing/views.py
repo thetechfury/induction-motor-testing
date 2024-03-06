@@ -224,7 +224,7 @@ class ReportView(TemplateView):
             performance_test = induction_motor.performance_determination_test
             context['parameters'] = PerformanceTestParameters.objects.filter(
                 performance_determination_test=performance_test)
-        selected_tests = PerformanceTest.objects.filter(motor_id=induction_motor.id, status=PerformanceTest.PENDING)
+        selected_tests = PerformanceTest.objects.filter(motor_id=induction_motor.id, status=PerformanceTest.COMPLETED)
         all_tests = PerformanceTest.objects.filter(motor_id=induction_motor.id)
         if selected_tests:
             context['selected_tests'] = selected_tests
