@@ -272,3 +272,12 @@ class Result(TimeStampedModel):
 
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="result")
     description = models.CharField(max_length=250, blank=True, null=True)
+
+
+
+class Configuration(models.Model):
+    no_load_test = models.CharField(max_length=100)
+    performance_determination = models.CharField(max_length=100)
+    lock_rotor_test = models.CharField(max_length=100)
+
+
