@@ -7,7 +7,7 @@
             <a href="{% url 'home' %}" type="button" class="btn btn-primary">
                 <i class="bi bi-arrow-left-circle-fill"></i> Back to Home</a>
         </div>
-    {{all_test_completed}}
+
         <div class="mb-3 clearfix {% if all_test_completed %} d-block {% else %} d-none {% endif %} ">
             <a href="{% url 'chart' inductionMotorReport.id %}" class="text-white btn btn-primary"
                target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a>
@@ -621,8 +621,7 @@
      <script>
 $(document).ready(function () {
 
- let nav_links = document.querySelectorAll('.nav-link')
-
+ let nav_links = document.querySelectorAll('.fullfilled');
  console.log(nav_links)
     $('form').submit(function (e) {
         e.preventDefault();
@@ -639,6 +638,10 @@ $(document).ready(function () {
             data: formData,
             success: function (data) {
              const status = data.status
+             if(data.all_test_completed){
+             window.location.reload();
+
+             }
             if(status === 'completed'){
                 currentTabButton.addClass('fullfilled');
                 }
