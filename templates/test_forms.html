@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
 
-    <div class="d-flex justify-content-between">
-        <div class="datatable-search datatable-top">
+    <div class="d-flex justify-content-between ">
+        <div class="datatable-search datatable-top mb-2">
             <a href="{% url 'home' %}" type="button" class="btn btn-primary">
                 <i class="bi bi-arrow-left-circle-fill"></i> Back to Home</a>
         </div>
 
-        <div class="mb-3 clearfix {% if all_test_completed %} d-block {% else %} d-none {% endif %} ">
+        <div class="mb-3 clearfix block {% if all_test_completed %} d-block {% else %} d-none {% endif %} ">
             <a href="{% url 'chart' inductionMotorReport.id %}" class="text-white btn btn-primary"
                target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a>
             <a href="{% url 'pdf' inductionMotorReport.id %}" class="text-white btn btn-success"
@@ -620,9 +620,18 @@
 {#</script>#}
      <script>
 $(document).ready(function () {
+               let un_completed_test = $('#testFormTabs .nav-link:not(.fullfilled)')
+               let completed_test = $('#testFormTabs .nav-link.fullfilled')
+               console.log(un_completed_test.length,completed_test[0])
+               if(un_completed_test.length===0){
+                completed_test[0].click()
+               }
 
- let nav_links = document.querySelectorAll('.fullfilled');
- console.log(nav_links)
+               else{
+               console.log(" Not All uncompleted")
+                un_completed_test[0].click()
+               }
+
     $('form').submit(function (e) {
         e.preventDefault();
 
@@ -637,6 +646,12 @@ $(document).ready(function () {
             url: $(this).attr('action'),
             data: formData,
             success: function (data) {
+
+            // Filter out nav-links which have a fullfilled class in the button inside li of ul
+
+
+
+
              const status = data.status
              if(data.all_test_completed){
              window.location.reload();
@@ -645,7 +660,7 @@ $(document).ready(function () {
             if(status === 'completed'){
                 currentTabButton.addClass('fullfilled');
                 }
-                console.log(data);
+
 
                 // Update form fields with saved data
                 $(currentFormId + ' input[type="text"]').each(function() {
@@ -670,7 +685,10 @@ $(document).ready(function () {
                     nextTabButton.addClass('active');
                 } else {
                     // Optionally, do something if there is no next tab
-                    console.log('No next tab found.');
+                    if(un_completed_test.length!==0){
+                    un_completed_test[0].click()
+                    }
+
                 }
             },
             error: function (xhr, errmsg, err) {

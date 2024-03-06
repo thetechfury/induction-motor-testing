@@ -17,10 +17,9 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
           rel="stylesheet">
 
-    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-    <script src="{% static 'assets/js/html_to_image.js' %}"></script>
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
 
 </head>
 
@@ -112,14 +111,13 @@
 
         // If no checkbox is checked, alert the user and do not proceed
         if (!isChecked) {
-            alert("Please select at least one checkbox.");
+
             required.classList.remove('d-none');
             // Change button color to red
           // Change button color to red
  // Add border around the button
     var button = document.getElementById('performed_tests');
-    button.style.background = "red";
-    button.style.color = "white";
+            button.click()
             return false;
         }
 
@@ -128,6 +126,7 @@
         return true;
     }
 </script>
+    <script src="{% static 'assets/js/html_to_image.js' %}"></script>
 
 {% block scripts %}
 

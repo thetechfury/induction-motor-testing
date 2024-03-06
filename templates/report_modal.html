@@ -1,44 +1,44 @@
 <div class="modal fade" id="main-modal" tabindex="-1" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="card-title p-0 text-center">New Induction Report</h1>
+            <div class="modal-header p-1">
+                <h1 class="card-title p-2 text-center">New Induction Report</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="main-form" class="row g-3" method="post">{% csrf_token %}
+                <form id="main-form" class="row gx-3 gy-1" method="post">{% csrf_token %}
                     {% if form.non_field_errors %}
                         <div class="text-danger">{{ form.non_field_errors }}</div>
                     {% endif %}
 
                     <div class="col-md-4">
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-7">
                                 <label for="id_serial_number" class="col-form-label">Motor's Serial No*</label>
                             </div>
-                            <div class="col-md-7">{{ form.serial_number }}</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="id_customer_name" class="col-form-label">Customer*</label>
-                            </div>
-                            <div class="col-md-9">{{ form.customer_name }}</div>
+                            <div class="col-md-5">{{ form.serial_number }}</div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="id_sales_order_number" class="col-form-label">Sales Order*</label>
+                                <label for="id_customer_name" class="col-form-label">Customer*</label>
                             </div>
-                            <div class="col-md-8">{{ form.sales_order_number }}</div>
+                            <div class="col-md-8">{{ form.customer_name }}</div>
                         </div>
                     </div>
 
-                    <hr style="border-top: 2px solid #1559d3;">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label for="id_sales_order_number" class="col-form-label">Sales Order*</label>
+                            </div>
+                            <div class="col-md-7">{{ form.sales_order_number }}</div>
+                        </div>
+                    </div>
+
+                    <hr style="border-top: 2px solid #1559d3;" class="my-2">
 
                     <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -55,7 +55,7 @@
                         </li>
                     </ul>
 
-                    <div class="tab-content pt-2" id="v-pills-tabContent">
+                    <div class="tab-content pt-2 py-0"  id="v-pills-tabContent">
                         <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                              aria-labelledby="motor_identification">
                             <div class="row g-3 px-3">
@@ -141,7 +141,7 @@
                                     </div>
                                 </div>
 
-                                <table class="table">
+                                <table class="table my-1">
                                     <thead>
                                     <tr>
                                         <th class="text-center" scope="col">Sr. #</th>

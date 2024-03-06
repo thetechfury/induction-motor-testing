@@ -1310,12 +1310,13 @@ position:relative;
 }
 
 .fullfilled{
-color:white !important ;
-background-color: #198754 !important ;
-margin-right:10px !important;
-margin-bottom:10px !important;
+color:white;
+background-color: #198754;
+margin-right:10px;
+margin-bottom:10px;
 }
-.fullfilled.active{
-color:white !important;
-background-color:green !important;
+
+.fullfilled:hover{
+color:white;
+background:#0d6efd;
 }
