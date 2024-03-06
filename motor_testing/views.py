@@ -88,6 +88,12 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         return render(self.request, "listings.html", {"form": form, "error": "error", "formset": formset})
 
 
+def get_form_statuses(inductionMotorReport):
+    test_statuses = PerformanceTest.objects.filter(motor=inductionMotorReport,status__in=[PerformanceTest.PENDING,PerformanceTest.COMPLETED])
+    tests = {test.test_type: test.status for test in test_statuses}
+    return tests
+
+
 class TestsView(LoginRequiredMixin, View):
 
     def get_performance_tests_forms(self, obj=None):
@@ -127,8 +133,8 @@ class TestsView(LoginRequiredMixin, View):
         if not inductionMotorReport:
             return render(request, "registration/404.html")
         else:
-            tests = PerformanceTest.objects.filter(motor_id=inductionMotorReport.id).filter(
-                status=PerformanceTest.PENDING)
+            tests = PerformanceTest.objects.filter(motor_id=inductionMotorReport.id,
+                                                   status__in=[PerformanceTest.COMPLETED, PerformanceTest.PENDING])
             test_types = []
             for test in tests:
                 test_types.append(test.test_type)
@@ -162,10 +168,12 @@ class TestsView(LoginRequiredMixin, View):
             for key, form in forms.items():
                 if form.prefix in test_types:
                     context[form.prefix] = form
-
+            context['all_forms'] = forms.items()
             context['inductionMotorReport'] = inductionMotorReport
             context['edit_form'] = InitialForm(initial=model_to_dict(inductionMotorReport))
             context['edit_formset'] = self.get_performance_tests_forms(inductionMotorReport)
+            context['status'] = get_form_statuses(inductionMotorReport)
+            context['all_test_completed'] = all(value == 'COMPLETED' for value in context['status'].values())
             # context['files'] = self.get_performance_files(inductionMotorReport.performance_determination_test)
             return render(request, "test_forms.html", context)
 
@@ -272,6 +280,8 @@ class ElectricFormSaveView(View):
         motor.electric_resistance_test.resistance_ohm_3 = resistance_ohm_3 if resistance_ohm_3 else default
         motor.electric_resistance_test.ambient_temperature_C = ambient_temperature_C if ambient_temperature_C else default
         motor.electric_resistance_test.unbalance_percentage = unbalance_percentage if unbalance_percentage else default
+        PerformanceTest.objects.filter(motor=motor, test_type='electric_resistance_test').update(
+            status=PerformanceTest.COMPLETED)
         motor.electric_resistance_test.save()
 
         response_data = {
@@ -279,7 +289,8 @@ class ElectricFormSaveView(View):
             'resistance_ohm_2': motor.electric_resistance_test.resistance_ohm_2,
             'resistance_ohm_3': motor.electric_resistance_test.resistance_ohm_3,
             'ambient_temperature_C': motor.electric_resistance_test.ambient_temperature_C,
-            'unbalance_percentage': motor.electric_resistance_test.unbalance_percentage
+            'unbalance_percentage': motor.electric_resistance_test.unbalance_percentage,
+            'status': 'completed'
         }
 
         return JsonResponse(response_data)
@@ -305,6 +316,8 @@ class TemperatureFormSaveView(View):
         motor.temperature_rise_test.frequency = frequency if frequency else default
         motor.temperature_rise_test.de_bearing = de_bearing if de_bearing else default
         motor.temperature_rise_test.nde_bearing = nde_bearing if nde_bearing else default
+        PerformanceTest.objects.filter(motor=motor, test_type='temperature_rise_test').update(
+            status=PerformanceTest.COMPLETED)
         motor.temperature_rise_test.save()
 
         response_data = {
@@ -312,7 +325,8 @@ class TemperatureFormSaveView(View):
             'winding': motor.temperature_rise_test.winding,
             'frequency': motor.temperature_rise_test.frequency,
             'de_bearing': motor.temperature_rise_test.de_bearing,
-            'nde_bearing': motor.temperature_rise_test.nde_bearing
+            'nde_bearing': motor.temperature_rise_test.nde_bearing,
+            'status': 'completed'
         }
 
         return JsonResponse(response_data)
@@ -340,6 +354,8 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.frequency = frequency if frequency else default
         motor.no_load_test.speed = speed if speed else default
         motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
+        PerformanceTest.objects.filter(motor=motor, test_type='no_load_test').update(status=PerformanceTest.COMPLETED)
+
         motor.no_load_test.save()
 
         response_data = {
@@ -348,7 +364,8 @@ class NoLoadFormSaveView(View):
             'power': motor.no_load_test.power,
             'frequency': motor.no_load_test.frequency,
             'speed': motor.no_load_test.speed,
-            'direction_of_rotation': motor.no_load_test.direction_of_rotation
+            'direction_of_rotation': motor.no_load_test.direction_of_rotation,
+            'status': 'completed'
         }
 
         return JsonResponse(response_data)
@@ -369,12 +386,16 @@ class WithStandVoltageFormSaveView(View):
         motor.withstand_voltage_ac_test.description = description if description else ''
         motor.withstand_voltage_ac_test.voltage_kv = voltage_kv if voltage_kv else Decimal('0.00')
         motor.withstand_voltage_ac_test.time_in_seconds = time_in_seconds if time_in_seconds else 0
+        PerformanceTest.objects.filter(motor=motor, test_type='withstand_voltage_ac_test').update(
+            status=PerformanceTest.COMPLETED)
+
         motor.withstand_voltage_ac_test.save()
 
         response_data = {
             'description': motor.withstand_voltage_ac_test.description,
             'voltage_kv': motor.withstand_voltage_ac_test.voltage_kv,
-            'time_in_seconds': motor.withstand_voltage_ac_test.time_in_seconds
+            'time_in_seconds': motor.withstand_voltage_ac_test.time_in_seconds,
+            'status': 'completed'
         }
 
         return JsonResponse(response_data)
@@ -402,6 +423,9 @@ class InsulationFormSaveView(View):
         motor.insulation_resistance_test.time_in_seconds = time_in_seconds if time_in_seconds else 0
         motor.insulation_resistance_test.ambient_temperature_C = ambient_temperature_C if ambient_temperature_C else default
         motor.insulation_resistance_test.humidity_percentage = humidity_percentage if humidity_percentage else default
+        PerformanceTest.objects.filter(motor=motor, test_type='insulation_resistance_test').update(
+            status=PerformanceTest.COMPLETED)
+
         motor.insulation_resistance_test.save()
 
         response_data = {
@@ -410,10 +434,12 @@ class InsulationFormSaveView(View):
             'insulation_resistance': motor.insulation_resistance_test.insulation_resistance,
             'time_in_seconds': motor.insulation_resistance_test.time_in_seconds,
             'ambient_temperature_C': motor.insulation_resistance_test.ambient_temperature_C,
-            'humidity_percentage': motor.insulation_resistance_test.humidity_percentage
+            'humidity_percentage': motor.insulation_resistance_test.humidity_percentage,
+            'status': 'completed'
         }
 
         return JsonResponse(response_data)
+
 
 class LockRotorFormSave(View):
     def post(self, request, *args, **kwargs):
@@ -433,15 +459,20 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.vibration = vibration if vibration else default
         motor.lock_rotor_test.noise = noise if noise else default
         motor.lock_rotor_test.temperature = temperature if temperature else default
+        PerformanceTest.objects.filter(motor=motor, test_type='lock_rotor_test').update(
+            status=PerformanceTest.COMPLETED)
+
         motor.lock_rotor_test.save()
 
         response_data = {
             'vibration': vibration,
             'noise': noise,
-            'temperature': temperature
+            'temperature': temperature,
+            'status': 'completed'
         }
 
         return JsonResponse(response_data)
+
 
 class PerformanceDeterminationFormSave(View):
 
@@ -543,6 +574,8 @@ class PerformanceDeterminationFormSave(View):
         #     performance_determination_test.performance_75 = file_3
         # if file_4:
         #     performance_determination_test.performance_100 = file_4
+        PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
+            status=PerformanceTest.COMPLETED)
         performance_determination_test.save()
         parent_obj = performance_determination_test
         # if file_1:
@@ -558,6 +591,7 @@ class PerformanceDeterminationFormSave(View):
             'voltage': motor.performance_determination_test.voltage,
             'frequency': motor.performance_determination_test.frequency,
             'nominal_t': motor.performance_determination_test.nominal_t,
+            'status': 'completed'
         }
 
         return JsonResponse(response_data)
