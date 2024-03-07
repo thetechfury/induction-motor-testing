@@ -9,6 +9,35 @@
         </div>
 
         <div class="mb-3 clearfix block {% if all_test_completed %} d-block {% else %} d-none {% endif %} ">
+<!--Remarks Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Remarks
+</button>
+
+<!-- Remarks Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Remarks</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="remarksForm" action="{% url 'remarks' inductionMotorReport.id %}" method="post">
+          {% csrf_token %}
+          <textarea id="remarks" name="remarks" rows="4" class="form-control">{{ inductionMotorReport.remarks }}</textarea>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" onclick="submitRemarksForm()" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
             <a href="{% url 'chart' inductionMotorReport.id %}" class="text-white btn btn-primary"
                target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a>
             <a href="{% url 'pdf' inductionMotorReport.id %}" class="text-white btn btn-success"
@@ -583,6 +612,36 @@
     </section>
 {% endblock %}
 {% block scripts %}
+    <script>
+// Example JavaScript snippet for initiating the AJAX call
+function submitRemarksForm() {
+    var form = document.getElementById('remarksForm');
+    var formData = new FormData(form);
+
+    // Construct the action URL dynamically or ensure it's set correctly in the form's action attribute
+    var actionUrl = form.action; // Assuming the form's 'action' attribute already contains the correct URL with `pk`
+
+    fetch(actionUrl, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response here
+      if(data.success) {
+        var modalInstance = bootstrap.Modal.getInstance(document.getElementById('staticBackdrop'));
+        modalInstance.hide();
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
+</script>
 {#<script>#}
 {#    function validateForm(tbodyId) {#}
 {#        console.log(tbodyId)#}

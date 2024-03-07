@@ -64,6 +64,7 @@ class InductionMotor(TimeStampedModel):
     )
     status = models.CharField(max_length=7, choices=REPORT_STATUS, default=ACTIVE, blank=True)
     report_link = models.CharField(max_length=50, null=True, blank=True)
+    remarks = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.serial_number
@@ -268,11 +269,8 @@ class LockRotorTest(TimeStampedModel):
     )
 
 
-class Result(TimeStampedModel):
-    """ 3.8. Result """
 
-    induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="result")
-    description = models.CharField(max_length=250, blank=True, null=True)
+
 
 
 

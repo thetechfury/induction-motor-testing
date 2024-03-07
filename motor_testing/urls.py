@@ -5,7 +5,7 @@ from .views import InductionMotorListingsView, TestsView, ReportView, GeneratePD
     InsulationFormSaveView, PerformanceDeterminationFormSave, LockRotorFormSave
 from .views import InductionMotorListingsView, TestsView, ReportView, GeneratePDF, DeleteReportView, \
     ElectricFormSaveView, TemperatureFormSaveView, NoLoadFormSaveView, WithStandVoltageFormSaveView, \
-    InsulationFormSaveView, PerformanceDeterminationFormSave, ChartView
+    InsulationFormSaveView, PerformanceDeterminationFormSave, ChartView,Remarks
 
 urlpatterns = [
     path("home/", InductionMotorListingsView.as_view(), name="home"),
@@ -21,4 +21,5 @@ urlpatterns = [
     path("Lock-rotor-form/<int:id>", LockRotorFormSave.as_view(), name="lock-rotor-form"),
     path('pdf/<int:id>', GeneratePDF.as_view(), name='pdf'),
     path('chart/<int:id>', ChartView.as_view(), name='chart'),
+    path('remarks/<int:id>', Remarks.as_view(), name='remarks'),
 ]
