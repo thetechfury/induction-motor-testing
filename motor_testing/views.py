@@ -231,6 +231,8 @@ class ReportView(TemplateView):
         if all_tests:
             context['all_tests'] = all_tests
         context['induction_motor'] = induction_motor
+        if selected_tests.filter(test_type='lock_rotor_test').first() in selected_tests:
+            context['lock_rotor_test'] = True
         return context
 
 

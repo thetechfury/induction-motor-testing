@@ -397,52 +397,61 @@
                 University Rd. Kala Shah Kaku, Sheikhupura, Punjab
             </div>
         </header>
+
         <section class="main-section">
-            <h1 class="main-title">4. Lock Rotor Test</h1>
-            <br>
-            <section class="section-5">
-                <table class="table-border">
-                    <tr>
-                        <th>Tested Perimeters for 5 seconds</th>
-                        <th>Value</th>
-                    </tr>
-                    <tr>
-                        <td>Voltage (V)</td>
-                        <td>60.0</td>
-                    </tr>
-                    <tr>
-                        <td>Frequency (Hz)</td>
-                        <td>60.0</td>
-                    </tr>
-                    <tr>
-                        <td>Current (A)</td>
-                        <td>60.0</td>
-                    </tr>
-                    <tr>
-                        <td>Power (KW)</td>
-                        <td>60.0</td>
-                    </tr>
-                    <tr>
-                        <td>Vibration (mm/s)</td>
-                        <td>60.0</td>
-                    </tr>
-                    <tr>
-                        <td>Noise (db.)</td>
-                        <td>60.0</td>
-                    </tr>
-                    <tr>
-                        <td>Temperature (°C)</td>
-                        <td>60.0</td>
-                    </tr>
-                </table>
-            </section>
-            <h1 class="main-title">5. Result</h1>
+            {% for selected_test in selected_tests %}
+                {% if selected_test.test_type == 'lock_rotor_test' %}
+                    <h1 class="main-title">4. Lock Rotor Test</h1>
+                    <br>
+                    <section class="section-5">
+                        <table class="table-border">
+                            <tr>
+                                <th>Tested Perimeters for 5 seconds</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr>
+                                <td>Voltage (V)</td>
+                                <td>60.0</td>
+                            </tr>
+                            <tr>
+                                <td>Frequency (Hz)</td>
+                                <td>60.0</td>
+                            </tr>
+                            <tr>
+                                <td>Current (A)</td>
+                                <td>60.0</td>
+                            </tr>
+                            <tr>
+                                <td>Power (KW)</td>
+                                <td>60.0</td>
+                            </tr>
+                            <tr>
+                                <td>Vibration (mm/s)</td>
+                                <td>60.0</td>
+                            </tr>
+                            <tr>
+                                <td>Noise (db.)</td>
+                                <td>60.0</td>
+                            </tr>
+                            <tr>
+                                <td>Temperature (°C)</td>
+                                <td>60.0</td>
+                            </tr>
+                        </table>
+                    </section>
+                {% endif %}
+            {% endfor %}
+            <h1 class="main-title">
+                {% if lock_rotor_test %}
+                    5{% else %}4{% endif %}. Result</h1>
             <section class="section-4">
+
                 <p>
-                {{ induction_motor.remarks}}
+                    {{ induction_motor.remarks }}
                 </p>
             </section>
         </section>
+
         <section class="section-4">
         </section>
         <footer class="footer-2">
