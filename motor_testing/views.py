@@ -618,3 +618,13 @@ class PerformanceDeterminationFormSave(View):
 class ChartView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'graph.html')
+
+class Remarks(View):
+    def post(self, request, *args, **kwargs):
+        motor_id = kwargs['id']
+        remarks = request.POST.get('remarks')
+        motor = get_object_or_404(InductionMotor, id=motor_id)
+        motor.remarks = remarks
+        motor.save()
+
+        return JsonResponse({'success': True})
