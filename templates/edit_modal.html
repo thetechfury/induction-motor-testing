@@ -14,7 +14,7 @@
                     <div class="col-md-4">
                         <div class="row">
                             <div class="col-md-5">
-                                <label for="id_serial_number" class="col-form-label">Motor's Serial No*</label>
+                                <label for="id_serial_number" class="col-form-label text-small">Motor's Serial No*</label>
                             </div>
                             <div class="col-md-7">{{ edit_form.serial_number }}</div>
                         </div>
@@ -22,22 +22,38 @@
 
                     <div class="col-md-4">
                         <div class="row">
-                            <div class="col-md-3">
-                                <label for="id_customer_name" class="col-form-label">Customer*</label>
+                            <div class="col-md-5">
+                                <label for="id_customer_name" class="col-form-label text-small">Customer*</label>
                             </div>
-                            <div class="col-md-9">{{ edit_form.customer_name }}</div>
+                            <div class="col-md-7">{{ edit_form.customer_name }}</div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="id_sales_order_number" class="col-form-label">Sales Order*</label>
+                            <div class="col-md-5">
+                                <label for="id_sales_order_number" class="col-form-label text-small">Sales Order*</label>
                             </div>
-                            <div class="col-md-8">{{ edit_form.sales_order_number }}</div>
+                            <div class="col-md-7">{{ edit_form.sales_order_number }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="id_sales_order_number" class="col-form-label text-small">Sales Order*</label>
+                            </div>
+                            <div class="col-md-8">{{ edit_form.director_cerad }}</div>
                         </div>
                     </div>
 
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label for="id_sales_order_number" class="col-form-label text-small">Sales Order*</label>
+                            </div>
+                            <div class="col-md-7">{{ edit_form.lab_instructor }}</div>
+                        </div>
+                    </div>
                     <hr style="border-top: 2px solid #1559d3;">
 
                     <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
