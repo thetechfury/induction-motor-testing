@@ -492,78 +492,6 @@ class LockRotorFormSave(View):
 
 class PerformanceDeterminationFormSave(View):
 
-    def handle_file(self, file, obj, load=0):
-        file_path = settings.MEDIA_ROOT / file.name
-
-        with open(file_path, 'wb') as destination:
-            for chunk in file.chunks():
-                destination.write(chunk)
-
-        wb = load_workbook(file_path)
-        sheet = wb.active
-
-        total_sum_current = 0
-        count_current = 0
-        total_sum_slip = 0
-        count_slip = 0
-        total_sum_speed = 0
-        count_speed = 0
-        total_sum_efficiency = 0
-        count_efficiency = 0
-        total_sum_cos = 0
-        count_cos = 0
-
-        for row in sheet.iter_rows(min_row=2, values_only=True):
-            try:
-                current = row[1]
-                slip = row[2]
-                speed = row[3]
-                efficiency = row[4]
-                cos = row[5]
-                total_sum_current += current
-                count_current += 1
-                total_sum_slip += slip
-                count_slip += 1
-                total_sum_speed += speed
-                count_speed += 1
-                total_sum_efficiency += efficiency
-                count_efficiency += 1
-                total_sum_cos += cos
-                count_cos += 1
-            except IndexError:
-                pass
-
-        parameter = PerformanceTestParameters.objects.get_or_create(
-            performance_determination_test=obj, load=load
-        )[0]
-        if count_current > 0:
-            average_current = total_sum_current / count_current
-            parameter.current = round(average_current, 2)
-        else:
-            parameter.current = Decimal('0.00')
-        if count_slip > 0:
-            average_slip = total_sum_slip / count_slip
-            parameter.slip = round(average_slip, 4)
-        else:
-            parameter.slip = Decimal('0.0000')
-        if count_speed > 0:
-            average_speed = total_sum_speed / count_speed
-            parameter.speed = round(average_speed, 2)
-        else:
-            parameter.speed = Decimal('0.00')
-        if count_efficiency > 0:
-            average_efficiency = total_sum_efficiency / count_efficiency
-            parameter.efficiency = round(average_efficiency, 2)
-        else:
-            parameter.efficiency = Decimal('0.00')
-        if count_cos > 0:
-            average_cos = total_sum_cos / count_cos
-            parameter.cos = round(average_cos, 2)
-        else:
-            parameter.cos = Decimal('0.00')
-        parameter.load = load
-        parameter.save()
-
     def post(self, request, *args, **kwargs):
         motor_id = kwargs['id']
         motor = get_object_or_404(InductionMotor, id=motor_id)
@@ -575,34 +503,17 @@ class PerformanceDeterminationFormSave(View):
         voltage = request.POST.get('performance_determination_test-voltage')
         frequency = request.POST.get('performance_determination_test-frequency')
         nominal_t = request.POST.get('performance_determination_test-nominal_t')
-        file_1 = request.FILES.get('performance_determination_test-file_1')
-        file_2 = request.FILES.get('performance_determination_test-file_2')
-        file_3 = request.FILES.get('performance_determination_test-file_3')
-        file_4 = request.FILES.get('performance_determination_test-file_4')
         performance_determination_test.voltage = voltage if voltage else default
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
-        # if file_1:
-        #     performance_determination_test.performance_25 = file_1
-        # if file_2:
-        #     performance_determination_test.performance_50 = file_2
-        # if file_3:
-        #     performance_determination_test.performance_75 = file_3
-        # if file_4:
-        #     performance_determination_test.performance_100 = file_4
+
+
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
             status=PerformanceTest.COMPLETED)
         performance_determination_test.save()
-        parent_obj = performance_determination_test
-        # if file_1:
-        #     self.handle_file(file_1, parent_obj, 25)
-        # if file_2:
-        #     self.handle_file(file_2, parent_obj, 50)
-        # if file_3:
-        #     self.handle_file(file_3, parent_obj, 75)
-        # if file_4:
-        #     self.handle_file(file_4, parent_obj, 100)
         statues = get_form_statuses(motor_id)
+
+
         response_data = {
             'voltage': motor.performance_determination_test.voltage,
             'frequency': motor.performance_determination_test.frequency,

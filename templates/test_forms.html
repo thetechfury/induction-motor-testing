@@ -130,7 +130,7 @@
 
                             {% if electric_resistance_test %}
                                 <div class="tab-pane fade" id="electric" role="tabpanel" aria-labelledby="electric-tab">
-                                    <form id="electric-form " class="row g-3"
+                                    <form id="electric-form " class="row g-3 test-form"
                                           action="{% url 'electric-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
@@ -196,7 +196,7 @@
                             {% if temperature_rise_test %}
                                 <div class="tab-pane fade" id="temperature" role="tabpanel"
                                      aria-labelledby="temperature-tab">
-                                    <form id="temperature-form" class="row g-3"
+                                    <form id="temperature-form" class="row g-3 test-form"
                                           action="{% url 'temperature-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
@@ -255,7 +255,7 @@
                             {% if performance_determination_test %}
                                 <div class="tab-pane fade" id="performance" role="tabpanel"
                                      aria-labelledby="performance-tab">
-                                    <form id="performance-form" class="row g-3"
+                                    <form id="performance-form" class="row g-3 test-form"
                                           action="{% url 'performance-form' inductionMotorReport.id %}" method="post"
                                           enctype="multipart/form-data" novalidate>
                                         {% csrf_token %}
@@ -383,7 +383,7 @@
 
                             {% if no_load_test %}
                                 <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
-                                    <form id="noload-form" class="row g-3"
+                                    <form id="noload-form" class="row g-3 test-form"
                                           action="{% url 'noload-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
@@ -451,7 +451,7 @@
                             {% if withstand_voltage_ac_test %}
                                 <div class="tab-pane fade" id="withstand" role="tabpanel"
                                      aria-labelledby="withstand-tab">
-                                    <form id="withstand-form" class="row g-3"
+                                    <form id="withstand-form" class="row g-3 test-form"
                                           action="{% url 'withstand-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
@@ -492,7 +492,7 @@
                             {% if insulation_resistance_test %}
                                 <div class="tab-pane fade" id="insulation" role="tabpanel"
                                      aria-labelledby="insulation-tab">
-                                    <form id="insulation-form" class="row g-3"
+                                    <form id="insulation-form" class="row g-3 test-form"
                                           action="{% url 'insulation-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
@@ -565,7 +565,7 @@
                             {% endif %}
                {% if lock_rotor_test %}
     <div class="tab-pane fade" id="lock-rotor" role="tabpanel" aria-labelledby="rotor-tab">
-        <form id="lock-rotor-test-form" class="row g-3" action="{% url 'lock-rotor-form' inductionMotorReport.id %}" method="post">
+        <form id="lock-rotor-test-form" class="row g-3 test-form" action="{% url 'lock-rotor-form' inductionMotorReport.id %}" method="post">
             {% csrf_token %}
 
             <div class="col-md-4 pt-5">
@@ -691,7 +691,7 @@ $(document).ready(function () {
                 un_completed_test[0].click()
                }
 
-    $('form').submit(function (e) {
+    $('.test-form').submit(function (e) {
         e.preventDefault();
 
 
@@ -718,6 +718,7 @@ $(document).ready(function () {
              }
             if(status === 'completed'){
                 currentTabButton.addClass('fullfilled');
+                console.log('HTMLE');
                 }
 
 
@@ -728,7 +729,7 @@ $(document).ready(function () {
                 });
 
                 // Optionally, display a success message or perform other actions
-                alert('Form data saved successfully!');
+                alert('Form data saved success');
 
                 // Switch to the next tab
                 var nextTab = currentTab.next('.tab-pane');

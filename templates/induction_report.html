@@ -294,30 +294,6 @@
                     {% endfor %}
                 {% endif %}
             {% endfor %}
-                                  <tr>
-                                            <td>50</td>
-                                            <td>156.57</td>
-                                            <td>0.0027</td>
-                                            <td>1795.1</td>
-                                            <td>96.26</td>
-                                            <td>0.77</td>
-                                        </tr>
-                                        <tr>
-                                            <td>75</td>
-                                            <td>213.34</td>
-                                            <td>0.0041</td>
-                                            <td>1792.5</td>
-                                            <td>96.64</td>
-                                            <td>0.84</td>
-                                        </tr>
-                                        <tr>
-                                            <td>100</td>
-                                            <td>276.76</td>
-                                            <td>0.0056</td>
-                                            <td>1789.8</td>
-                                            <td>96.56</td>
-                                            <td>0.86</td>
-                                        </tr>
                 </table>
             {% for selected_test in selected_tests %}
                 {% if selected_test.test_type == 'no_load_test' %}
@@ -346,11 +322,7 @@
                         <th>Time (s)</th>
                     </tr>
                     <tr>
-                        <td>{% if induction_motor.withstand_voltage_ac_test.description  %}{{ induction_motor.withstand_voltage_ac_test.description }}
-                        
-                        {% else %}
-                        X
-                        {% endif %}</td>
+                        <td>{{ induction_motor.withstand_voltage_ac_test.description }} </td>
                         <td>{{ induction_motor.withstand_voltage_ac_test.voltage_kv }}</td>
                         <td>{{ induction_motor.withstand_voltage_ac_test.time_in_seconds }}</td>
                     </tr>
@@ -371,11 +343,7 @@
                         <th>Time (s)</th>
                     </tr>
                     <tr>
-                        <td>{% if induction_motor.insulation_resistance_test.description %}
-                            {{ induction_motor.insulation_resistance_test.description }}
-                        {% else %}
-                        X
-                        {% endif %}</td>
+                        <td> {{ induction_motor.insulation_resistance_test.description }} </td>
                         <td>{{ induction_motor.insulation_resistance_test.voltage }}</td>
                         <td>{{ induction_motor.insulation_resistance_test.insulation_resistance }}</td>
                         <td>{{ induction_motor.insulation_resistance_test.time_in_seconds }}</td>
