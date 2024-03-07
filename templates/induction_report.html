@@ -294,30 +294,30 @@
                     {% endfor %}
                 {% endif %}
             {% endfor %}
-                    {#                    <tr>#}
-                    {#                        <td>50</td>#}
-                    {#                        <td>156.57</td>#}
-                    {#                        <td>0.0027</td>#}
-                    {#                        <td>1795.1</td>#}
-                    {#                        <td>96.26</td>#}
-                    {#                        <td>0.77</td>#}
-                    {#                    </tr>#}
-                    {#                    <tr>#}
-                    {#                        <td>75</td>#}
-                    {#                        <td>213.34</td>#}
-                    {#                        <td>0.0041</td>#}
-                    {#                        <td>1792.5</td>#}
-                    {#                        <td>96.64</td>#}
-                    {#                        <td>0.84</td>#}
-                    {#                    </tr>#}
-                    {#                    <tr>#}
-                    {#                        <td>100</td>#}
-                    {#                        <td>276.76</td>#}
-                    {#                        <td>0.0056</td>#}
-                    {#                        <td>1789.8</td>#}
-                    {#                        <td>96.56</td>#}
-                    {#                        <td>0.86</td>#}
-                    {#                    </tr>#}
+                                  <tr>
+                                            <td>50</td>
+                                            <td>156.57</td>
+                                            <td>0.0027</td>
+                                            <td>1795.1</td>
+                                            <td>96.26</td>
+                                            <td>0.77</td>
+                                        </tr>
+                                        <tr>
+                                            <td>75</td>
+                                            <td>213.34</td>
+                                            <td>0.0041</td>
+                                            <td>1792.5</td>
+                                            <td>96.64</td>
+                                            <td>0.84</td>
+                                        </tr>
+                                        <tr>
+                                            <td>100</td>
+                                            <td>276.76</td>
+                                            <td>0.0056</td>
+                                            <td>1789.8</td>
+                                            <td>96.56</td>
+                                            <td>0.86</td>
+                                        </tr>
                 </table>
             {% for selected_test in selected_tests %}
                 {% if selected_test.test_type == 'no_load_test' %}
@@ -346,7 +346,11 @@
                         <th>Time (s)</th>
                     </tr>
                     <tr>
-                        <td>{{ induction_motor.withstand_voltage_ac_test.description }}</td>
+                        <td>{% if induction_motor.withstand_voltage_ac_test.description  %}{{ induction_motor.withstand_voltage_ac_test.description }}
+                        
+                        {% else %}
+                        X
+                        {% endif %}</td>
                         <td>{{ induction_motor.withstand_voltage_ac_test.voltage_kv }}</td>
                         <td>{{ induction_motor.withstand_voltage_ac_test.time_in_seconds }}</td>
                     </tr>
@@ -367,7 +371,11 @@
                         <th>Time (s)</th>
                     </tr>
                     <tr>
-                        <td>{{ induction_motor.insulation_resistance_test.description }}</td>
+                        <td>{% if induction_motor.insulation_resistance_test.description %}
+                            {{ induction_motor.insulation_resistance_test.description }}
+                        {% else %}
+                        X
+                        {% endif %}</td>
                         <td>{{ induction_motor.insulation_resistance_test.voltage }}</td>
                         <td>{{ induction_motor.insulation_resistance_test.insulation_resistance }}</td>
                         <td>{{ induction_motor.insulation_resistance_test.time_in_seconds }}</td>
@@ -397,7 +405,7 @@
                 <li> WEG will keep the original document archived for
                     at least five years.</li>
             </ul>
-            <div>Report issued on {{ induction_motor.updated_on | date:"m/d/Y"  }}</div>
+            <div style="padding:10px;">Report issued on {{ induction_motor.updated_on | date:"m/d/Y"  }}</div>
         </footer>
     </div>
     <p class="page-number first-page">Page 1 of 2</p>
@@ -480,27 +488,36 @@
                     <th>UET TEST REOPRT</th>
                     <th>Customer</th>
                 </tr>
-                <tr>
-                    <td>
-                        <div class="d-f">
-                            <div>
-                                <div>
-                                       <span style="text-align:left ">Director CERAD</span>
-                                        <span style="text-align:right;margin-left:200px">Lab Instructor</span>
-                                </div>
-                                <div>
-                                    <span style="text-align:left;margin-right:250px" ><i>{{ induction_motor.director_cerad}}</i></span>
-                                            <span ><i>{{ induction_motor.lab_instructor}}</i></span>
+                <tr style="padding:20px;">
+                    <td style="padding:10px;">
+                    <table style="border:0">
+                        <tr style=" margin-bottom:10px;">
+                            <td style="border:0">Director Cerad</td>
+                            <td style="border:0; text-align:left;">Lab Instructor</td>
+                        </tr>
+                         <tr style="text-align:center">
+                            <td style="border:0; "><i>{{ induction_motor.director_cerad}}</i></td>
+                            <td style="border:0; text-align:left;"> <i>{{ induction_motor.lab_instructor}}</i></td>
+                        </tr>
+                    </table>
 
-                                    </div>
+<!--                                    <div style="">-->
+<!--                                        <span style="text-align:left;">Director CERAD</span>-->
+<!--                                        <span style="text-align:right;">Lab Instructor</span>-->
+<!--                                    </div>-->
+<!--                                <div>-->
+<!--                                    <span style="" ><i>{{ induction_motor.director_cerad}}</i></span>-->
+<!--                                            <span style="margin-left:200px;" ><i>{{ induction_motor.lab_instructor}}</i></span>-->
+
+<!--                                    </div>-->
 <!--                                <p>Test Date: {{ induction_motor.updated_on | date:"m/d/Y"  }}</p>-->
-                            </div>
-                        </div>
+
+
                     </td>
-                    <td>Inspector</td>
+                    <td style="text-align:center;">Inspector</td>
                 </tr>
-                <tr>
-                    <td colspan="2">Report issued on {{ induction_motor.updated_on | date:"m/d/Y"  }}</td>
+                <tr >
+                    <td colspan="2" style="padding:10px;">Report issued on {{ induction_motor.updated_on | date:"m/d/Y"  }}</td>
 
                 </tr>
             </table>

@@ -1324,3 +1324,8 @@ background:#0d6efd;
 .text-small{
 font-size:14px;
 }
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
