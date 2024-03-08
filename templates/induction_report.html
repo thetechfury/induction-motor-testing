@@ -237,12 +237,12 @@
                     <span class="title">3.1. Electric Resistance</span>
                 </h1>
                 <ul class="section-ul">
-                    <li>Resistance (mOhms): {{ induction_motor.electric_resistance_test.resistance_ohm_1 }}
+                    <li class="text-left">Resistance (mOhms): {{ induction_motor.electric_resistance_test.resistance_ohm_1 }}
                         / {{ induction_motor.electric_resistance_test.resistance_ohm_2 }}
                         / {{ induction_motor.electric_resistance_test.resistance_ohm_3 }}</li>
-                    <li>Ambient Temperature
+                    <li class="text-left">Ambient Temperature
                         (°C): {{ induction_motor.electric_resistance_test.ambient_temperature_C }}</li>
-                    <li>Unbalance (%): {{ induction_motor.electric_resistance_test.unbalance_percentage }}</li>
+                    <li class="text-left">Unbalance (%): {{ induction_motor.electric_resistance_test.unbalance_percentage }}</li>
                 </ul>
                 {% endif %}
             {% endfor %}
@@ -253,13 +253,13 @@
               >3.2. Temperature Rise - Nominal Condition - Direct</span
               >
                 </h1>
-                <ul class="section-ul-2">
+                <ul class="section-ul-3">
                     <li>Voltage (V): {{ induction_motor.temperature_rise_test.voltage }}</li>
-                    <li>Frequency (Hz): {{ induction_motor.temperature_rise_test.winding }}</li>
+                    <li style="padding-left:17px;">Frequency (Hz): {{ induction_motor.temperature_rise_test.winding }}</li>
                     <li>Winding (Resistance Method) (C): {{ induction_motor.temperature_rise_test.frequency }}</li>
-                    <li>DE Bearing (C): {{ induction_motor.temperature_rise_test.de_bearing }}</li>
-                    <li></li>
-                    <li>NDE Bearing (C): {{ induction_motor.temperature_rise_test.nde_bearing }}</li>
+                    <li >DE Bearing (C): {{ induction_motor.temperature_rise_test.de_bearing }}</li>
+
+                    <li style="padding-left:17px;">NDE Bearing (C): {{ induction_motor.temperature_rise_test.nde_bearing }}</li>
                 </ul>
             {% endif %}
             {% endfor %}
@@ -269,9 +269,9 @@
                     <span class="title">3.3. Performance Determination</span>
                 </h1>
                 <ul class="section-ul">
-                    <li>Voltage (V): {{ induction_motor.performance_determination_test.voltage }}</li>
-                    <li>Frequency (Hz): {{ induction_motor.performance_determination_test.frequency }}</li>
-                    <li>Nominal T. (N.m): {{ induction_motor.performance_determination_test.nominal_t }}</li>
+                    <li class="text-left">Voltage (V): {{ induction_motor.performance_determination_test.voltage }}</li>
+                    <li class="text-left">Frequency (Hz): {{ induction_motor.performance_determination_test.frequency }}</li>
+                    <li class="text-left">Nominal T. (N.m): {{ induction_motor.performance_determination_test.nominal_t }}</li>
                 </ul>
                 <table class="table-border">
                     <tr>
@@ -294,38 +294,7 @@
                     {% endfor %}
                 {% endif %}
             {% endfor %}
-                      <tr>
-                    <td>25</td>
-                    <td>156.57</td>
-                    <td>0.0027</td>
-                    <td>1795.1</td>
-                    <td>96.26</td>
-                    <td>0.77</td>
-                </tr>
-                    <tr>
-                    <td>50</td>
-                    <td>156.57</td>
-                    <td>0.0027</td>
-                    <td>1795.1</td>
-                    <td>96.26</td>
-                    <td>0.77</td>
-                </tr>
-                <tr>
-                    <td>75</td>
-                    <td>213.34</td>
-                    <td>0.0041</td>
-                    <td>1792.5</td>
-                    <td>96.64</td>
-                    <td>0.84</td>
-                </tr>
-                <tr>
-                    <td>100</td>
-                    <td>276.76</td>
-                    <td>0.0056</td>
-                    <td>1789.8</td>
-                    <td>96.56</td>
-                    <td>0.86</td>
-                </tr>
+
                 </table>
             {% for selected_test in selected_tests %}
                 {% if selected_test.test_type == 'no_load_test' %}
@@ -334,10 +303,10 @@
                 </h1>
                 <ul class="section-ul-3">
                     <li>Voltage (V): {{ induction_motor.no_load_test.voltage }}</li>
-                    <li>Current (A): {{ induction_motor.no_load_test.current }}</li>
+                    <li style="padding-left:17px;">Current (A): {{ induction_motor.no_load_test.current }}</li>
                     <li>Power (W): {{ induction_motor.no_load_test.power }}</li>
                     <li>Frequency (Hz): {{ induction_motor.no_load_test.frequency }}</li>
-                    <li>Speed (rpm): {{ induction_motor.no_load_test.speed }}</li>
+                    <li style="padding-left:17px;">Speed (rpm): {{ induction_motor.no_load_test.speed }}</li>
                     <li>Direction of Rotation: {{ induction_motor.no_load_test.direction_of_rotation }}</li>
                 </ul>
             {% endif %}
