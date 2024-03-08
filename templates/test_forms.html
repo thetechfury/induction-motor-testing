@@ -391,26 +391,51 @@
                                           action="{% url 'noload-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
-                  <div class="col-md-4 pt-5">
-    <div class="row" style="text-align: right">
-        <div class="col">
-            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>
-        </div>
-        <div class="col">
-            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">
-        </div>
-    </div>
-</div>
-                                        <div class="col-md-4 pt-5">
-    <div class="row" style="text-align: right">
-        <div class="col">
-            <label for="id_no_load_test_selected_date" class="col-form-label">Select Date:</label>
-        </div>
-        <div class="col">
-            <input type="date" id="id_no_load_test_selected_date" name="selected_date">
-        </div>
-    </div>
-</div>
+<!--                  <div class="col-md-4 pt-5">-->
+<!--    <div class="row" style="text-align: right">-->
+<!--        <div class="col">-->
+<!--            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>-->
+<!--        </div>-->
+<!--&lt;!&ndash;        <div class="col">&ndash;&gt;-->
+<!--&lt;!&ndash;            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--    </div>-->
+<!--</div>-->
+<!--    <div class="row" style="text-align: right">-->
+                                        <div class="col-md-4 " style="text-align:left">
+                                        <div class="form-check">
+                                            <input type="radio" id="id_no_load_test_current_date" name="date_checkbox" class="form-check-input">
+                                             <label for="id_no_load_test_current_date" class="form-check-label" style="text-align:left">Current Date</label>
+                                        </div>
+                                        <div class=" form-check">
+                                            <input type="radio" id="select_date" class="form-check-input" type="radio" name="date_checkbox">
+                                            <label for="select_date" class="form-check-label"  style="text-align:left">Select Date</label>
+                                            <input type="date" id="id_no_load_test_selected_date" name="selected_date" style="display:none;">
+
+                                        </div>
+                                        </div>
+
+<!--                                        <div class="col-4 " style="text-align:left;" >-->
+<!--                                            <input type="date" id="" name="selected_date">-->
+<!--                                        </div>-->
+
+                                        <div class="col-md-4 ">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col-6"><label for="id_no_load_test-direction_of_rotation"
+                                                    class="col-form-label">Direction of Rotation:</label>
+                                                </div>
+                                                <div class="col-6">{{ no_load_test.direction_of_rotation }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center py-5">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+<!--        <div class="col">-->
+<!--            <input type="date" id="id_no_load_test_selected_date" name="selected_date">-->
+<!--        </div>-->
+<!--    </div>-->
+
 
 {#                                        <div class="col-md-4 pt-5">#}
 {#                                            <div class="row" style="text-align: right">#}
@@ -448,18 +473,6 @@
 {#                                            </div>#}
 {#                                        </div>#}
 
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_no_load_test-direction_of_rotation"
-                                                    class="col-form-label">Direction of Rotation:</label>
-                                                </div>
-                                                <div class="col">{{ no_load_test.direction_of_rotation }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center py-5">
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </div>
                                     </form>
                                 </div>
                             {% endif %}
@@ -725,6 +738,23 @@ $(document).ready(function () {
                console.log(" Not All uncompleted")
                 un_completed_test[0].click()
                }
+       const showDateCheckbox = document.getElementById('select_date');
+        const dateInput = document.getElementById('id_no_load_test_selected_date')
+        const currentDate = document.getElementById('id_no_load_test_current_date')
+        showDateCheckbox.addEventListener('change', function() {
+          if (this.checked) {
+            dateInput.style.display = 'block'; // Show the date input
+          } else {
+            dateInput.style.display = 'none'; // Hide the date input
+          }
+        });
+
+     currentDate.addEventListener('change', function() {
+          if (this.checked) {
+            dateInput.style.display = 'none'; // Show the date input
+            dateInput.value=0;
+          }
+        });
 
     $('.test-form').submit(function (e) {
         e.preventDefault();
@@ -797,183 +827,5 @@ $(document).ready(function () {
 
 
 
-<!--  <script>-->
-<!--       $(document).ready(function ()-->
-<!--            $('#electric-form').submit(function (e)-->
-<!--                e.preventDefault();#}-->
-<!--                var formData = $(this).serialize();-->
-<!--                $.ajax(-->
-<!--                    type: 'POST',-->
-<!--                   url: $(this).attr('action'),-->
-<!--                    data: formData,-->
-<!--                    success: function (data)-->
-<!--                        console.log(data);-->
-<!--                        // Update form fields with saved data-->
-<!--                        $('#id_electric_resistance_test-resistance_ohm_1').val(data.resistance_ohm_1);-->
-<!--                        $('#id_electric_resistance_test-resistance_ohm_2').val(data.resistance_ohm_2);-->
-<!--                        $('#id_electric_resistance_test-resistance_ohm_3').val(data.resistance_ohm_3);-->
-<!--                        $('#id_electric_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C)';-->
-<!--                        $('#id_electric_resistance_test-unbalance_percentage').val(data.unbalance_percentage);-->
-
-<!--                        // Optionally, display a success message or perform other actions-->
-<!--                        alert('Form data saved successfully!');-->
-<!--                    },-->
-<!--                });-->
-<!--            });-->
-<!--        });-->
-<!--    </script>-->
-{#    <script>#}
-{#        $(document).ready(function () {#}
-{#            $('#temperature-form').submit(function (e) {#}
-{#                e.preventDefault();#}
-{#                var formData = $(this).serialize();#}
-{#                $.ajax({#}
-{#                    type: 'POST',#}
-{#                    url: $(this).attr('action'),#}
-{#                    data: formData,#}
-{#                    success: function (data) {#}
-{#                        console.log(data);#}
-{#                        // Update form fields with saved data#}
-{#                        $('#id_temperature_rise_test-voltage').val(data.voltage);#}
-{#                        $('#id_temperature_rise_test-winding').val(data.winding);#}
-{#                        $('#id_temperature_rise_test-frequency').val(data.frequency);#}
-{#                        $('#id_temperature_rise_test-de_bearing').val(data.de_bearing);#}
-{#                        $('#id_temperature_rise_test-nde_bearing').val(data.nde_bearing);#}
-{##}
-{#                        // Optionally, display a success message or perform other actions#}
-{#                        alert('Form data saved successfully!');#}
-{#                    },#}
-{#                });#}
-{#            });#}
-{#        });#}
-{#    </script>#}
-{#    <script>#}
-{#        $(document).ready(function () {#}
-{#            $('#noload-form').submit(function (e) {#}
-{#                e.preventDefault();#}
-{#                var formData = $(this).serialize();#}
-{#                $.ajax({#}
-{#                    type: 'POST',#}
-{#                    url: $(this).attr('action'),#}
-{#                    data: formData,#}
-{#                    success: function (data) {#}
-{#                        console.log(data);#}
-{#                        // Update form fields with saved data#}
-{#                        $('#id_no_load_test-voltage').val(data.voltage);#}
-{#                        $('#id_no_load_test-current').val(data.current);#}
-{#                        $('#id_no_load_test-power').val(data.power);#}
-{#                        $('#id_no_load_test-frequency').val(data.frequency);#}
-{#                        $('#id_no_load_test-speed').val(data.speed);#}
-{#                        $('#id_no_load_test-direction_of_rotation').val(data.direction_of_rotation);#}
-{#                        // Optionally, display a success message or perform other actions#}
-{#                        alert('Form data saved successfully!');#}
-{#                    },#}
-{#                });#}
-{#            });#}
-{#        });#}
-{#    </script>#}
-{#    <script>#}
-{#        $(document).ready(function () {#}
-{#            $('#withstand-form').submit(function (e) {#}
-{#                e.preventDefault();#}
-{#                var formData = $(this).serialize();#}
-{#                  console.log($(this).attr('action'));#}
-{#                $.ajax({#}
-{#                    type: 'POST',#}
-{#                    url: $(this).attr('action'),#}
-{#                    data: formData,#}
-{#                    success: function (data) {#}
-{#                        console.log(data);#}
-{#                        // Update form fields with saved data#}
-{#                        $('#id_withstand_voltage_ac_test-description').val(data.description);#}
-{#                        $('#id_withstand_voltage_ac_test-voltage_kv').val(data.voltage_kv);#}
-{#                        $('#id_withstand_voltage_ac_test-time_in_seconds').val(data.time_in_seconds);#}
-{#                        // Optionally, display a success message or perform other actions#}
-{#                        alert('Form data saved successfully!');#}
-{#                    },#}
-{#                });#}
-{#            });#}
-{#        });#}
-{#    </script>#}
-{#    <script>#}
-{#        $(document).ready(function () {#}
-{#            $('#insulation-form').submit(function (e) {#}
-{#                e.preventDefault();#}
-{#                var formData = $(this).serialize();#}
-{#                $.ajax({#}
-{#                    type: 'POST',#}
-{#                    url: $(this).attr('action'),#}
-{#                    data: formData,#}
-{#                    success: function (data) {#}
-{#                        console.log(data);#}
-{#                        // Update form fields with saved data#}
-{#                        $('#id_insulation_resistance_test-description').val(data.description);#}
-{#                        $('#id_insulation_resistance_test-voltage').val(data.voltage);#}
-{#                        $('#id_insulation_resistance_test-insulation_resistance').val(data.insulation_resistance);#}
-{#                        $('#id_insulation_resistance_test-time_in_seconds').val(data.time_in_seconds);#}
-{#                        $('#id_insulation_resistance_test-ambient_temperature_C').val(data.ambient_temperature_C);#}
-{#                        $('#id_insulation_resistance_test-humidity_percentage').val(data.humidity_percentage);#}
-{#                        // Optionally, display a success message or perform other actions#}
-{#                        alert('Form data saved successfully!');#}
-{#                    },#}
-{#                });#}
-{#            });#}
-{#        });#}
-{#    </script>#}
-{#    <script>#}
-{#        $(document).ready(function () {#}
-{#            $('#performance-form').submit(function (e) {#}
-{#                e.preventDefault();#}
-{#                $('input[type="file"]').on('change', function () {#}
-{#                    $(this).parent().removeClass('empty')#}
-{#                })#}
-{#                if (!$(document).find('.empty').length > 0) {#}
-{#                     var formData = new FormData(this);#}
-{#                    $.ajax({#}
-{#                        type: 'POST',#}
-{#                        url: $(this).attr('action'),#}
-{#                        data: formData,#}
-{#                        processData: false,#}
-{#                        contentType: false,#}
-{#                        success: function (data) {#}
-{#                            console.log(data);#}
-{#                            // Update form fields with saved data#}
-{#                            $('#id_performance_determination_test-voltage').val(data.voltage);#}
-{#                            $('#id_performance_determination_test-frequency').val(data.frequency);#}
-{#                            $('#id_performance_determination_test-nominal_t').val(data.nominal_t);#}
-{#                            alert('Form data saved successfully!');#}
-{#                        },#}
-{#                    });#}
-{#                }#}
-{##}
-{#                else {#}
-{#                    alert("Please upload the remaining Performance Load File")#}
-{#                }#}
-{#            });#}
-{#        });#}
-{#    </script>#}
-{#    <script>#}
-{#    $(document).ready(function () {#}
-{#        $('#lock-rotor-test-form').submit(function (e) {#}
-{#            e.preventDefault();#}
-{#            var formData = $(this).serialize();#}
-{#             console.log($(this).attr('action'));#}
-{#            $.ajax({#}
-{#                type: 'POST',#}
-{#                url: $(this).attr('action'),#}
-{#                data: formData,#}
-{#                success: function (data) {#}
-{##}
-{#                    // Update form fields with saved data#}
-{#                    $('#id_lock_rotor_test-vibration').val(data.vibration);#}
-{#                    $('#id_lock_rotor_test-noise').val(data.noise);#}
-{#                    $('#id_lock_rotor_test-temperature').val(data.temperature);#}
-{#                    // Optionally, display a success message or perform other actions#}
-{#                    alert('Form data saved successfully!');#}
-{#                },#}
-{#            });#}
-{#        });#}
-{#    });#}
-{#</script>#}
 
 {% endblock %}
