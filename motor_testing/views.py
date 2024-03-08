@@ -356,7 +356,7 @@ class NoLoadFormSaveView(View):
         if request.POST.get('date_checkbox'):
             current_date_time = datetime.now()
             current_date = current_date_time.date()
-            date = current_date.strftime('%-d%-m%Y')
+            date = "{}{}{}".format(current_date.day, current_date.month,current_date.year)
         date_str = request.POST.get('selected_date')
         if date_str:
             year, month, day = date_str.split('-')
