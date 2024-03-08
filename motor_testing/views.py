@@ -592,7 +592,7 @@ class LockRotorFormSave(View):
             'avg_amp': avg_amp,
             'avg_speed': avg_speed,
             'avg_volt': avg_volt,
-            'power': power/1000,
+            'power': power,
             'status': 'completed',
             'all_test_completed': all(value == 'COMPLETED' for value in statues.values())
 
