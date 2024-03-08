@@ -256,59 +256,134 @@
                                 </div>
                             {% endif %}
 
-                           {% if performance_determination_test %}
-    <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="performance-tab">
-        <form id="performance-form" class="row g-3" action="{% url 'performance-form' inductionMotorReport.id %}" method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
-            <div class="col-md-4 pt-5">
-                <div class="row" style="text-align: right">
-                    <div class="col">
-                        <label for="id_performance_determination_test-voltage" class="col-form-label">Voltage (V):</label>
-                    </div>
-                    <div class="col">{{ performance_determination_test.voltage }}</div>
-                </div>
-            </div>
-            <div class="col-md-4 pt-5">
-                <div class="row" style="text-align: right">
-                    <div class="col">
-                        <label for="id_performance_determination_test-frequency" class="col-form-label">Frequency (Hz):</label>
-                    </div>
-                    <div class="col">{{ performance_determination_test.frequency }}</div>
-                </div>
-            </div>
-            <div class="col-md-4 pt-5">
-                <div class="row" style="text-align: right">
-                    <div class="col">
-                        <label for="id_performance_determination_test-nominal_t" class="col-form-label">Nominal T. (N.m):</label>
-                    </div>
-                    <div class="col">{{ performance_determination_test.nominal_t }}</div>
-                </div>
-            </div>
-            <div class="col-md-4 pt-5">
-                <div class="row" style="text-align: right">
-                    <div class="col">
-                        <label for="id_performance_determination_test-is_current_date" class="col-form-label">Use Current Date:</label>
-                    </div>
-                    <div class="col">
-                        <input type="checkbox" id="id_performance_determination_test-is_current_date" name="is_current_date" {% if performance_determination_test.is_current_date %}checked{% endif %}>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 pt-5">
-                <div class="row" style="text-align: right">
-                    <div class="col">
-                        <label for="id_performance_determination_test-test_date" class="col-form-label">Test Date:</label>
-                    </div>
-                    <div class="col">{{ performance_determination_test.test_date }}</div>
-                </div>
-            </div>
-            <div class="text-center py-5">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>
-    </div>
-{% endif %}
+                            {% if performance_determination_test %}
+                                <div class="tab-pane fade" id="performance" role="tabpanel"
+                                     aria-labelledby="performance-tab">
+                                    <form id="performance-form" class="row g-3 test-form"
+                                          action="{% url 'performance-form' inductionMotorReport.id %}" method="post"
+                                          enctype="multipart/form-data" novalidate>
+                                        {% csrf_token %}
 
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_performance_determination_test-voltage"
+                                                    class="col-form-label">Voltage (V):</label>
+                                                </div>
+                                                <div class="col">{{ performance_determination_test.voltage }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_performance_determination_test-frequency"
+                                                    class="col-form-label">Frequency (Hz):</label>
+                                                </div>
+                                                <div class="col">{{ performance_determination_test.frequency }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 pt-5">
+                                            <div class="row" style="text-align: right">
+                                                <div class="col"><label for="id_performance_determination_test-nominal_t"
+                                                    class="col-form-label">Nominal T. (N.m):</label>
+                                                </div>
+                                                <div class="col">{{ performance_determination_test.nominal_t }}</div>
+                                            </div>
+                                        </div>
+
+{#                                        <div class="col-md-6 pt-md-5 ps-md-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col-md-5">#}
+{#                                                    <label for="id_performance_determination_test-file_1"#}
+{#                                                    class="col-form-label">Performance Load 25%:</label>#}
+{#                                                </div>#}
+{#                                                <div class="col-md-5 {% if not files.file_25 %}empty{% endif %}">#}
+{#                                                    {{ performance_determination_test.file_1 }}#}
+{#                                                    {% if files.file_25 %}#}
+{#                                                        <span class="pt-3">#}
+{#                                                            <span class="fst-italic">{{ files.file_25_name }} - </span>#}
+{#                                                            <a href="{{ files.file_25.url }}"#}
+{#                                                               class="text-decoration-none">#}
+{#                                                                 Download File <i class="bi bi-download"></i></a>#}
+{#                                                        </span>#}
+{#                                                    {% else %}#}
+{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
+{#                                                    {% endif %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="col-md-6 pt-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_2"#}
+{#                                                    class="col-form-label">Performance Load 50%:</label>#}
+{#                                                </div>#}
+{#                                                <div class="col-md-5 {% if not files.file_50 %}empty{% endif %}">#}
+{#                                                    {{ performance_determination_test.file_2 }}#}
+{#                                                    {% if files.file_50 %}#}
+{#                                                        <span class="pt-3">#}
+{#                                                        <span class="fst-italic">{{ files.file_50_name }} - </span>#}
+{#                                                            <a href="{{ files.file_50.url }}"#}
+{#                                                               class="text-decoration-none">#}
+{#                                                                 Download File <i class="bi bi-download"></i></a>#}
+{#                                                        </span>#}
+{#                                                    {% else %}#}
+{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
+{#                                                    {% endif %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="col-md-6 pt-md-5 ps-md-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_3"#}
+{#                                                    class="col-form-label">Performance Load 75%:</label>#}
+{#                                                </div>#}
+{#                                                <div class="col-md-5 {% if not files.file_75 %}empty{% endif %}">#}
+{#                                                    {{ performance_determination_test.file_3 }}#}
+{#                                                    {% if files.file_75 %}#}
+{#                                                        <span class="pt-3">#}
+{#                                                            <span class="fst-italic">{{ files.file_75_name }} - </span>#}
+{#                                                            <a href="{{ files.file_75.url }}"#}
+{#                                                               class="text-decoration-none">#}
+{#                                                                 Download File <i class="bi bi-download"></i>#}
+{#                                                            </a>#}
+{#                                                        </span>#}
+{#                                                    {% else %}#}
+{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
+{#                                                    {% endif %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="col-md-6 pt-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_4"#}
+{#                                                    class="col-form-label">Performance Load 100%:</label>#}
+{#                                                </div>#}
+{#                                                <div class="col-md-5 {% if not files.file_100 %}empty{% endif %}">#}
+{#                                                    {{ performance_determination_test.file_4 }}#}
+{#                                                    {% if files.file_100 %}#}
+{#                                                        <span class="pt-3">#}
+{#                                                           <span class="fst-italic">{{ files.file_100_name }} - </span>#}
+{#                                                           <a href="{{ files.file_100.url }}"#}
+{#                                                               class="text-decoration-none">#}
+{#                                                                 Download File <i class="bi bi-download"></i>#}
+{#                                                            </a>#}
+{#                                                        </span>#}
+{#                                                    {% else %}#}
+{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
+{#                                                    {% endif %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+
+                                        <div class="text-center py-5">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            {% endif %}
 
                             {% if no_load_test %}
                                 <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
