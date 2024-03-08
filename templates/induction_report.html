@@ -229,12 +229,19 @@
                         </tr>
                 </table>
             </section>
+
+
             <h1 class="main-title">3. Tests</h1>
+
+
             <section class="section-4">
+
+                
             {% for selected_test in selected_tests %}
+
                 {% if selected_test.test_type == 'electric_resistance_test' %}
                 <h1 class="text">
-                    <span class="title">3.1. Electric Resistance</span>
+                    <span class="title">3.{{forloop.counter}}. Electric Resistance</span>
                 </h1>
                 <ul class="section-ul">
                     <li class="text-left">Resistance (mOhms): {{ induction_motor.electric_resistance_test.resistance_ohm_1 }}
@@ -245,12 +252,13 @@
                     <li class="text-left">Unbalance (%): {{ induction_motor.electric_resistance_test.unbalance_percentage }}</li>
                 </ul>
                 {% endif %}
-            {% endfor %}
-            {% for selected_test in selected_tests %}
+            {% comment %} {% endfor %} {% endcomment %}
+            {% comment %} {% for selected_test in selected_tests %} {% endcomment %}
                 {% if selected_test.test_type == 'temperature_rise_test' %}
+
                 <h1 class="text">
               <span class="title"
-              >3.2. Temperature Rise - Nominal Condition - Direct</span
+              >3.{{forloop.counter}}. Temperature Rise - Nominal Condition - Direct</span
               >
                 </h1>
                 <ul class="section-ul-3">
@@ -262,11 +270,11 @@
                     <li style="padding-left:17px;">NDE Bearing (C): {{ induction_motor.temperature_rise_test.nde_bearing }}</li>
                 </ul>
             {% endif %}
-            {% endfor %}
-            {% for selected_test in selected_tests %}
+            {% comment %} {% endfor %} {% endcomment %}
+            {% comment %} {% for selected_test in selected_tests %} {% endcomment %}
                 {% if selected_test.test_type == 'performance_determination_test' %}
                 <h1 class="text">
-                    <span class="title">3.3. Performance Determination</span>
+                    <span class="title">3.{{forloop.counter}}. Performance Determination</span>
                 </h1>
                 <ul class="section-ul">
                     <li class="text-left">Voltage (V): {{ induction_motor.performance_determination_test.voltage }}</li>
@@ -293,13 +301,13 @@
                         </tr>
                     {% endfor %}
                 {% endif %}
-            {% endfor %}
+            {% comment %} {% endfor %} {% endcomment %}
 
                 </table>
-            {% for selected_test in selected_tests %}
+            {% comment %} {% for selected_test in selected_tests %} {% endcomment %}
                 {% if selected_test.test_type == 'no_load_test' %}
                 <h1 class="text">
-                    <span class="title">3.4. No Load</span>
+                    <span class="title">3.{{forloop.counter}}. No Load</span>
                 </h1>
                 <ul class="section-ul-3">
                     <li>Voltage (V): {{ induction_motor.no_load_test.voltage }}</li>
@@ -310,11 +318,11 @@
                     <li>Direction of Rotation: {{ induction_motor.no_load_test.direction_of_rotation }}</li>
                 </ul>
             {% endif %}
-            {% endfor %}
-            {% for selected_test in selected_tests %}
+            {% comment %} {% endfor %} {% endcomment %}
+            {% comment %} {% for selected_test in selected_tests %} {% endcomment %}
                 {% if selected_test.test_type == 'withstand_voltage_ac_test' %}
                 <h1 class="text">
-                    <span class="title">3.5. Withstand Voltage AC</span>
+                    <span class="title">3.{{forloop.counter}}. Withstand Voltage AC</span>
                 </h1>
                 <table class="table-border">
                     <tr>
@@ -329,12 +337,12 @@
                     </tr>
                 </table>
             {% endif %}
-            {% endfor %}
+            {% comment %} {% endfor %} {% endcomment %}
                 <br>
-            {% for selected_test in selected_tests %}
+            {% comment %} {% for selected_test in selected_tests %} {% endcomment %}
                 {% if selected_test.test_type == 'insulation_resistance_test' %}
                 <h1 class="text">
-                    <span class="title">3.6. Insulation Resistance</span>
+                    <span class="title">3.{{forloop.counter}}. Insulation Resistance</span>
                 </h1>
                 <table class="table-border">
                     <tr>
@@ -356,10 +364,14 @@
                     <li>Humidity (%): {{ induction_motor.insulation_resistance_test.humidity_percentage }}</li>
                 </ul>
             {% endif %}
+            
+
             {% endfor %}
+            
+
             </section>
         </section>
-        <footer class="footer-1">
+        <footer class="footer-1" style="margin-top:50px;">
             <hr/>
             <ul class="footer-ul">
                 <li>
@@ -412,7 +424,7 @@
                             </tr>
                             <tr>
                                 <td>Voltage (V)</td>
-                                <td>60.0</td>
+                                <td> 60.0</td>
                             </tr>
                             <tr>
                                 <td>Frequency (Hz)</td>
@@ -428,15 +440,15 @@
                             </tr>
                             <tr>
                                 <td>Vibration (mm/s)</td>
-                                <td>60.0</td>
+                                <td>{{ induction_motor.lock_rotor_test.vibration}}</td>
                             </tr>
                             <tr>
                                 <td>Noise (db.)</td>
-                                <td>60.0</td>
+                                <td>{{ induction_motor.lock_rotor_test.noise }}</td>
                             </tr>
                             <tr>
                                 <td>Temperature (°C)</td>
-                                <td>60.0</td>
+                                <td>{{ induction_motor.lock_rotor_test.temperature }}</td>
                             </tr>
                         </table>
                     </section>

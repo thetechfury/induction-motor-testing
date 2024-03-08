@@ -225,7 +225,7 @@ class ReportView(TemplateView):
         context = super().get_context_data(**kwargs)
         induction_motor = InductionMotor.objects.filter(id=self.kwargs['id']).prefetch_related(
             'electric_resistance_test', 'temperature_rise_test', 'performance_determination_test', 'no_load_test',
-            'withstand_voltage_ac_test', 'insulation_resistance_test', 'performance_tests').first()
+            'withstand_voltage_ac_test', 'insulation_resistance_test', 'performance_tests','lock_rotor_test').first()
         if hasattr(induction_motor, 'performance_determination_test'):
             performance_test = induction_motor.performance_determination_test
             context['parameters'] = PerformanceTestParameters.objects.filter(
