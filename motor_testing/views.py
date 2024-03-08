@@ -23,7 +23,7 @@ from motor_testing.forms import (
 )
 from motor_testing.models import InductionMotor, PerformanceTest, ElectricResistanceTest, TemperatureRiseTest, \
     PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, \
-    PerformanceTestParameters, LockRotorTest
+    PerformanceTestParameters, LockRotorTest, Configuration
 
 
 class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
@@ -348,11 +348,10 @@ class NoLoadFormSaveView(View):
     def post(self, request, *args, **kwargs):
         motor_id = kwargs['id']
         motor = get_object_or_404(InductionMotor, id=motor_id)
-
         # Check if the InductionMotor instance has an associated ElectricResistanceTest
         if not hasattr(motor, 'no_load_test'):
             motor.no_load_test = NoLoadTest.objects.get_or_create(induction_motor=motor)
-        file_path = '/home/thetechfury/Downloads/3.4.mdb'
+        file_path = Configuration.objects.all().first().no_load_test
         date = ''
         if request.POST.get('date_checkbox'):
             current_date_time = datetime.now()
@@ -522,7 +521,7 @@ class LockRotorFormSave(View):
         if not hasattr(motor, 'lock_rotor_test'):
             motor.lock_rotor_test = LockRotorTest.objects.create(induction_motor=motor)
 
-        file_path = '/home/thetechfury/Downloads/3.7.mdb'
+        file_path = Configuration.objects.all().first().lock_rotor_test
         date = ''
         if request.POST.get('date_checkbox'):
             current_date_time = datetime.now()
