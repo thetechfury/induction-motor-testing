@@ -13,6 +13,8 @@ from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
 from django_pdfkit import PDFView
 from openpyxl import load_workbook
+import math
+from datetime import datetime
 
 from core_settings import settings
 from motor_testing.forms import (
@@ -350,19 +352,70 @@ class NoLoadFormSaveView(View):
         # Check if the InductionMotor instance has an associated ElectricResistanceTest
         if not hasattr(motor, 'no_load_test'):
             motor.no_load_test = NoLoadTest.objects.get_or_create(induction_motor=motor)
+        file_path = '/home/thetechfury/Downloads/3.4.mdb'
+        date = ''
+        if request.POST.get('date_checkbox'):
+            current_date_time = datetime.now()
+            current_date = current_date_time.date()
+            date = current_date.strftime('%-d%-m%Y')
+        date_str = request.POST.get('selected_date')
+        if date_str:
+            year, month, day = date_str.split('-')
+            if day.startswith('0'):
+                day = day[1:]
+            if month.startswith('0'):
+                month = month[1:]
+            formatted_date = day + month + year
+            date = formatted_date
+
+
+        table_name = date
+        serial_number = motor.serial_number
+        csv_data = read_mdb_table(table_name, file_path)
+        filtered_data = [item for item in csv_data if item['Serial_No_4'] == serial_number]
+        # Initialize sums
+        sum_rpm = 0
+        sum_speed = 0
+        sum_volt = 0
+        sum_amp = 0
+
+        # Number of entries
+        num_entries = len(filtered_data)
+
+        # Sum up the values
+        for entry in filtered_data:
+            sum_rpm += float(entry['TM_RPM4'])
+            sum_speed += float(entry['TM_Speed4'])
+            sum_volt += float(entry['TM_Volt4'])
+            sum_amp += float(entry['TM_Amp4'])
+
+        # Calculate averages
+        avg_rpm = sum_rpm / num_entries
+        avg_speed = sum_speed / num_entries
+        avg_volt = sum_volt / num_entries
+        avg_amp = sum_amp / num_entries
+
+
+
+        PF = 0.89
+
+
+        power = avg_volt * avg_amp * PF * math.sqrt(3)
 
         default = Decimal('0.00')
-        voltage = request.POST.get('no_load_test-voltage')
-        current = request.POST.get('no_load_test-current')
-        power = request.POST.get('no_load_test-power')
-        frequency = request.POST.get('no_load_test-frequency')
-        speed = request.POST.get('no_load_test-speed')
+        # voltage = request.POST.get('no_load_test-voltage')
+        # current = request.POST.get('no_load_test-current')
+        # power = request.POST.get('no_load_test-power')
+        # frequency = request.POST.get('no_load_test-frequency')
+        # speed = request.POST.get('no_load_test-speed')
         direction_of_rotation = request.POST.get('no_load_test-direction_of_rotation')
-        motor.no_load_test.voltage = voltage if voltage else default
-        motor.no_load_test.current = current if current else default
+        motor.no_load_test.voltage = avg_volt if avg_volt else default
+        motor.no_load_test.current = avg_amp if avg_amp else default
         motor.no_load_test.power = power if power else default
-        motor.no_load_test.frequency = frequency if frequency else default
-        motor.no_load_test.speed = speed if speed else default
+        motor.no_load_test.frequency = avg_speed if avg_speed else default
+        motor.no_load_test.speed = avg_rpm if avg_rpm else default
+        motor.no_load_test.mdb_data = filtered_data
+        motor.no_load_test.report_date = table_name
         motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
         PerformanceTest.objects.filter(motor=motor, test_type='no_load_test').update(status=PerformanceTest.COMPLETED)
 
@@ -497,6 +550,7 @@ class LockRotorFormSave(View):
 
 
 class PerformanceDeterminationFormSave(View):
+    list=[]
     performancetest = [{
         'load': 25,
         'current': 156,
@@ -615,24 +669,23 @@ class Remarks(View):
 #
 # read_table('732024')
 #
-# import subprocess
-# import csv
-# from io import StringIO
-#
-# def mdb_to_csv(table_name, mdb_path):
-#     """
-#     Export a table from an MDB file to CSV format.
-#     """
-#     command = ['mdb-export', mdb_path, table_name]
-#     process = subprocess.run(command, capture_output=True, text=True, check=True)
-#     return process.stdout
-#
-# def read_mdb_table(table_name, mdb_path):
-#     """
-#     Read data from an MDB file table and return a list of dictionaries.
-#     """
-#     csv_data = mdb_to_csv(table_name, mdb_path)
-#     csv_reader = csv.DictReader(StringIO(csv_data))
-#     return list(csv_reader)
-#
-# read_mdb_table('732024', '/home/thetechfury/Downloads/3.3.mdb')
+import subprocess
+import csv
+from io import StringIO
+
+def mdb_to_csv(table_name, mdb_path):
+    """
+    Export a table from an MDB file to CSV format.
+    """
+    command = ['mdb-export', mdb_path, table_name]
+    process = subprocess.run(command, capture_output=True, text=True, check=True)
+    return process.stdout
+
+def read_mdb_table(table_name, mdb_path):
+    """
+    Read data from an MDB file table and return a list of dictionaries.
+    """
+    csv_data = mdb_to_csv(table_name, mdb_path)
+    csv_reader = csv.DictReader(StringIO(csv_data))
+    return list(csv_reader)
+

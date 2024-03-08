@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
-
+from django.db.models import JSONField
 
 class TimeStampedModel(models.Model):
     """ TimeStamped Abstract Model """
@@ -219,6 +219,8 @@ class NoLoadTest(TimeStampedModel):
         max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     direction_of_rotation = models.CharField(max_length=20, choices=DIRECTION_CHOICES, blank=True, null=True)
+    report_date = models.CharField(max_length=20,null=True, blank=True)
+    mdb_data = JSONField(null=True, blank=True)
 
 
 class WithstandVoltageACTest(TimeStampedModel):

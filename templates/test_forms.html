@@ -391,50 +391,62 @@
                                           action="{% url 'noload-form' inductionMotorReport.id %}" method="post">
                                         {% csrf_token %}
 
+                  <div class="col-md-4 pt-5">
+    <div class="row" style="text-align: right">
+        <div class="col">
+            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>
+        </div>
+        <div class="col">
+            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">
+        </div>
+    </div>
+</div>
                                         <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_no_load_test-voltage"
-                                                    class="col-form-label">Voltage (V):</label>
-                                                </div>
-                                                <div class="col">{{ no_load_test.voltage }}</div>
-                                            </div>
-                                        </div>
+    <div class="row" style="text-align: right">
+        <div class="col">
+            <label for="id_no_load_test_selected_date" class="col-form-label">Select Date:</label>
+        </div>
+        <div class="col">
+            <input type="date" id="id_no_load_test_selected_date" name="selected_date">
+        </div>
+    </div>
+</div>
 
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_no_load_test-current"
-                                                    class="col-form-label">Current (A):</label>
-                                                </div>
-                                                <div class="col">{{ no_load_test.current }}</div>
-                                            </div>
-                                        </div>
+{#                                        <div class="col-md-4 pt-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col"><label for="id_no_load_test-current"#}
+{#                                                    class="col-form-label">Current (A):</label>#}
+{#                                                </div>#}
+{#                                                <div class="col">{{ no_load_test.current }}</div>#}
+{#                                            </div>#}
+{#                                        </div>#}
 
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_no_load_test-power"
-                                                    class="col-form-label">Power (W):</label>
-                                                </div>
-                                                <div class="col">{{ no_load_test.power }}</div>
-                                            </div>
-                                        </div>
+{#                                        <div class="col-md-4 pt-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col"><label for="id_no_load_test-power"#}
+{#                                                    class="col-form-label">Power (W):</label>#}
+{#                                                </div>#}
+{#                                                <div class="col">{{ no_load_test.power }}</div>#}
+{#                                            </div>#}
+{#                                        </div>#}
 
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_no_load_test-frequency"
-                                                    class="col-form-label">Frequency (Hz):</label>
-                                                </div>
-                                                <div class="col">{{ no_load_test.frequency }}</div>
-                                            </div>
-                                        </div>
+{#                                        <div class="col-md-4 pt-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col"><label for="id_no_load_test-frequency"#}
+{#                                                    class="col-form-label">Frequency (Hz):</label>#}
+{#                                                </div>#}
+{#                                                <div class="col">{{ no_load_test.frequency }}</div>#}
+{#                                            </div>#}
+{#                                        </div>#}
 
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_no_load_test-speed"
-                                                    class="col-form-label">Speed (rpm):</label>
-                                                </div>
-                                                <div class="col">{{ no_load_test.speed }}</div>
-                                            </div>
-                                        </div>
+{#                                        <div class="col-md-4 pt-5">#}
+{#                                            <div class="row" style="text-align: right">#}
+{#                                                <div class="col"><label for="id_no_load_test-speed"#}
+{#                                                    class="col-form-label">Speed (rpm):</label>#}
+{#                                                </div>#}
+{#                                                <div class="col">{{ no_load_test.speed }}</div>#}
+{#                                            </div>#}
+{#                                        </div>#}
 
                                         <div class="col-md-4 pt-5">
                                             <div class="row" style="text-align: right">
