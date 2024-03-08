@@ -191,8 +191,12 @@ class TestsView(LoginRequiredMixin, View):
         for form in formset:
             if form.is_valid():
                 instance = form.cleaned_data
-                form.cleaned_data['status'] = PerformanceTest.PENDING if (
-                        instance['routine'] or instance['type'] or instance['special']) else PerformanceTest.NOT_FOUND
+                existing_test = motor.performance_tests.filter(test_type=form.cleaned_data['test_type']).first().status
+                if not existing_test == 'COMPLETED' or not (instance['routine'] or instance['type'] or instance['special']):
+                    form.cleaned_data['status'] = PerformanceTest.PENDING if (
+                            instance['routine'] or instance['type'] or instance['special']) else PerformanceTest.NOT_FOUND
+                else:
+                    form.cleaned_data['status'] = 'COMPLETED'
                 motor.performance_tests.update_or_create(
                     test_type=form.cleaned_data['test_type'], defaults=form.cleaned_data
                 )
@@ -541,3 +545,37 @@ class Remarks(View):
         motor.save()
 
         return JsonResponse({'success': True})
+
+# import subprocess
+#
+# def read_table(table_name):
+#     cmd = ['mdb-export', '/home/thetechfury/Downloads/3.3.mdb', table_name]
+#     result = subprocess.run(cmd, capture_output=True, text=True)
+#     if result.returncode == 0:
+#         print(result.stdout)
+#     else:
+#         print("Error reading table:", result.stderr)
+#
+# read_table('732024')
+#
+# import subprocess
+# import csv
+# from io import StringIO
+#
+# def mdb_to_csv(table_name, mdb_path):
+#     """
+#     Export a table from an MDB file to CSV format.
+#     """
+#     command = ['mdb-export', mdb_path, table_name]
+#     process = subprocess.run(command, capture_output=True, text=True, check=True)
+#     return process.stdout
+#
+# def read_mdb_table(table_name, mdb_path):
+#     """
+#     Read data from an MDB file table and return a list of dictionaries.
+#     """
+#     csv_data = mdb_to_csv(table_name, mdb_path)
+#     csv_reader = csv.DictReader(StringIO(csv_data))
+#     return list(csv_reader)
+#
+# read_mdb_table('732024', '/home/thetechfury/Downloads/3.3.mdb')
