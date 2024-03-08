@@ -296,3 +296,6 @@ hr {
   border:1px solid black;
 }
 
+.text-left{
+text-align:left !important;
+}
