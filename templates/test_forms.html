@@ -596,7 +596,26 @@
     <div class="tab-pane fade" id="lock-rotor" role="tabpanel" aria-labelledby="rotor-tab">
         <form id="lock-rotor-test-form" class="row g-3 test-form" action="{% url 'lock-rotor-form' inductionMotorReport.id %}" method="post">
             {% csrf_token %}
-
+      <div class="col-md-4 pt-5">
+    <div class="row" style="text-align: right">
+        <div class="col">
+            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>
+        </div>
+        <div class="col">
+            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">
+        </div>
+    </div>
+</div>
+                                        <div class="col-md-4 pt-5">
+    <div class="row" style="text-align: right">
+        <div class="col">
+            <label for="id_no_load_test_selected_date" class="col-form-label">Select Date:</label>
+        </div>
+        <div class="col">
+            <input type="date" id="id_no_load_test_selected_date" name="selected_date">
+        </div>
+    </div>
+</div>
             <div class="col-md-4 pt-5">
                 <div class="row" style="text-align: right">
                     <div class="col">

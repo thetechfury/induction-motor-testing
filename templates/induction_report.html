@@ -424,19 +424,19 @@
                             </tr>
                             <tr>
                                 <td>Voltage (V)</td>
-                                <td> 60.0</td>
+                                <td> {{ induction_motor.lock_rotor_test.voltage}}</td>
                             </tr>
                             <tr>
                                 <td>Frequency (Hz)</td>
-                                <td>60.0</td>
+                                <td>{{ induction_motor.lock_rotor_test.speed }}</td>
                             </tr>
                             <tr>
                                 <td>Current (A)</td>
-                                <td>60.0</td>
+                                <td>{{ induction_motor.lock_rotor_test.current}}</td>
                             </tr>
                             <tr>
                                 <td>Power (KW)</td>
-                                <td>60.0</td>
+                                <td>{% widthratio induction_motor.lock_rotor_test.power 1000 1 %} </td>
                             </tr>
                             <tr>
                                 <td>Vibration (mm/s)</td>

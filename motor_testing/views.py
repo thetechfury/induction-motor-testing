@@ -522,7 +522,50 @@ class LockRotorFormSave(View):
         if not hasattr(motor, 'lock_rotor_test'):
             motor.lock_rotor_test = LockRotorTest.objects.create(induction_motor=motor)
 
+        file_path = '/home/thetechfury/Downloads/3.7.mdb'
+        date = ''
+        if request.POST.get('date_checkbox'):
+            current_date_time = datetime.now()
+            current_date = current_date_time.date()
+            date = current_date.strftime('%-d%-m%Y')
+        date_str = request.POST.get('selected_date')
+        if date_str:
+            year, month, day = date_str.split('-')
+            if day.startswith('0'):
+                day = day[1:]
+            if month.startswith('0'):
+                month = month[1:]
+            formatted_date = day + month + year
+            date = formatted_date
+
+        table_name = date
+        serial_number = motor.serial_number
+        csv_data = read_mdb_table(table_name, file_path)
+        filtered_data = [item for item in csv_data if item['Serial_No_7'] == serial_number]
+        # Initialize sums
+        sum_speed = 0
+        sum_amp = 0
+        sum_volt = 0
+
+        # Number of entries
+        num_entries = len(filtered_data)
+
+        # Sum up the values
+        for entry in filtered_data:
+            sum_speed += int(entry['TM_Speed7'])
+            sum_amp += float(entry['TM_Amp7'])
+            sum_volt += int(entry['TM_Volt7'])
+
+        # Calculate averages
+        avg_speed = sum_speed / num_entries
+        avg_amp = sum_amp / num_entries
+        avg_volt = sum_volt / num_entries
+        PF = 0.89
+
+        power = avg_volt * avg_amp * PF * math.sqrt(3)
+
         default = Decimal('0.00')
+
         vibration = request.POST.get('lock_rotor_test-vibration')
         noise = request.POST.get('lock_rotor_test-noise')
         temperature = request.POST.get('lock_rotor_test-temperature')
@@ -531,6 +574,12 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.vibration = vibration if vibration else default
         motor.lock_rotor_test.noise = noise if noise else default
         motor.lock_rotor_test.temperature = temperature if temperature else default
+        motor.lock_rotor_test.speed = avg_speed if avg_speed else default
+        motor.lock_rotor_test.voltage = avg_volt if avg_volt else default
+        motor.lock_rotor_test.current = avg_amp if avg_amp else default
+        motor.lock_rotor_test.power = power if power else default
+        motor.lock_rotor_test.report_date = table_name
+        motor.lock_rotor_test.mdb_data = filtered_data
         PerformanceTest.objects.filter(motor=motor, test_type='lock_rotor_test').update(
             status=PerformanceTest.COMPLETED)
 
@@ -541,6 +590,10 @@ class LockRotorFormSave(View):
             'vibration': vibration,
             'noise': noise,
             'temperature': temperature,
+            'avg_amp': avg_amp,
+            'avg_speed': avg_speed,
+            'avg_volt': avg_volt,
+            'power': power/1000,
             'status': 'completed',
             'all_test_completed': all(value == 'COMPLETED' for value in statues.values())
 

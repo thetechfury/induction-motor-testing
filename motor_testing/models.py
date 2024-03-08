@@ -269,6 +269,20 @@ class LockRotorTest(TimeStampedModel):
     temperature = models.DecimalField(
         max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+    speed = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    voltage = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    current = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    power = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+    )
+    report_date = models.CharField(max_length=20, null=True, blank=True)
+    mdb_data = JSONField(null=True, blank=True)
 
 
 
