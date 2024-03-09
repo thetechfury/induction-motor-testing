@@ -288,8 +288,9 @@ hr {
   padding-bottom: 5.0rem;
 }
 
+
 .page-2 .main-section{
-  height: 900px;
+  height: 865px;
 }
 
 .lock-rotor, .lock-rotor th, .lock-rotor td{
@@ -298,4 +299,26 @@ hr {
 
 .text-left{
 text-align:left !important;
+}
+
+.concern-persons{
+border: 0;
+}
+
+.concern-persons tr:first-child{
+ margin-bottom:10px;
+}
+
+.concern-name {
+text-align:center;
+ }
+
+tr.concern-name td, tr.concern-title td {
+border: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+tr.concern-name td {
+font-style: italic;
 }

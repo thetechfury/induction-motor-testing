@@ -12,11 +12,14 @@ from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
 from django_pdfkit import PDFView
-from openpyxl import load_workbook
+import pandas as pd
+import subprocess
+
 import math
 from datetime import datetime
 
-from core_settings import settings
+from core_settings.settings import MDB_TO_CSV_EXE_LOCATION, MDB_TO_CSV_OUTPUT_PATH_FOR_NO_LOAD, \
+    MDB_TO_CSV_OUTPUT_PATH_FOR_LOCK_ROTOR, WK_HTML_TO_PDF_PATH
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm, LockRotorTestForm
@@ -91,7 +94,8 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
 
 
 def get_form_statuses(inductionMotorReport):
-    test_statuses = PerformanceTest.objects.filter(motor=inductionMotorReport,status__in=[PerformanceTest.PENDING,PerformanceTest.COMPLETED])
+    test_statuses = PerformanceTest.objects.filter(motor=inductionMotorReport,
+                                                   status__in=[PerformanceTest.PENDING, PerformanceTest.COMPLETED])
     tests = {test.test_type: test.status for test in test_statuses}
     return tests
 
@@ -194,9 +198,11 @@ class TestsView(LoginRequiredMixin, View):
             if form.is_valid():
                 instance = form.cleaned_data
                 existing_test = motor.performance_tests.filter(test_type=form.cleaned_data['test_type']).first().status
-                if not existing_test == 'COMPLETED' or not (instance['routine'] or instance['type'] or instance['special']):
+                if not existing_test == 'COMPLETED' or not (
+                        instance['routine'] or instance['type'] or instance['special']):
                     form.cleaned_data['status'] = PerformanceTest.PENDING if (
-                            instance['routine'] or instance['type'] or instance['special']) else PerformanceTest.NOT_FOUND
+                            instance['routine'] or instance['type'] or instance[
+                        'special']) else PerformanceTest.NOT_FOUND
                 else:
                     form.cleaned_data['status'] = 'COMPLETED'
                 motor.performance_tests.update_or_create(
@@ -225,7 +231,7 @@ class ReportView(TemplateView):
         context = super().get_context_data(**kwargs)
         induction_motor = InductionMotor.objects.filter(id=self.kwargs['id']).prefetch_related(
             'electric_resistance_test', 'temperature_rise_test', 'performance_determination_test', 'no_load_test',
-            'withstand_voltage_ac_test', 'insulation_resistance_test', 'performance_tests','lock_rotor_test').first()
+            'withstand_voltage_ac_test', 'insulation_resistance_test', 'performance_tests', 'lock_rotor_test').first()
         if hasattr(induction_motor, 'performance_determination_test'):
             performance_test = induction_motor.performance_determination_test
             context['parameters'] = PerformanceTestParameters.objects.filter(
@@ -244,7 +250,7 @@ class ReportView(TemplateView):
 
 class GeneratePDF(PDFView):
     def get(self, request, *args, **kwargs):
-        config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
+        config = pdfkit.configuration(wkhtmltopdf=WK_HTML_TO_PDF_PATH)
         induction_motor = InductionMotor.objects.get(id=kwargs['id'])
         report_url = request.build_absolute_uri(reverse('report', kwargs={'id': kwargs['id']}))
         report_link = f'./generatedReports/{induction_motor.customer_name}-{induction_motor.serial_number}.pdf'
@@ -299,7 +305,7 @@ class ElectricFormSaveView(View):
             'ambient_temperature_C': motor.electric_resistance_test.ambient_temperature_C,
             'unbalance_percentage': motor.electric_resistance_test.unbalance_percentage,
             'status': 'completed',
-            'all_test_completed':all(value == 'COMPLETED' for value in statues.values())
+            'all_test_completed': all(value == 'COMPLETED' for value in statues.values())
         }
 
         return JsonResponse(response_data)
@@ -356,7 +362,7 @@ class NoLoadFormSaveView(View):
         if request.POST.get('date_checkbox'):
             current_date_time = datetime.now()
             current_date = current_date_time.date()
-            date = "{}{}{}".format(current_date.day, current_date.month,current_date.year)
+            date = "{}{}{}".format(current_date.day, current_date.month, current_date.year)
         date_str = request.POST.get('selected_date')
         if date_str:
             year, month, day = date_str.split('-')
@@ -367,11 +373,10 @@ class NoLoadFormSaveView(View):
             formatted_date = day + month + year
             date = formatted_date
 
-
         table_name = date
         serial_number = motor.serial_number
-        csv_data = read_mdb_table(table_name, file_path)
-        filtered_data = [item for item in csv_data if item['Serial_No_4'] == serial_number]
+        csv_data = read_mdb_table(file_path, MDB_TO_CSV_OUTPUT_PATH_FOR_NO_LOAD, table_name)
+        filtered_data = [item for item in csv_data.values if item[1] == serial_number]
         # Initialize sums
         sum_rpm = 0
         sum_speed = 0
@@ -383,10 +388,10 @@ class NoLoadFormSaveView(View):
 
         # Sum up the values
         for entry in filtered_data:
-            sum_rpm += float(entry['TM_RPM4'])
-            sum_speed += float(entry['TM_Speed4'])
-            sum_volt += float(entry['TM_Volt4'])
-            sum_amp += float(entry['TM_Amp4'])
+            sum_rpm += float(entry[5])
+            sum_speed += float(entry[4])
+            sum_volt += float(entry[3])
+            sum_amp += float(entry[2])
 
         # Calculate averages
         avg_rpm = sum_rpm / num_entries
@@ -394,26 +399,18 @@ class NoLoadFormSaveView(View):
         avg_volt = sum_volt / num_entries
         avg_amp = sum_amp / num_entries
 
-
-
         PF = 0.89
-
 
         power = avg_volt * avg_amp * PF * math.sqrt(3)
 
         default = Decimal('0.00')
-        # voltage = request.POST.get('no_load_test-voltage')
-        # current = request.POST.get('no_load_test-current')
-        # power = request.POST.get('no_load_test-power')
-        # frequency = request.POST.get('no_load_test-frequency')
-        # speed = request.POST.get('no_load_test-speed')
         direction_of_rotation = request.POST.get('no_load_test-direction_of_rotation')
         motor.no_load_test.voltage = avg_volt if avg_volt else default
         motor.no_load_test.current = avg_amp if avg_amp else default
         motor.no_load_test.power = power if power else default
         motor.no_load_test.frequency = avg_speed if avg_speed else default
         motor.no_load_test.speed = avg_rpm if avg_rpm else default
-        motor.no_load_test.mdb_data = filtered_data
+        # motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
         motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
         PerformanceTest.objects.filter(motor=motor, test_type='no_load_test').update(status=PerformanceTest.COMPLETED)
@@ -526,7 +523,7 @@ class LockRotorFormSave(View):
         if request.POST.get('date_checkbox'):
             current_date_time = datetime.now()
             current_date = current_date_time.date()
-            date = current_date.strftime('%-d%-m%Y')
+            date = "{}{}{}".format(current_date.day, current_date.month, current_date.year)
         date_str = request.POST.get('selected_date')
         if date_str:
             year, month, day = date_str.split('-')
@@ -539,8 +536,9 @@ class LockRotorFormSave(View):
 
         table_name = date
         serial_number = motor.serial_number
-        csv_data = read_mdb_table(table_name, file_path)
-        filtered_data = [item for item in csv_data if item['Serial_No_7'] == serial_number]
+        csv_data = read_mdb_table(file_path, MDB_TO_CSV_OUTPUT_PATH_FOR_LOCK_ROTOR, table_name)
+        filtered_data = [item for item in csv_data.values if item[1] == serial_number]
+
         # Initialize sums
         sum_speed = 0
         sum_amp = 0
@@ -551,9 +549,9 @@ class LockRotorFormSave(View):
 
         # Sum up the values
         for entry in filtered_data:
-            sum_speed += int(entry['TM_Speed7'])
-            sum_amp += float(entry['TM_Amp7'])
-            sum_volt += int(entry['TM_Volt7'])
+            sum_speed += int(entry[4])
+            sum_amp += float(entry[2])
+            sum_volt += int(entry[3])
 
         # Calculate averages
         avg_speed = sum_speed / num_entries
@@ -578,7 +576,7 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.current = avg_amp if avg_amp else default
         motor.lock_rotor_test.power = power if power else default
         motor.lock_rotor_test.report_date = table_name
-        motor.lock_rotor_test.mdb_data = filtered_data
+        # motor.lock_rotor_test.mdb_data = filtered_data
         PerformanceTest.objects.filter(motor=motor, test_type='lock_rotor_test').update(
             status=PerformanceTest.COMPLETED)
 
@@ -602,7 +600,7 @@ class LockRotorFormSave(View):
 
 
 class PerformanceDeterminationFormSave(View):
-    list=[]
+    list = []
     performancetest = [{
         'load': 25,
         'current': 156,
@@ -618,21 +616,21 @@ class PerformanceDeterminationFormSave(View):
             'speed': 153,
             'efficiency': 45,
             'cos': 0.4
-    }, {
+        }, {
             'load': 75,
             'current': 156,
             'slip': 0.054,
             'speed': 153,
             'efficiency': 45,
             'cos': 0.4
-    }, {
+        }, {
             'load': 100,
             'current': 156,
             'slip': 0.054,
             'speed': 153,
             'efficiency': 45,
             'cos': 0.4
-    }]
+        }]
 
     def post(self, request, *args, **kwargs):
         motor_id = kwargs['id']
@@ -649,14 +647,12 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
 
-
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
             status=PerformanceTest.COMPLETED)
         performance_determination_test.save()
         self.save_performance_determination_tests(
             performance_determination_test)
         statues = get_form_statuses(motor_id)
-
 
         response_data = {
             'voltage': motor.performance_determination_test.voltage,
@@ -676,8 +672,11 @@ class PerformanceDeterminationFormSave(View):
         if not performance_tests:
 
             for performance_test in self.performancetest:
-                performance_objects.append({'performance_determination_test': performance_determination_test, 'load': performance_test['load'], 'current': performance_test[
-                                           'current'], 'slip': performance_test['slip'], 'speed': performance_test['speed'], 'efficiency': performance_test['efficiency'], 'cos': performance_test['cos']})
+                performance_objects.append(
+                    {'performance_determination_test': performance_determination_test, 'load': performance_test['load'],
+                     'current': performance_test[
+                         'current'], 'slip': performance_test['slip'], 'speed': performance_test['speed'],
+                     'efficiency': performance_test['efficiency'], 'cos': performance_test['cos']})
                 # PerformanceTestParameters.performance_determination_test = performance_determination_test
                 # performance_objects.append(performance_determination_test,self.performance_object(performance_determination_test,performance_test))
         # instances = [PerformanceDeterminationTest(**item) for item in performance_objects]
@@ -699,6 +698,7 @@ class ChartView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'graph.html')
 
+
 class Remarks(View):
     def post(self, request, *args, **kwargs):
         motor_id = kwargs['id']
@@ -709,35 +709,22 @@ class Remarks(View):
 
         return JsonResponse({'success': True})
 
-# import subprocess
-#
-# def read_table(table_name):
-#     cmd = ['mdb-export', '/home/thetechfury/Downloads/3.3.mdb', table_name]
-#     result = subprocess.run(cmd, capture_output=True, text=True)
-#     if result.returncode == 0:
-#         print(result.stdout)
-#     else:
-#         print("Error reading table:", result.stderr)
-#
-# read_table('732024')
-#
-import subprocess
-import csv
-from io import StringIO
 
-def mdb_to_csv(table_name, mdb_path):
+def mdb_to_csv_conversion(input_file_path, csv_output_path):
     """
     Export a table from an MDB file to CSV format.
     """
-    command = ['mdb-export', mdb_path, table_name]
-    process = subprocess.run(command, capture_output=True, text=True, check=True)
+    command = [os.path.join(MDB_TO_CSV_EXE_LOCATION, "mdb2csv.exe"),
+               input_file_path, f'-output={csv_output_path}', '-silent']
+    process = subprocess.run(command)
     return process.stdout
 
-def read_mdb_table(table_name, mdb_path):
+
+def read_mdb_table(input_file_path, csv_output_path, table_name):
     """
     Read data from an MDB file table and return a list of dictionaries.
     """
-    csv_data = mdb_to_csv(table_name, mdb_path)
-    csv_reader = csv.DictReader(StringIO(csv_data))
-    return list(csv_reader)
+    mdb_to_csv_conversion(input_file_path, csv_output_path)
+    data = pd.read_csv(f'{csv_output_path}\\{table_name}.csv')
 
+    return data

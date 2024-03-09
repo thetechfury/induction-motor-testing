@@ -475,35 +475,21 @@
                 </tr>
                 <tr style="padding:20px;">
                     <td style="padding:10px;">
-                    <table style="border:0">
-                        <tr style=" margin-bottom:10px;">
-                            <td style="border:0">Director Cerad</td>
-                            <td style="border:0; text-align:left;">Lab Instructor</td>
+                    <table class="concern-persons" >
+                        <tr class="concern-title">
+                            <td>Director Cerad</td>
+                            <td>Lab Instructor</td>
                         </tr>
-                         <tr style="text-align:center">
-                            <td style="border:0; "><i>{{ induction_motor.director_cerad}}</i></td>
-                            <td style="border:0; text-align:left;"> <i>{{ induction_motor.lab_instructor}}</i></td>
+                         <tr class="concern-name">
+                            <td>{{ induction_motor.director_cerad}}</td>
+                            <td>{{ induction_motor.lab_instructor}}</td>
                         </tr>
                     </table>
-
-<!--                                    <div style="">-->
-<!--                                        <span style="text-align:left;">Director CERAD</span>-->
-<!--                                        <span style="text-align:right;">Lab Instructor</span>-->
-<!--                                    </div>-->
-<!--                                <div>-->
-<!--                                    <span style="" ><i>{{ induction_motor.director_cerad}}</i></span>-->
-<!--                                            <span style="margin-left:200px;" ><i>{{ induction_motor.lab_instructor}}</i></span>-->
-
-<!--                                    </div>-->
-<!--                                <p>Test Date: {{ induction_motor.updated_on | date:"m/d/Y"  }}</p>-->
-
-
                     </td>
-                    <td style="text-align:center;">Inspector</td>
+                    <td>Inspector</td>
                 </tr>
                 <tr >
                     <td colspan="2" style="padding:10px;">Report issued on {{ induction_motor.updated_on | date:"m/d/Y"  }}</td>
-
                 </tr>
             </table>
         </footer>

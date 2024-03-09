@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'django-insecure-ty5+7v)oo!mnmqalq+duc-w%-g_qfm87^$i*7+gmb^v01r_-g8
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -72,7 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core_settings.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -82,7 +79,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -102,7 +98,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -113,7 +108,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -141,3 +135,9 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
+
+WK_HTML_TO_PDF_PATH = r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+
+MDB_TO_CSV_EXE_LOCATION = r"C:\Program Files (x86)\MDBtoCSV\64"
+MDB_TO_CSV_OUTPUT_PATH_FOR_NO_LOAD = r"C:\Users\moeez\Documents\workspace\induction-motor-testing\media\csv\no_load"
+MDB_TO_CSV_OUTPUT_PATH_FOR_LOCK_ROTOR = r"C:\Users\moeez\Documents\workspace\induction-motor-testing\media\csv\lock_rotor"
