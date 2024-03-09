@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import JSONField
 
+
 class TimeStampedModel(models.Model):
     """ TimeStamped Abstract Model """
 
@@ -29,8 +30,8 @@ class InductionMotor(TimeStampedModel):
     serial_number = models.CharField(max_length=20)
     customer_name = models.CharField(max_length=100)
     sales_order_number = models.CharField(max_length=20)
-    director_cerad = models.CharField(max_length=50,default='')
-    lab_instructor = models.CharField(max_length=50,default='')
+    director_cerad = models.CharField(max_length=50, default='')
+    lab_instructor = models.CharField(max_length=50, default='')
     # 1- Motor Identification
     tag = models.CharField(max_length=50, blank=True, null=True)
     material = models.CharField(max_length=50, blank=True, null=True)
@@ -105,8 +106,6 @@ class PerformanceTest(models.Model):
         return f'{self.motor.serial_number} - {self.test_type}'
 
 
-
-
 class ElectricResistanceTest(TimeStampedModel):
     """ 3.1. Electric Resistance Test Report"""
 
@@ -169,9 +168,9 @@ class PerformanceDeterminationTest(TimeStampedModel):
     test_date = models.DateField(null=True, blank=True, verbose_name="Test Date")
 
 
-
 class PerformanceTestParameters(models.Model):
-    performance_determination_test = models.ForeignKey(PerformanceDeterminationTest, on_delete=models.CASCADE, related_name="parameters")
+    performance_determination_test = models.ForeignKey(PerformanceDeterminationTest, on_delete=models.CASCADE,
+                                                       related_name="parameters")
     load = models.PositiveSmallIntegerField(blank=True, null=True)
     current = models.DecimalField(
         max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
@@ -188,7 +187,6 @@ class PerformanceTestParameters(models.Model):
     cos = models.DecimalField(
         max_digits=4, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
-
 
 
 class NoLoadTest(TimeStampedModel):
@@ -219,7 +217,7 @@ class NoLoadTest(TimeStampedModel):
         max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     direction_of_rotation = models.CharField(max_length=20, choices=DIRECTION_CHOICES, blank=True, null=True)
-    report_date = models.CharField(max_length=20,null=True, blank=True)
+    report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
 
 
@@ -285,14 +283,7 @@ class LockRotorTest(TimeStampedModel):
     mdb_data = JSONField(null=True, blank=True)
 
 
-
-
-
-
-
 class Configuration(models.Model):
     no_load_test = models.CharField(max_length=100)
     performance_determination = models.CharField(max_length=100)
     lock_rotor_test = models.CharField(max_length=100)
-
-

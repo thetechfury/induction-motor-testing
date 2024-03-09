@@ -601,36 +601,39 @@ class LockRotorFormSave(View):
 
 class PerformanceDeterminationFormSave(View):
     list = []
-    performancetest = [{
-        'load': 25,
-        'current': 156,
-        'slip': 0.054,
-        'speed': 153,
-        'efficiency': 45,
-        'cos': 0.4
-    },
-        {
+    performancetest = {
+        '25': {
+            'load': 25,
+            'current': 156,
+            'slip': 0.054,
+            'speed': 153,
+            'efficiency': 45,
+            'cos': 0.4
+        },
+        '50': {
             'load': 50,
             'current': 156,
             'slip': 0.054,
             'speed': 153,
             'efficiency': 45,
             'cos': 0.4
-        }, {
+        },
+        '75': {
             'load': 75,
             'current': 156,
             'slip': 0.054,
             'speed': 153,
             'efficiency': 45,
             'cos': 0.4
-        }, {
+        },
+        '100': {
             'load': 100,
             'current': 156,
             'slip': 0.054,
             'speed': 153,
             'efficiency': 45,
             'cos': 0.4
-        }]
+        }}
 
     def post(self, request, *args, **kwargs):
         motor_id = kwargs['id']
@@ -666,32 +669,25 @@ class PerformanceDeterminationFormSave(View):
         return JsonResponse(response_data)
 
     def save_performance_determination_tests(self, performance_determination_test):
-        performance_tests = PerformanceTestParameters.objects.filter(
-            performance_determination_test=performance_determination_test)
+        PerformanceTestParameters.objects.filter(
+            performance_determination_test=performance_determination_test).delete()
         performance_objects = []
-        if not performance_tests:
 
-            for performance_test in self.performancetest:
-                performance_objects.append(
-                    {'performance_determination_test': performance_determination_test, 'load': performance_test['load'],
-                     'current': performance_test[
-                         'current'], 'slip': performance_test['slip'], 'speed': performance_test['speed'],
-                     'efficiency': performance_test['efficiency'], 'cos': performance_test['cos']})
-                # PerformanceTestParameters.performance_determination_test = performance_determination_test
-                # performance_objects.append(performance_determination_test,self.performance_object(performance_determination_test,performance_test))
-        # instances = [PerformanceDeterminationTest(**item) for item in performance_objects]
-        # PerformanceTestParameters.objects.bulk_create(instances)
-        for item in performance_objects:
-            my_instance = PerformanceTestParameters(**item)
-            my_instance.save()
-        # PerformanceTestParameters.objects.bulk_create(performance_objects)
+        for key in self.performancetest:
+            performance_objects.append(self.create_performance_determination_obj(key, performance_determination_test))
 
-    # def performance_object(self, performance_determination_test, performance_test):
-    #     performance_test_parameters = PerformanceTestParameters
-    #     performance_test_parameters.performance_determination_test = performance_determination_test
-    #     performance_test_parameters.speed = performance_test['speed']
+        PerformanceTestParameters.objects.bulk_create(performance_objects)
 
-    #     return performance_test_parameters
+    def create_performance_determination_obj(self, key, performance_determination_test):
+        performance_test_param = PerformanceTestParameters()
+        performance_test_param.performance_determination_test = performance_determination_test
+        performance_test_param.load = self.performancetest.get(key)['load']
+        performance_test_param.current = self.performancetest.get(key)['current']
+        performance_test_param.slip = self.performancetest.get(key)['slip']
+        performance_test_param.speed = self.performancetest.get(key)['speed']
+        performance_test_param.efficiency = self.performancetest.get(key)['efficiency']
+        performance_test_param.cos = self.performancetest.get(key)['cos']
+        return performance_test_param
 
 
 class ChartView(View):
