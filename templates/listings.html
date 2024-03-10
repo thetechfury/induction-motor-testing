@@ -62,7 +62,7 @@
                                 <td class="text-center">
                                        {% if obj.report_status %}
                                     <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                        <a href="{% url 'pdf' obj.id %}" type="button" class="btn btn-outline-info hover-button" data-name="view">
+                                        <a href="{% url 'pdf' obj.id %}" type="button" class="btn btn-outline-info hover-button" target="_blank" data-name="view">
                                             <i class="bi bi-eye"></i></a>
                                         <a href="{% url 'chart' obj.id %}" type="button" class="btn btn-outline-primary hover-button" data-name="chart">
                                             <i class="bi bi-pie-chart-fill"></i></a>

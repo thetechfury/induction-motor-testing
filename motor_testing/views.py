@@ -604,36 +604,55 @@ class PerformanceDeterminationFormSave(View):
     performancetest = {
         '25': {
             'load': 25,
-            'current': 156,
-            'slip': 0.054,
-            'speed': 153,
-            'efficiency': 45,
-            'cos': 0.4
+            'current': 0,
+            'slip': 0.0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
         },
         '50': {
             'load': 50,
-            'current': 156,
-            'slip': 0.054,
-            'speed': 153,
-            'efficiency': 45,
-            'cos': 0.4
+            'current': 0,
+            'slip': 0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
         },
         '75': {
             'load': 75,
-            'current': 156,
-            'slip': 0.054,
-            'speed': 153,
-            'efficiency': 45,
-            'cos': 0.4
+            'current': 0,
+            'slip': 0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
         },
         '100': {
             'load': 100,
-            'current': 156,
-            'slip': 0.054,
-            'speed': 153,
-            'efficiency': 45,
-            'cos': 0.4
+            'current': 0,
+            'slip': 0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
         }}
+
+    def get_performance_tests_data(self, table_name='732024'):
+        configuration = Configuration.objects.all().first()
+        csv_data = read_mdb_table(configuration.performance_determination,
+                                  MDB_TO_CSV_OUTPUT_PATH_FOR_NO_LOAD, table_name)
+        return csv_data
+
+    def align_load_data(self, serial_no, csv_data):
+        filtered_data = {
+            '25': [],
+            '50': [],
+            '75': [],
+            '100': [],
+        }
+        for data in csv_data.values:
+            if data[3] == serial_no:
+                filtered_data[f'{data[7]}'].append(data)
+
+        return filtered_data
 
     def post(self, request, *args, **kwargs):
         motor_id = kwargs['id']
@@ -652,9 +671,9 @@ class PerformanceDeterminationFormSave(View):
 
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
             status=PerformanceTest.COMPLETED)
+        filtered_determine_data = self.align_load_data(motor.serial_number, self.get_performance_tests_data())
         performance_determination_test.save()
-        self.save_performance_determination_tests(
-            performance_determination_test)
+        self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data)
         statues = get_form_statuses(motor_id)
 
         response_data = {
@@ -668,25 +687,62 @@ class PerformanceDeterminationFormSave(View):
 
         return JsonResponse(response_data)
 
-    def save_performance_determination_tests(self, performance_determination_test):
+    def save_performance_determination_tests(self, motor, performance_determination_test, filtered_determine_data):
         PerformanceTestParameters.objects.filter(
             performance_determination_test=performance_determination_test).delete()
         performance_objects = []
-
+        electric_resistance = ElectricResistanceTest.objects.filter(induction_motor=motor).first()
+        avg_resistance = (
+                                 electric_resistance.resistance_ohm_1 + electric_resistance.resistance_ohm_2 + electric_resistance.resistance_ohm_3) / 3
         for key in self.performancetest:
-            performance_objects.append(self.create_performance_determination_obj(key, performance_determination_test))
+            performance_objects.append(
+                self.create_performance_determination_obj(key, performance_determination_test,
+                                                          filtered_determine_data.get(key), avg_resistance))
 
         PerformanceTestParameters.objects.bulk_create(performance_objects)
 
-    def create_performance_determination_obj(self, key, performance_determination_test):
+    def create_performance_determination_obj(self, key, performance_determination_test, filtered_determine_data,
+                                             avg_resistance):
         performance_test_param = PerformanceTestParameters()
         performance_test_param.performance_determination_test = performance_determination_test
-        performance_test_param.load = self.performancetest.get(key)['load']
-        performance_test_param.current = self.performancetest.get(key)['current']
-        performance_test_param.slip = self.performancetest.get(key)['slip']
-        performance_test_param.speed = self.performancetest.get(key)['speed']
-        performance_test_param.efficiency = self.performancetest.get(key)['efficiency']
-        performance_test_param.cos = self.performancetest.get(key)['cos']
+
+        if len(filtered_determine_data):
+            current_amp = 0
+            speed_rpm = 0
+            hertz_freq = 0
+            voltage = 0
+            torque = 0
+            for determine_data in filtered_determine_data:
+                current_amp += determine_data[6]
+                speed_rpm += determine_data[4]
+                hertz_freq += determine_data[1]
+                voltage += determine_data[2]
+                torque += determine_data[5]
+            avg_current = current_amp / len(filtered_determine_data)
+            avg_speed_rpm = speed_rpm / len(filtered_determine_data)
+            avg_hertz_freq = hertz_freq / len(filtered_determine_data)
+            avg_voltage = voltage / len(filtered_determine_data)
+            avg_torque = torque / len(filtered_determine_data)
+            ns = (avg_hertz_freq * 120) / 2
+            machainal_power = avg_torque * avg_speed_rpm
+            loses = float(avg_resistance) * avg_current * avg_current
+            electrical_power = avg_current * avg_voltage
+            real_power = avg_voltage * avg_current * 0.89 * 1.732
+            apperent_power = avg_voltage * avg_current * 1.732
+
+            performance_test_param.load = self.performancetest.get(key)['load']
+            performance_test_param.current = avg_current
+            performance_test_param.slip = ((ns - avg_speed_rpm) / ns) * 100
+            performance_test_param.speed = avg_speed_rpm
+            performance_test_param.efficiency = (machainal_power / (electrical_power + machainal_power + loses)) * 100
+            performance_test_param.cos = real_power / apperent_power
+        else:
+            performance_test_param.load = self.performancetest.get(key)['load']
+            performance_test_param.current = self.performancetest.get(key)['current']
+            performance_test_param.slip = self.performancetest.get(key)['slip']
+            performance_test_param.speed = self.performancetest.get(key)['speed']
+            performance_test_param.efficiency = self.performancetest.get(key)['efficiency']
+            performance_test_param.cos = self.performancetest.get(key)['cos']
         return performance_test_param
 
 

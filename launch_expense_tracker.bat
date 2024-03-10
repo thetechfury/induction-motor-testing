@@ -17,13 +17,10 @@ if exist venv\Scripts\activate (
 
 REM Start Django server
 echo Starting Django server...
-start /min "" python manage.py runserver
+start /min "" python manage.py runserver 8089
 
 REM Wait for Django server to start
 timeout /t 10
 
-REM Start Electron application
-echo Starting Electron application...
-start /min "" npm run expense
-
+start "" http://127.0.0.1:8089/
 echo All processes started successfully.
