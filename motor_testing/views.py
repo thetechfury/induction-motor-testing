@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
 from django_pdfkit import PDFView
-import pandas as pd
+# import pandas as pd
 import subprocess
 
 import math
@@ -375,8 +375,8 @@ class NoLoadFormSaveView(View):
 
         table_name = date
         serial_number = motor.serial_number
-        csv_data = read_mdb_table(file_path, MDB_TO_CSV_OUTPUT_PATH_FOR_NO_LOAD, table_name)
-        filtered_data = [item for item in csv_data.values if item[1] == serial_number]
+        csv_data = read_mdb_table(table_name,file_path)
+        filtered_data = [item for item in csv_data if item[1] == serial_number]
         # Initialize sums
         sum_rpm = 0
         sum_speed = 0
@@ -536,8 +536,8 @@ class LockRotorFormSave(View):
 
         table_name = date
         serial_number = motor.serial_number
-        csv_data = read_mdb_table(file_path, MDB_TO_CSV_OUTPUT_PATH_FOR_LOCK_ROTOR, table_name)
-        filtered_data = [item for item in csv_data.values if item[1] == serial_number]
+        csv_data = read_mdb_table(table_name,file_path)
+        filtered_data = [item for item in csv_data if item[1][3] == serial_number]
 
         # Initialize sums
         sum_speed = 0
@@ -772,11 +772,30 @@ def mdb_to_csv_conversion(input_file_path, csv_output_path):
     return process.stdout
 
 
-def read_mdb_table(input_file_path, csv_output_path, table_name):
-    """
-    Read data from an MDB file table and return a list of dictionaries.
-    """
-    mdb_to_csv_conversion(input_file_path, csv_output_path)
-    data = pd.read_csv(f'{csv_output_path}\\{table_name}.csv')
+# def read_mdb_table(input_file_path, csv_output_path, table_name):
+#     """
+#     Read data from an MDB file table and return a list of dictionaries.
+#     """
+#     mdb_to_csv_conversion(input_file_path, csv_output_path)
+#     data = pd.read_csv(f'{csv_output_path}\\{table_name}.csv')
+#
+#     return data
 
+def read_mdb_table(table_name, mdb_path):
+
+    from mdb_parser import MDBParser, MDBTable
+
+    db = MDBParser(file_path=mdb_path)
+    table = db.get_table(table_name)
+    table = MDBTable(file_path=mdb_path, table=table_name)
+
+    data = []
+    data.append(table.columns)
+    for row in table:
+        data.append(row)
+    # formatted_data = [[date.split()[0][6:] + date.split()[0][0:2] + date.split()[0][3:5]] + row[1:] for date, *row
+    #                       in data]
     return data
+
+
+# read_mdb_table('732024', '/home/thetechfury/Downloads/3.3.mdb')
