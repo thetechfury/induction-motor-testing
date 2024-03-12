@@ -766,30 +766,45 @@ def mdb_to_csv_conversion(input_file_path, csv_output_path):
     return process.stdout
 
 
-# def read_mdb_table(input_file_path, csv_output_path, table_name):
-#     """
-#     Read data from an MDB file table and return a list of dictionaries.
-#     """
-#     mdb_to_csv_conversion(input_file_path, csv_output_path)
-#     data = pd.read_csv(f'{csv_output_path}\\{table_name}.csv')
-#
-#     return data
 
-def read_mdb_table(table_name, mdb_path):
 
-    from mdb_parser import MDBParser, MDBTable
 
-    db = MDBParser(file_path=mdb_path)
-    table = db.get_table(table_name)
-    table = MDBTable(file_path=mdb_path, table=table_name)
 
+from mdb_parser import MDBParser, MDBTable
+import platform
+import pyodbc
+
+def read_mdb_table(table_name, file_path):
+    system = platform.system()
     data = []
-    data.append(table.columns)
-    for row in table:
-        data.append(row)
-    # formatted_data = [[date.split()[0][6:] + date.split()[0][0:2] + date.split()[0][3:5]] + row[1:] for date, *row
-    #                       in data]
+    if system == "Windows":
+        print("Running on Windows")
+        # Establish connection to the MDB file
+        conn_str = r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=' + file_path + ';'
+        conn = pyodbc.connect(conn_str)
+        # Create a cursor to execute SQL queries
+        cursor = conn.cursor()
+        sql_query = 'SELECT * FROM {}'.format(table_name)
+        cursor.execute(sql_query)
+
+        # Fetch and print the results
+        for row in cursor.fetchall():
+            data.append(row)
+        # Close cursor and connection
+        cursor.close()
+        conn.close()
+    elif system == "Linux":
+        print("Running on Linux")
+        db = MDBParser(file_path=file_path)
+        table = db.get_table(table_name)
+        table = MDBTable(file_path=file_path, table=table_name)
+        data.append(table.columns)
+        for row in table:
+            data.append(row)
+    else:
+        print(f"Running on {system}")
+
     return data
 
 
-# read_mdb_table('732024', '/home/thetechfury/Downloads/3.3.mdb')
+
