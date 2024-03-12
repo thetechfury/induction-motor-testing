@@ -1,831 +1,1350 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-    <div class="d-flex justify-content-between ">
-        <div class="datatable-search datatable-top mb-2">
-            <a href="{% url 'home' %}" type="button" class="btn btn-primary">
-                <i class="bi bi-arrow-left-circle-fill"></i> Back to Home</a>
+<div class="d-flex justify-content-between">
+  <div class="datatable-search datatable-top mb-2">
+    <a href="{% url 'home' %}" type="button" class="btn btn-primary">
+      <i class="bi bi-arrow-left-circle-fill"></i> Back to Home</a
+    >
+  </div>
+
+  <div
+    class="mb-3 clearfix block {% if all_test_completed %} d-block {% else %} d-none {% endif %}"
+  >
+    <a
+      href="{% url 'chart' inductionMotorReport.id %}"
+      class="text-white btn btn-primary"
+      target="_blank"
+      type="button"
+      ><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a
+    >
+    <a
+      href="{% url 'pdf' inductionMotorReport.id %}"
+      class="text-white btn btn-success"
+      target="_blank"
+      type="button"
+      ><i class="bi bi-file-earmark-pdf-fill"></i> Generate Report</a
+    >
+  </div>
+</div>
+
+<section class="section">
+  <div class="row" style="text-align: right">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <h5 class="card-title">Please fill and save the forms below.</h5>
+            <div class="text-center datatable-top mt-2">
+              {% if all_test_completed %}
+              <!--Remarks Button trigger modal -->
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+              >
+                Remarks
+              </button>
+              <!-- Remarks Modal -->
+              <div
+                class="modal fade"
+                id="staticBackdrop"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabindex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">
+                        Remarks
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <form
+                        id="remarksForm"
+                        action="{% url 'remarks' inductionMotorReport.id %}"
+                        method="post"
+                      >
+                        {% csrf_token %}
+                        <textarea
+                          id="remarks"
+                          name="remarks"
+                          rows="4"
+                          class="form-control"
+                        >
+{% if inductionMotorReport.remarks == None %}{% else %}{{ inductionMotorReport.remarks }}{% endif %}</textarea
+                        >
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button
+                        type="button"
+                        onclick="submitRemarksForm()"
+                        class="btn btn-primary"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+              <button
+                type="button"
+                class="btn btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#edit-modal"
+                id="update-modal"
+              >
+                Update This Record
+              </button>
+            </div>
+          </div>
+
+          <!-- Default Tabs -->
+          <ul
+            class="nav nav-pills justify-content-center pt-5"
+            id="testFormTabs"
+            role="tablist"
+          >
+            {% if electric_resistance_test %}
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link {% if status.electric_resistance_test == 'COMPLETED' %}fullfilled {% endif %}"
+                id="electric-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#electric"
+                type="button"
+                role="tab"
+                aria-controls="electric"
+                aria-selected="true"
+              >
+                Electric Resistance Test
+              </button>
+            </li>
+            {% endif %} {% if temperature_rise_test %}
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link {% if status.temperature_rise_test == 'COMPLETED' %}fullfilled {% endif %}"
+                id="temperature-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#temperature"
+                type="button"
+                role="tab"
+                aria-controls="temperature"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Temperature Rise Test
+              </button>
+            </li>
+            {% endif %} {% if performance_determination_test %}
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link {% if status.performance_determination_test == 'COMPLETED' %}fullfilled {% endif %}"
+                id="performance-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#performance"
+                type="button"
+                role="tab"
+                aria-controls="performance"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Performance Determination Test
+              </button>
+            </li>
+            {% endif %} {% if no_load_test %}
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link {% if status.no_load_test == 'COMPLETED' %}fullfilled {% endif %}"
+                id="noload-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#noload"
+                type="button"
+                role="tab"
+                aria-controls="noload"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                No Load Test
+              </button>
+            </li>
+            {% endif %} {% if withstand_voltage_ac_test %}
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link {% if status.withstand_voltage_ac_test == 'COMPLETED' %}fullfilled {% endif %}"
+                id="withstand-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#withstand"
+                type="button"
+                role="tab"
+                aria-controls="withstand"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Withstand Voltage AC Test
+              </button>
+            </li>
+            {% endif %} {% if insulation_resistance_test %}
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link {% if status.insulation_resistance_test == 'COMPLETED' %}fullfilled {% endif %}"
+                id="insulation-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#insulation"
+                type="button"
+                role="tab"
+                aria-controls="insulation"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Insulation Resistance Test
+              </button>
+            </li>
+            {% endif %} {% if lock_rotor_test %}
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link {% if status.lock_rotor_test == 'COMPLETED' %}fullfilled {% endif %}"
+                id="rotor-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#lock-rotor"
+                type="button"
+                role="tab"
+                aria-controls="lock-rotor"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Lock Rotor Test
+              </button>
+            </li>
+            {% endif %}
+          </ul>
+          <div class="tab-content pt-3 pe-5" id="myTabContent">
+            {% if electric_resistance_test %}
+            <div
+              class="tab-pane fade"
+              id="electric"
+              role="tabpanel"
+              aria-labelledby="electric-tab"
+            >
+              <form
+                id="electric-form "
+                class="row g-3 test-form"
+                action="{% url 'electric-form' inductionMotorReport.id %}"
+                method="post"
+              >
+                {% csrf_token %}
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_electric_resistance_test-resistance_ohm_1"
+                        class="col-form-label"
+                        >Resistance (mOhms) 1:</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ electric_resistance_test.resistance_ohm_1 }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_electric_resistance_test-resistance_ohm_2"
+                        class="col-form-label"
+                        >Resistance (mOhms) 2:</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ electric_resistance_test.resistance_ohm_2 }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_electric_resistance_test-resistance_ohm_3"
+                        class="col-form-label"
+                        >Resistance (mOhms) 3:</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ electric_resistance_test.resistance_ohm_3 }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_electric_resistance_test-ambient_temperature_C"
+                        class="col-form-label"
+                        >Ambient Temperature (°C):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ electric_resistance_test.ambient_temperature_C }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_electric_resistance_test-unbalance_percentage"
+                        class="col-form-label"
+                        >Unbalance (%):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ electric_resistance_test.unbalance_percentage }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center py-5">
+                  <button type="submit" class="btn btn-primary pb-2">
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
+            {% endif %} {% if temperature_rise_test %}
+            <div
+              class="tab-pane fade"
+              id="temperature"
+              role="tabpanel"
+              aria-labelledby="temperature-tab"
+            >
+              <form
+                id="temperature-form"
+                class="row g-3 test-form"
+                action="{% url 'temperature-form' inductionMotorReport.id %}"
+                method="post"
+              >
+                {% csrf_token %}
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_temperature_rise_test-voltage"
+                        class="col-form-label"
+                        >Voltage (V):</label
+                      >
+                    </div>
+                    <div class="col">{{ temperature_rise_test.voltage }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_temperature_rise_test-frequency"
+                        class="col-form-label"
+                        >Frequency (Hz):</label
+                      >
+                    </div>
+                    <div class="col">{{ temperature_rise_test.frequency }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_temperature_rise_test-de_bearing"
+                        class="col-form-label"
+                        >DE Bearing (C):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ temperature_rise_test.de_bearing }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_temperature_rise_test-winding"
+                        class="col-form-label"
+                        >Winding (Resistance Method) (C):</label
+                      >
+                    </div>
+                    <div class="col">{{ temperature_rise_test.winding }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_temperature_rise_test-nde_bearing"
+                        class="col-form-label"
+                        >NDE Bearing (C):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ temperature_rise_test.nde_bearing }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center py-5">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+            {% endif %} {% if performance_determination_test %}
+            <div
+              class="tab-pane fade"
+              id="performance"
+              role="tabpanel"
+              aria-labelledby="performance-tab"
+            >
+              <form
+                id="performance-form"
+                class="row g-3 test-form"
+                action="{% url 'performance-form' inductionMotorReport.id %}"
+                method="post"
+                enctype="multipart/form-data"
+                novalidate
+              >
+                {% csrf_token %}
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_performance_determination_test-voltage"
+                        class="col-form-label"
+                        >Voltage (V):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ performance_determination_test.voltage }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_performance_determination_test-frequency"
+                        class="col-form-label"
+                        >Frequency (Hz):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ performance_determination_test.frequency }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_performance_determination_test-nominal_t"
+                        class="col-form-label"
+                        >Nominal T. (N.m):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ performance_determination_test.nominal_t }}
+                    </div>
+                  </div>
+                </div>
+
+                {% comment %} {#
+                <div class="col-md-6 pt-md-5 ps-md-5">
+                  #} {#
+                  <div class="row" style="text-align: right">
+                    #} {#
+                    <div class="col-md-5">
+                      #} {#
+                      <label
+                        for="id_performance_determination_test-file_1"
+                        #}
+                        {#
+                        class="col-form-label"
+                        >Performance Load 25%:</label
+                      >#} {#
+                    </div>
+                    #} {#
+                    <div
+                      class="col-md-5 {% if not files.file_25 %}empty{% endif %}"
+                    >
+                      #} {# {{ performance_determination_test.file_1 }}#} {# {%
+                      if files.file_25 %}#} {#
+                      <span class="pt-3"
+                        >#} {#
+                        <span class="fst-italic"
+                          >{{ files.file_25_name }} - </span
+                        >#} {#
+                        <a
+                          href="{{ files.file_25.url }}"
+                          #}
+                          {#
+                          class="text-decoration-none"
+                          >#} {# Download File <i class="bi bi-download"></i></a
+                        >#} {# </span
+                      >#} {# {% else %}#} {#
+                      <span class="fst-italic"
+                        >Please upload the excel file.</span
+                      >#} {# {% endif %}#} {#
+                    </div>
+                    #} {#
+                  </div>
+                  #} {#
+                </div>
+                #} {##} {#
+                <div class="col-md-6 pt-5">
+                  #} {#
+                  <div class="row" style="text-align: right">
+                    #} {#
+                    <div class="col-md-5">
+                      <label
+                        for="id_performance_determination_test-file_2"
+                        #}
+                        {#
+                        class="col-form-label"
+                        >Performance Load 50%:</label
+                      >#} {#
+                    </div>
+                    #} {#
+                    <div
+                      class="col-md-5 {% if not files.file_50 %}empty{% endif %}"
+                    >
+                      #} {# {{ performance_determination_test.file_2 }}#} {# {%
+                      if files.file_50 %}#} {#
+                      <span class="pt-3"
+                        >#} {#
+                        <span class="fst-italic"
+                          >{{ files.file_50_name }} - </span
+                        >#} {#
+                        <a
+                          href="{{ files.file_50.url }}"
+                          #}
+                          {#
+                          class="text-decoration-none"
+                          >#} {# Download File <i class="bi bi-download"></i></a
+                        >#} {# </span
+                      >#} {# {% else %}#} {#
+                      <span class="fst-italic"
+                        >Please upload the excel file.</span
+                      >#} {# {% endif %}#} {#
+                    </div>
+                    #} {#
+                  </div>
+                  #} {#
+                </div>
+                #} {##} {#
+                <div class="col-md-6 pt-md-5 ps-md-5">
+                  #} {#
+                  <div class="row" style="text-align: right">
+                    #} {#
+                    <div class="col-md-5">
+                      <label
+                        for="id_performance_determination_test-file_3"
+                        #}
+                        {#
+                        class="col-form-label"
+                        >Performance Load 75%:</label
+                      >#} {#
+                    </div>
+                    #} {#
+                    <div
+                      class="col-md-5 {% if not files.file_75 %}empty{% endif %}"
+                    >
+                      #} {# {{ performance_determination_test.file_3 }}#} {# {%
+                      if files.file_75 %}#} {#
+                      <span class="pt-3"
+                        >#} {#
+                        <span class="fst-italic"
+                          >{{ files.file_75_name }} - </span
+                        >#} {#
+                        <a
+                          href="{{ files.file_75.url }}"
+                          #}
+                          {#
+                          class="text-decoration-none"
+                          >#} {# Download File <i class="bi bi-download"></i>#}
+                          {# </a
+                        >#} {# </span
+                      >#} {# {% else %}#} {#
+                      <span class="fst-italic"
+                        >Please upload the excel file.</span
+                      >#} {# {% endif %}#} {#
+                    </div>
+                    #} {#
+                  </div>
+                  #} {#
+                </div>
+                #} {##} {#
+                <div class="col-md-6 pt-5">
+                  #} {#
+                  <div class="row" style="text-align: right">
+                    #} {#
+                    <div class="col-md-5">
+                      <label
+                        for="id_performance_determination_test-file_4"
+                        #}
+                        {#
+                        class="col-form-label"
+                        >Performance Load 100%:</label
+                      >#} {#
+                    </div>
+                    #} {#
+                    <div
+                      class="col-md-5 {% if not files.file_100 %}empty{% endif %}"
+                    >
+                      #} {# {{ performance_determination_test.file_4 }}#} {# {%
+                      if files.file_100 %}#} {#
+                      <span class="pt-3"
+                        >#} {#
+                        <span class="fst-italic"
+                          >{{ files.file_100_name }} - </span
+                        >#} {#
+                        <a
+                          href="{{ files.file_100.url }}"
+                          #}
+                          {#
+                          class="text-decoration-none"
+                          >#} {# Download File <i class="bi bi-download"></i>#}
+                          {# </a
+                        >#} {# </span
+                      >#} {# {% else %}#} {#
+                      <span class="fst-italic"
+                        >Please upload the excel file.</span
+                      >#} {# {% endif %}#} {#
+                    </div>
+                    #} {#
+                  </div>
+                  #} {#
+                </div>
+                #} {% endcomment %}
+
+                <div class="text-center py-5">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+            {% endif %} {% if no_load_test %}
+            <div
+              class="tab-pane fade"
+              id="noload"
+              role="tabpanel"
+              aria-labelledby="noload-tab"
+            >
+              <form
+                id="noload-form"
+                class="row g-3 test-form"
+                action="{% url 'noload-form' inductionMotorReport.id %}"
+                method="post"
+              >
+                {% csrf_token %}
+
+                <!--                  <div class="col-md-4 pt-5">-->
+                <!--    <div class="row" style="text-align: right">-->
+                <!--        <div class="col">-->
+                <!--            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>-->
+                <!--        </div>-->
+                <!--&lt;!&ndash;        <div class="col">&ndash;&gt;-->
+                <!--&lt;!&ndash;            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">&ndash;&gt;-->
+                <!--&lt;!&ndash;        </div>&ndash;&gt;-->
+                <!--    </div>-->
+                <!--</div>-->
+                <!--    <div class="row" style="text-align: right">-->
+
+                <div class="col-md-4" style="text-align: left">
+                  <div class="form-check" style="width: 50%; margin-left: 50%">
+                    <input
+                      type="radio"
+                      id="id_no_load_test_current_date"
+                      name="date_checkbox"
+                      class="form-check-input"
+                    checked
+                    />
+                    <label
+                      for="id_no_load_test_current_date"
+                      class="form-check-label"
+                      style="text-align: left"
+                      >Current date</label
+                    >
+                  </div>
+                </div>
+                <div class="col-4" style="text-align: left">
+                  <div class="form-check">
+                    <input
+                      type="radio"
+                      id="select_date"
+                      class="form-check-input"
+                      type="radio"
+                      name="date_checkbox"
+                    />
+                    <label
+                      for="select_date"
+                      class="form-check-label"
+                      style="text-align: left"
+                      >Select custom date</label
+                    >
+                    <input
+                      type="date"
+                      id="id_no_load_test_selected_date"
+                      class="form-control"
+                      name="selected_date"
+                      style="
+                        display: none;
+                        margin-top: 10px;
+                        margin-left: -1rem;
+                        width: 224px;
+                      "
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div
+                    class="row"
+                    style="text-align: right; transform: translate(-45%, -7px)"
+                  >
+                    <div class="col-6">
+                      <label
+                        for="id_no_load_test-direction_of_rotation"
+                        class="col-form-label"
+                        >Direction of Rotation:</label
+                      >
+                    </div>
+                    <div class="col-6">
+                      {{ no_load_test.direction_of_rotation }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center py-5">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+                <!--        <div class="col">-->
+                <!--            <input type="date" id="id_no_load_test_selected_date" name="selected_date">-->
+                <!--        </div>-->
+                <!--    </div>-->
+
+                {% comment %} {#
+                <div class="col-md-4 pt-5">
+                  #} {#
+                  <div class="row" style="text-align: right">
+                    #} {#
+                    <div class="col">
+                      <label
+                        for="id_no_load_test-current"
+                        #}
+                        {#
+                        class="col-form-label"
+                        >Current (A):</label
+                      >#} {#
+                    </div>
+                    #} {#
+                    <div class="col">{{ no_load_test.current }}</div>
+                    #} {#
+                  </div>
+                  #} {#
+                </div>
+                #} {#
+                <div class="col-md-4 pt-5">
+                  #} {#
+                  <div class="row" style="text-align: right">
+                    #} {#
+                    <div class="col">
+                      <label
+                        for="id_no_load_test-power"
+                        #}
+                        {#
+                        class="col-form-label"
+                        >Power (W):</label
+                      >#} {#
+                    </div>
+                    #} {#
+                    <div class="col">{{ no_load_test.power }}</div>
+                    #} {#
+                  </div>
+                  #} {#
+                </div>
+                #} {#
+                <div class="col-md-4 pt-5">
+                  #} {#
+                  <div class="row" style="text-align: right">
+                    #} {#
+                    <div class="col">
+                      <label
+                        for="id_no_load_test-frequency"
+                        #}
+                        {#
+                        class="col-form-label"
+                        >Frequency (Hz):</label
+                      >#} {#
+                    </div>
+                    #} {#
+                    <div class="col">{{ no_load_test.frequency }}</div>
+                    #} {#
+                  </div>
+                  #} {#
+                </div>
+                #} {#
+                <div class="col-md-4 pt-5">
+                  #} {#
+                  <div class="row" style="text-align: right">
+                    #} {#
+                    <div class="col">
+                      <label
+                        for="id_no_load_test-speed"
+                        #}
+                        {#
+                        class="col-form-label"
+                        >Speed (rpm):</label
+                      >#} {#
+                    </div>
+                    #} {#
+                    <div class="col">{{ no_load_test.speed }}</div>
+                    #} {#
+                  </div>
+                  #} {#
+                </div>
+                #} {% endcomment %}
+              </form>
+            </div>
+            {% endif %} {% if withstand_voltage_ac_test %}
+            <div
+              class="tab-pane fade"
+              id="withstand"
+              role="tabpanel"
+              aria-labelledby="withstand-tab"
+            >
+              <form
+                id="withstand-form"
+                class="row g-3 test-form"
+                action="{% url 'withstand-form' inductionMotorReport.id %}"
+                method="post"
+              >
+                {% csrf_token %}
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_withstand_voltage_ac_test-description"
+                        class="col-form-label"
+                        >Description:</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ withstand_voltage_ac_test.description }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_withstand_voltage_ac_test-voltage_kv"
+                        class="col-form-label"
+                        >Voltage (kV):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ withstand_voltage_ac_test.voltage_kv }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="withstand_voltage_ac_test-time_in_seconds"
+                        class="col-form-label"
+                        >Time (s):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ withstand_voltage_ac_test.time_in_seconds }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center py-5">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+            {% endif %} {% if insulation_resistance_test %}
+            <div
+              class="tab-pane fade"
+              id="insulation"
+              role="tabpanel"
+              aria-labelledby="insulation-tab"
+            >
+              <form
+                id="insulation-form"
+                class="row g-3 test-form"
+                action="{% url 'insulation-form' inductionMotorReport.id %}"
+                method="post"
+              >
+                {% csrf_token %}
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_insulation_resistance_test-description"
+                        class="col-form-label"
+                        >Description:</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ insulation_resistance_test.description }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_insulation_resistance_test-voltage"
+                        class="col-form-label"
+                        >Voltage (V):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ insulation_resistance_test.voltage }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_insulation_resistance_test-time_in_seconds"
+                        class="col-form-label"
+                        >Time (s):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ insulation_resistance_test.time_in_seconds }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_insulation_resistance_test-insulation_resistance"
+                        class="col-form-label"
+                        >Insulation Res. (Mohms):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ insulation_resistance_test.insulation_resistance }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_insulation_resistance_test-ambient_temperature_C"
+                        class="col-form-label"
+                        >Ambient Temperature (°C):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ insulation_resistance_test.ambient_temperature_C }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_insulation_resistance_test-humidity_percentage"
+                        class="col-form-label"
+                        >Humidity (%):</label
+                      >
+                    </div>
+                    <div class="col">
+                      {{ insulation_resistance_test.humidity_percentage }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center py-5">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+            {% endif %} {% if lock_rotor_test %}
+            <div
+              class="tab-pane fade"
+              id="lock-rotor"
+              role="tabpanel"
+              aria-labelledby="rotor-tab"
+            >
+              <form
+                id="lock-rotor-test-form"
+                class="row g-3 test-form d-flex justify-content-center"
+                action="{% url 'lock-rotor-form' inductionMotorReport.id %}"
+                method="post"
+              >
+                {% csrf_token %}
+               
+                <div class="col-md-4 pt-5" style="text-align: left">
+                  <div class="form-check" style="width: 50%; margin-left: 50%">
+                    <input
+                      type="radio"
+                      id="id_rotor_test_current_date"
+                      name="date_checkbox"
+                      class="form-check-input"
+                      checked
+                    />
+                    <label
+                      for="id_rotor_test_current_date"
+                      class="form-check-label"
+                      style="text-align: left"
+                      >Current date</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-4 pt-5" style="text-align: left;  
+                  transform: translateX(157px);
+                ">
+                  <div class="form-check">
+                    <input
+                      type="radio"
+                      id="select_rotor_date"
+                      class="form-check-input"
+                      type="radio"
+                      name="date_checkbox"
+                    />
+                    <label
+                      for="select_rotor_date"
+                      class="form-check-label"
+                      style="text-align: left"
+                      >Select custom date</label
+                    >
+                    <input
+                      type="date"
+                      id="id_rotor_test_selected_date"
+                      class="form-control"
+                      name="selected_date"
+                      style="
+                        display: none;
+                        margin-top: 10px;
+                        margin-left: -1rem;
+                        width: 224px;
+                      "
+                    />
+                  </div>
+                </div>
+
+                <!--      <div class="col-md-4 pt-5">-->
+                <!--    <div class="row" style="text-align: right">-->
+                <!--        <div class="col">-->
+                <!--            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>-->
+                <!--        </div>-->
+                <!--        <div class="col">-->
+                <!--            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->
+                <!--                                        <div class="col-md-4 pt-5">-->
+                <!--    <div class="row" style="text-align: right">-->
+                <!--        <div class="col">-->
+                <!--            <label for="id_no_load_test_selected_date" class="col-form-label">Select Date:</label>-->
+                <!--        </div>-->
+                <!--        <div class="col">-->
+
+                <!--            <input type="date" id="id_no_load_test_selected_date" name="selected_date">-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_lock_rotor_test-vibration"
+                        class="col-form-label"
+                        >Vibration:</label
+                      >
+                    </div>
+                    <div class="col">{{ lock_rotor_test.vibration }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5 " style="margin-left:-23%;%">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_lock_rotor_test-noise"
+                        class="col-form-label"
+                        >Noise:</label
+                      >
+                    </div>
+                    <div class="col">{{ lock_rotor_test.noise }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 pt-5">
+                  <div class="row" style="text-align: right">
+                    <div class="col">
+                      <label
+                        for="id_lock_rotor_test-temperature"
+                        class="col-form-label"
+                        >Temperature:</label
+                      >
+                    </div>
+                    <div class="col">{{ lock_rotor_test.temperature }}</div>
+                  </div>
+                </div>
+        
+                <!-- Include other form fields specific to lock rotor test here -->
+
+                <div class="text-center py-5">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+            {% endif %}
+          </div>
+          <!-- End Default Tabs -->
         </div>
-
-        <div class="mb-3 clearfix block {% if all_test_completed %} d-block {% else %} d-none {% endif %} ">
-
-
-
-
-
-
-            <a href="{% url 'chart' inductionMotorReport.id %}" class="text-white btn btn-primary"
-               target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a>
-            <a href="{% url 'pdf' inductionMotorReport.id %}" class="text-white btn btn-success"
-               target="_blank" type="button"><i class="bi bi-file-earmark-pdf-fill"></i> Generate Report</a>
-        </div>
-    </div>
-
-    <section class="section">
-        <div class="row" style="text-align: right">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title">Please fill and save the forms below.</h5>
-                            <div class="text-center datatable-top mt-2">
-                                {% if all_test_completed %}
-                                <!--Remarks Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-  Remarks
-</button>
-                                    <!-- Remarks Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Remarks</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="remarksForm" action="{% url 'remarks' inductionMotorReport.id %}" method="post">
-          {% csrf_token %}
-          <textarea id="remarks" name="remarks" rows="4" class="form-control">{% if inductionMotorReport.remarks == None %}{% else %}{{ inductionMotorReport.remarks }}{% endif %}</textarea>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" onclick="submitRemarksForm()" class="btn btn-primary">Submit</button>
       </div>
     </div>
   </div>
-</div>
-                                {% endif %}
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#edit-modal" id="update-modal">Update This Record
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Default Tabs -->
-                        <ul class="nav nav-pills justify-content-center pt-5" id="testFormTabs" role="tablist">
-
-                            {% if electric_resistance_test %}
-                            <li class="nav-item " role="presentation">
-                                    <button class="nav-link {% if status.electric_resistance_test == 'COMPLETED' %}fullfilled {% endif %}" id="electric-tab" data-bs-toggle="tab"
-                                            data-bs-target="#electric" type="button" role="tab" aria-controls="electric"
-                                            aria-selected="true">Electric Resistance Test
-                                    </button>
-                                </li>
-                            {% endif %}
-                            {% if temperature_rise_test %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link {% if status.temperature_rise_test == 'COMPLETED' %}fullfilled {% endif %}" id="temperature-tab" data-bs-toggle="tab"
-                                            data-bs-target="#temperature" type="button" role="tab"
-                                            aria-controls="temperature" aria-selected="false" tabindex="-1">Temperature
-                                        Rise
-                                        Test
-                                    </button>
-                                </li>
-                            {% endif %}
-                            {% if performance_determination_test %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link {% if status.performance_determination_test == 'COMPLETED' %}fullfilled {% endif %}" id="performance-tab" data-bs-toggle="tab"
-                                            data-bs-target="#performance" type="button" role="tab"
-                                            aria-controls="performance" aria-selected="false" tabindex="-1">Performance
-                                        Determination Test
-                                    </button>
-                                </li>
-                            {% endif %}
-                            {% if no_load_test %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link {% if status.no_load_test == 'COMPLETED' %}fullfilled {% endif %}" id="noload-tab" data-bs-toggle="tab"
-                                            data-bs-target="#noload"
-                                            type="button" role="tab" aria-controls="noload" aria-selected="false"
-                                            tabindex="-1">No Load Test
-                                    </button>
-                                </li>
-                            {% endif %}
-                            {% if withstand_voltage_ac_test %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link {% if status.withstand_voltage_ac_test == 'COMPLETED' %}fullfilled {% endif %}" id="withstand-tab" data-bs-toggle="tab"
-                                            data-bs-target="#withstand" type="button" role="tab"
-                                            aria-controls="withstand"
-                                            aria-selected="false" tabindex="-1">Withstand Voltage AC Test
-                                    </button>
-                                </li>
-                            {% endif %}
-                            {% if insulation_resistance_test %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link {% if status.insulation_resistance_test == 'COMPLETED' %}fullfilled {% endif %}" id="insulation-tab" data-bs-toggle="tab"
-                                            data-bs-target="#insulation" type="button" role="tab"
-                                            aria-controls="insulation"
-                                            aria-selected="false" tabindex="-1">Insulation Resistance Test
-                                    </button>
-                                </li>
-                            {% endif %}
-                                {% if lock_rotor_test %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link {% if status.lock_rotor_test == 'COMPLETED' %}fullfilled {% endif %}" id="rotor-tab" data-bs-toggle="tab"
-                                            data-bs-target="#lock-rotor" type="button" role="tab"
-                                            aria-controls="lock-rotor"
-                                            aria-selected="false" tabindex="-1">Lock Rotor Test
-                                    </button>
-                                </li>
-                            {% endif %}
-                        </ul>
-                        <div class="tab-content pt-3 pe-5" id="myTabContent">
-
-                            {% if electric_resistance_test %}
-                                <div class="tab-pane fade" id="electric" role="tabpanel" aria-labelledby="electric-tab">
-                                    <form id="electric-form " class="row g-3 test-form"
-                                          action="{% url 'electric-form' inductionMotorReport.id %}" method="post">
-                                        {% csrf_token %}
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_electric_resistance_test-resistance_ohm_1"
-                                                    class="col-form-label">Resistance (mOhms) 1:</label>
-                                                </div>
-                                                <div class="col">{{ electric_resistance_test.resistance_ohm_1 }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_electric_resistance_test-resistance_ohm_2"
-                                                    class="col-form-label">Resistance (mOhms) 2:</label>
-                                                </div>
-                                                <div class="col">{{ electric_resistance_test.resistance_ohm_2 }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_electric_resistance_test-resistance_ohm_3"
-                                                    class="col-form-label">Resistance (mOhms) 3:</label>
-                                                </div>
-                                                <div class="col">{{ electric_resistance_test.resistance_ohm_3 }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_electric_resistance_test-ambient_temperature_C"
-                                                    class="col-form-label">Ambient Temperature (°C):</label>
-                                                </div>
-                                                <div class="col">{{ electric_resistance_test.ambient_temperature_C }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_electric_resistance_test-unbalance_percentage"
-                                                    class="col-form-label">Unbalance (%):</label>
-                                                </div>
-                                                <div class="col">{{ electric_resistance_test.unbalance_percentage }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center py-5">
-                                            <button type="submit" class="btn btn-primary pb-2">Save</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            {% endif %}
-
-                            {% if temperature_rise_test %}
-                                <div class="tab-pane fade" id="temperature" role="tabpanel"
-                                     aria-labelledby="temperature-tab">
-                                    <form id="temperature-form" class="row g-3 test-form"
-                                          action="{% url 'temperature-form' inductionMotorReport.id %}" method="post">
-                                        {% csrf_token %}
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_temperature_rise_test-voltage"
-                                                    class="col-form-label">Voltage (V):</label>
-                                                </div>
-                                                <div class="col">{{ temperature_rise_test.voltage }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_temperature_rise_test-frequency"
-                                                    class="col-form-label">Frequency (Hz):</label>
-                                                </div>
-                                                <div class="col">{{ temperature_rise_test.frequency }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_temperature_rise_test-de_bearing"
-                                                    class="col-form-label">DE Bearing (C):</label>
-                                                </div>
-                                                <div class="col">{{ temperature_rise_test.de_bearing }}</div>
-                                            </div>
-                                        </div>
-
-                                         <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_temperature_rise_test-winding"
-                                                    class="col-form-label">Winding (Resistance Method) (C):</label>
-                                                </div>
-                                                <div class="col">{{ temperature_rise_test.winding }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_temperature_rise_test-nde_bearing"
-                                                    class="col-form-label">NDE Bearing (C):</label>
-                                                </div>
-                                                <div class="col">{{ temperature_rise_test.nde_bearing }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center py-5">
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            {% endif %}
-
-                            {% if performance_determination_test %}
-                                <div class="tab-pane fade" id="performance" role="tabpanel"
-                                     aria-labelledby="performance-tab">
-                                    <form id="performance-form" class="row g-3 test-form"
-                                          action="{% url 'performance-form' inductionMotorReport.id %}" method="post"
-                                          enctype="multipart/form-data" novalidate>
-                                        {% csrf_token %}
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_performance_determination_test-voltage"
-                                                    class="col-form-label">Voltage (V):</label>
-                                                </div>
-                                                <div class="col">{{ performance_determination_test.voltage }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_performance_determination_test-frequency"
-                                                    class="col-form-label">Frequency (Hz):</label>
-                                                </div>
-                                                <div class="col">{{ performance_determination_test.frequency }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_performance_determination_test-nominal_t"
-                                                    class="col-form-label">Nominal T. (N.m):</label>
-                                                </div>
-                                                <div class="col">{{ performance_determination_test.nominal_t }}</div>
-                                            </div>
-                                        </div>
-
-{#                                        <div class="col-md-6 pt-md-5 ps-md-5">#}
-{#                                            <div class="row" style="text-align: right">#}
-{#                                                <div class="col-md-5">#}
-{#                                                    <label for="id_performance_determination_test-file_1"#}
-{#                                                    class="col-form-label">Performance Load 25%:</label>#}
-{#                                                </div>#}
-{#                                                <div class="col-md-5 {% if not files.file_25 %}empty{% endif %}">#}
-{#                                                    {{ performance_determination_test.file_1 }}#}
-{#                                                    {% if files.file_25 %}#}
-{#                                                        <span class="pt-3">#}
-{#                                                            <span class="fst-italic">{{ files.file_25_name }} - </span>#}
-{#                                                            <a href="{{ files.file_25.url }}"#}
-{#                                                               class="text-decoration-none">#}
-{#                                                                 Download File <i class="bi bi-download"></i></a>#}
-{#                                                        </span>#}
-{#                                                    {% else %}#}
-{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
-{#                                                    {% endif %}#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="col-md-6 pt-5">#}
-{#                                            <div class="row" style="text-align: right">#}
-{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_2"#}
-{#                                                    class="col-form-label">Performance Load 50%:</label>#}
-{#                                                </div>#}
-{#                                                <div class="col-md-5 {% if not files.file_50 %}empty{% endif %}">#}
-{#                                                    {{ performance_determination_test.file_2 }}#}
-{#                                                    {% if files.file_50 %}#}
-{#                                                        <span class="pt-3">#}
-{#                                                        <span class="fst-italic">{{ files.file_50_name }} - </span>#}
-{#                                                            <a href="{{ files.file_50.url }}"#}
-{#                                                               class="text-decoration-none">#}
-{#                                                                 Download File <i class="bi bi-download"></i></a>#}
-{#                                                        </span>#}
-{#                                                    {% else %}#}
-{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
-{#                                                    {% endif %}#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="col-md-6 pt-md-5 ps-md-5">#}
-{#                                            <div class="row" style="text-align: right">#}
-{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_3"#}
-{#                                                    class="col-form-label">Performance Load 75%:</label>#}
-{#                                                </div>#}
-{#                                                <div class="col-md-5 {% if not files.file_75 %}empty{% endif %}">#}
-{#                                                    {{ performance_determination_test.file_3 }}#}
-{#                                                    {% if files.file_75 %}#}
-{#                                                        <span class="pt-3">#}
-{#                                                            <span class="fst-italic">{{ files.file_75_name }} - </span>#}
-{#                                                            <a href="{{ files.file_75.url }}"#}
-{#                                                               class="text-decoration-none">#}
-{#                                                                 Download File <i class="bi bi-download"></i>#}
-{#                                                            </a>#}
-{#                                                        </span>#}
-{#                                                    {% else %}#}
-{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
-{#                                                    {% endif %}#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="col-md-6 pt-5">#}
-{#                                            <div class="row" style="text-align: right">#}
-{#                                                <div class="col-md-5"><label for="id_performance_determination_test-file_4"#}
-{#                                                    class="col-form-label">Performance Load 100%:</label>#}
-{#                                                </div>#}
-{#                                                <div class="col-md-5 {% if not files.file_100 %}empty{% endif %}">#}
-{#                                                    {{ performance_determination_test.file_4 }}#}
-{#                                                    {% if files.file_100 %}#}
-{#                                                        <span class="pt-3">#}
-{#                                                           <span class="fst-italic">{{ files.file_100_name }} - </span>#}
-{#                                                           <a href="{{ files.file_100.url }}"#}
-{#                                                               class="text-decoration-none">#}
-{#                                                                 Download File <i class="bi bi-download"></i>#}
-{#                                                            </a>#}
-{#                                                        </span>#}
-{#                                                    {% else %}#}
-{#                                                        <span class="fst-italic">Please upload the excel file.</span>#}
-{#                                                    {% endif %}#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-
-                                        <div class="text-center py-5">
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            {% endif %}
-
-                            {% if no_load_test %}
-                                <div class="tab-pane fade" id="noload" role="tabpanel" aria-labelledby="noload-tab">
-                                    <form id="noload-form" class="row g-3 test-form"
-                                          action="{% url 'noload-form' inductionMotorReport.id %}" method="post">
-                                        {% csrf_token %}
-
-<!--                  <div class="col-md-4 pt-5">-->
-<!--    <div class="row" style="text-align: right">-->
-<!--        <div class="col">-->
-<!--            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>-->
-<!--        </div>-->
-<!--&lt;!&ndash;        <div class="col">&ndash;&gt;-->
-<!--&lt;!&ndash;            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--    </div>-->
-<!--</div>-->
-<!--    <div class="row" style="text-align: right">-->
-                                        <div class="col-md-4 " style="text-align:left">
-                                        <div class="form-check">
-                                            <input type="radio" id="id_no_load_test_current_date" name="date_checkbox" class="form-check-input">
-                                             <label for="id_no_load_test_current_date" class="form-check-label" style="text-align:left">Current Date</label>
-                                        </div>
-                                        <div class=" form-check">
-                                            <input type="radio" id="select_date" class="form-check-input" type="radio" name="date_checkbox">
-                                            <label for="select_date" class="form-check-label"  style="text-align:left">Select Date</label>
-                                            <input type="date" id="id_no_load_test_selected_date" name="selected_date" style="display:none;">
-
-                                        </div>
-                                        </div>
-
-<!--                                        <div class="col-4 " style="text-align:left;" >-->
-<!--                                            <input type="date" id="" name="selected_date">-->
-<!--                                        </div>-->
-
-                                        <div class="col-md-4 ">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col-6"><label for="id_no_load_test-direction_of_rotation"
-                                                    class="col-form-label">Direction of Rotation:</label>
-                                                </div>
-                                                <div class="col-6">{{ no_load_test.direction_of_rotation }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center py-5">
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </div>
-<!--        <div class="col">-->
-<!--            <input type="date" id="id_no_load_test_selected_date" name="selected_date">-->
-<!--        </div>-->
-<!--    </div>-->
-
-
-{#                                        <div class="col-md-4 pt-5">#}
-{#                                            <div class="row" style="text-align: right">#}
-{#                                                <div class="col"><label for="id_no_load_test-current"#}
-{#                                                    class="col-form-label">Current (A):</label>#}
-{#                                                </div>#}
-{#                                                <div class="col">{{ no_load_test.current }}</div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-
-{#                                        <div class="col-md-4 pt-5">#}
-{#                                            <div class="row" style="text-align: right">#}
-{#                                                <div class="col"><label for="id_no_load_test-power"#}
-{#                                                    class="col-form-label">Power (W):</label>#}
-{#                                                </div>#}
-{#                                                <div class="col">{{ no_load_test.power }}</div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-
-{#                                        <div class="col-md-4 pt-5">#}
-{#                                            <div class="row" style="text-align: right">#}
-{#                                                <div class="col"><label for="id_no_load_test-frequency"#}
-{#                                                    class="col-form-label">Frequency (Hz):</label>#}
-{#                                                </div>#}
-{#                                                <div class="col">{{ no_load_test.frequency }}</div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-
-{#                                        <div class="col-md-4 pt-5">#}
-{#                                            <div class="row" style="text-align: right">#}
-{#                                                <div class="col"><label for="id_no_load_test-speed"#}
-{#                                                    class="col-form-label">Speed (rpm):</label>#}
-{#                                                </div>#}
-{#                                                <div class="col">{{ no_load_test.speed }}</div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-
-                                    </form>
-                                </div>
-                            {% endif %}
-
-                            {% if withstand_voltage_ac_test %}
-                                <div class="tab-pane fade" id="withstand" role="tabpanel"
-                                     aria-labelledby="withstand-tab">
-                                    <form id="withstand-form" class="row g-3 test-form"
-                                          action="{% url 'withstand-form' inductionMotorReport.id %}" method="post">
-                                        {% csrf_token %}
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_withstand_voltage_ac_test-description"
-                                                    class="col-form-label">Description:</label>
-                                                </div>
-                                                <div class="col">{{ withstand_voltage_ac_test.description }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_withstand_voltage_ac_test-voltage_kv"
-                                                    class="col-form-label">Voltage (kV):</label>
-                                                </div>
-                                                <div class="col">{{ withstand_voltage_ac_test.voltage_kv }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="withstand_voltage_ac_test-time_in_seconds"
-                                                    class="col-form-label">Time (s):</label>
-                                                </div>
-                                                <div class="col">{{ withstand_voltage_ac_test.time_in_seconds }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center py-5">
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            {% endif %}
-
-                            {% if insulation_resistance_test %}
-                                <div class="tab-pane fade" id="insulation" role="tabpanel"
-                                     aria-labelledby="insulation-tab">
-                                    <form id="insulation-form" class="row g-3 test-form"
-                                          action="{% url 'insulation-form' inductionMotorReport.id %}" method="post">
-                                        {% csrf_token %}
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_insulation_resistance_test-description"
-                                                    class="col-form-label">Description:</label>
-                                                </div>
-                                                <div class="col">{{ insulation_resistance_test.description }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col"><label for="id_insulation_resistance_test-voltage"
-                                                    class="col-form-label">Voltage (V):</label>
-                                                </div>
-                                                <div class="col">{{ insulation_resistance_test.voltage }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_insulation_resistance_test-time_in_seconds"
-                                                    class="col-form-label">Time (s):</label>
-                                                </div>
-                                                <div class="col">{{ insulation_resistance_test.time_in_seconds }}</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_insulation_resistance_test-insulation_resistance"
-                                                    class="col-form-label">Insulation Res. (Mohms):</label>
-                                                </div>
-                                                <div class="col">{{ insulation_resistance_test.insulation_resistance }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_insulation_resistance_test-ambient_temperature_C"
-                                                    class="col-form-label">Ambient Temperature (°C):</label>
-                                                </div>
-                                                <div class="col">{{ insulation_resistance_test.ambient_temperature_C }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 pt-5">
-                                            <div class="row" style="text-align: right">
-                                                <div class="col">
-                                                    <label for="id_insulation_resistance_test-humidity_percentage"
-                                                    class="col-form-label">Humidity (%):</label>
-                                                </div>
-                                                <div class="col">{{ insulation_resistance_test.humidity_percentage }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center py-5">
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            {% endif %}
-               {% if lock_rotor_test %}
-    <div class="tab-pane fade" id="lock-rotor" role="tabpanel" aria-labelledby="rotor-tab">
-        <form id="lock-rotor-test-form" class="row g-3 test-form" action="{% url 'lock-rotor-form' inductionMotorReport.id %}" method="post">
-            {% csrf_token %}
-      <div class="col-md-4 pt-5">
-    <div class="row" style="text-align: right">
-        <div class="col">
-            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>
-        </div>
-        <div class="col">
-            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">
-        </div>
-    </div>
-</div>
-                                        <div class="col-md-4 pt-5">
-    <div class="row" style="text-align: right">
-        <div class="col">
-            <label for="id_no_load_test_selected_date" class="col-form-label">Select Date:</label>
-        </div>
-        <div class="col">
-            <input type="date" id="id_no_load_test_selected_date" name="selected_date">
-        </div>
-    </div>
-</div>
-            <div class="col-md-4 pt-5">
-                <div class="row" style="text-align: right">
-                    <div class="col">
-                        <label for="id_lock_rotor_test-vibration" class="col-form-label">Vibration:</label>
-                    </div>
-                    <div class="col">{{ lock_rotor_test.vibration }}</div>
-                </div>
-            </div>
-
-            <div class="col-md-4 pt-5">
-                <div class="row" style="text-align: right">
-                    <div class="col">
-                        <label for="id_lock_rotor_test-noise" class="col-form-label">Noise:</label>
-                    </div>
-                    <div class="col">{{ lock_rotor_test.noise }}</div>
-                </div>
-            </div>
-
-            <div class="col-md-4 pt-5">
-                <div class="row" style="text-align: right">
-                    <div class="col">
-                        <label for="id_lock_rotor_test-temperature" class="col-form-label">Temperature:</label>
-                    </div>
-                    <div class="col">{{ lock_rotor_test.temperature }}</div>
-                </div>
-            </div>
-
-            <!-- Include other form fields specific to lock rotor test here -->
-
-            <div class="text-center py-5">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>
-    </div>
-{% endif %}
-
-                        </div><!-- End Default Tabs -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-{% endblock %}
-{% block scripts %}
-    <script>
-// Example JavaScript snippet for initiating the AJAX call
-function submitRemarksForm() {
-    var form = document.getElementById('remarksForm');
+</section>
+{% endblock %} {% block scripts %}
+<script>
+  // Example JavaScript snippet for initiating the AJAX call
+  function submitRemarksForm() {
+    var form = document.getElementById("remarksForm");
     var formData = new FormData(form);
 
     // Construct the action URL dynamically or ensure it's set correctly in the form's action attribute
     var actionUrl = form.action; // Assuming the form's 'action' attribute already contains the correct URL with `pk`
 
     fetch(actionUrl, {
-      method: 'POST',
+      method: "POST",
       body: formData,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest',
+        "X-Requested-With": "XMLHttpRequest",
       },
     })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response here
-      if(data.success) {
-        var modalInstance = bootstrap.Modal.getInstance(document.getElementById('staticBackdrop'));
-        modalInstance.hide();
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
-
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the response here
+        if (data.success) {
+          var modalInstance = bootstrap.Modal.getInstance(
+            document.getElementById("staticBackdrop")
+          );
+          modalInstance.hide();
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 </script>
-{#<script>#}
-{#    function validateForm(tbodyId) {#}
-{#        console.log(tbodyId)#}
-{#        // Get the <tbody> element by its id#}
-{#        var tbody = document.getElementById(tbodyId);#}
-{##}
-{#        // Get all checkboxes inside the <tbody>#}
-{#        var checkboxes = tbody.querySelectorAll('input[type="checkbox"]');#}
-{##}
-{#        // Check if any checkbox is checked#}
-{#        var isChecked = false;#}
-{#        checkboxes.forEach(function(checkbox) {#}
-{#            if (checkbox.checked) {#}
-{#                isChecked = true;#}
-{#            }#}
-{#        });#}
-{##}
-{#        // If no checkbox is checked, alert the user and do not proceed#}
-{#        if (!isChecked) {#}
-{#            alert("Please select at least one checkbox.");#}
-{##}
-{#            // Change button color to red#}
-{#          // Change button color to red#}
-{# // Add border around the button#}
-{#    var button = document.getElementById('edit_performed_tests');#}
-{#    button.style.border = "2px solid red";#}
-{##}
-{#            return false;#}
-{#        }#}
-{##}
-{#        // If validation passes, close the modal programmatically#}
-{#        $('#edit-modal').modal('hide');#}
-{#        return true;#}
-{#    }#}
-{#</script>#}
-     <script>
-$(document).ready(function () {
-               let un_completed_test = $('#testFormTabs .nav-link:not(.fullfilled)')
-               let completed_test = $('#testFormTabs .nav-link.fullfilled')
-               console.log(un_completed_test.length,completed_test[0])
-               if(un_completed_test.length===0){
-                completed_test[0].click()
-               }
+{% comment %} {#
+<script>
+  #}
+  {#    function validateForm(tbodyId) {#}
+  {#        console.log(tbodyId)#}
+  {#        // Get the <tbody> element by its id#}
+  {#        var tbody = document.getElementById(tbodyId);#}
+  {##}
+  {#        // Get all checkboxes inside the <tbody>#}
+  {#        var checkboxes = tbody.querySelectorAll('input[type="checkbox"]');#}
+  {##}
+  {#        // Check if any checkbox is checked#}
+  {#        var isChecked = false;#}
+  {#        checkboxes.forEach(function(checkbox) {#}
+  {#            if (checkbox.checked) {#}
+  {#                isChecked = true;#}
+  {#            }#}
+  {#        });#}
+  {##}
+  {#        // If no checkbox is checked, alert the user and do not proceed#}
+  {#        if (!isChecked) {#}
+  {#            alert("Please select at least one checkbox.");#}
+  {##}
+  {#            // Change button color to red#}
+  {#          // Change button color to red#}
+  {# // Add border around the button#}
+  {#    var button = document.getElementById('edit_performed_tests');#}
+  {#    button.style.border = "2px solid red";#}
+  {##}
+  {#            return false;#}
+  {#        }#}
+  {##}
+  {#        // If validation passes, close the modal programmatically#}
+  {#        $('#edit-modal').modal('hide');#}
+  {#        return true;#}
+  {#    }#}
+  {#
+</script>
+#} {% endcomment %}
+<script>
+  $(document).ready(function () {
+    let un_completed_test = $("#testFormTabs .nav-link:not(.fullfilled)");
+    let completed_test = $("#testFormTabs .nav-link.fullfilled");
+    console.log(un_completed_test.length, completed_test[0]);
+    if (un_completed_test.length === 0) {
+      completed_test[0].click();
+    } else {
+      console.log(" Not All uncompleted");
+      un_completed_test[0].click();
+    }
+    // Eelements of no load test
+    const showDateCheckbox = document.getElementById("select_date");
+    const dateInput = document.getElementById("id_no_load_test_selected_date");
+    const currentDate = document.getElementById("id_no_load_test_current_date");
+    // Elements of Rotor Test
+    const showDateCheckboxRotor = document.getElementById("select_rotor_date");
+    const dateInputRotor = document.getElementById("id_rotor_test_selected_date");
+    const currentDateRotor = document.getElementById("id_rotor_test_current_date");
 
-               else{
-               console.log(" Not All uncompleted")
-                un_completed_test[0].click()
-               }
-       const showDateCheckbox = document.getElementById('select_date');
-        const dateInput = document.getElementById('id_no_load_test_selected_date')
-        const currentDate = document.getElementById('id_no_load_test_current_date')
-        showDateCheckbox.addEventListener('change', function() {
-          if (this.checked) {
-            dateInput.style.display = 'block'; // Show the date input
-          } else {
-            dateInput.style.display = 'none'; // Hide the date input
-          }
-        });
-
-     currentDate.addEventListener('change', function() {
-          if (this.checked) {
-            dateInput.style.display = 'none'; // Show the date input
-            dateInput.value=0;
-          }
-        });
-
-    $('.test-form').submit(function (e) {
-        e.preventDefault();
-
-
-        var formData = $(this).serialize();
-        var currentFormId = '#' + $(this).attr('id'); // Get the ID of the current form
-        var currentTab = $(this).closest('.tab-pane'); // Find the current tab containing the form
-        var currentTabButton = $('button.nav-link.active[aria-controls="' + currentTab.attr('id') + '"]'); // Find the button corresponding to the current tab
-
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: formData,
-            success: function (data) {
-
-            // Filter out nav-links which have a fullfilled class in the button inside li of ul
-
-
-
-
-             const status = data.status
-             if(data.all_test_completed){
-             window.location.reload();
-
-             }
-            if(status === 'completed'){
-                currentTabButton.addClass('fullfilled');
-                console.log('HTMLE');
-                }
-
-
-                // Update form fields with saved data
-                $(currentFormId + ' input[type="text"]').each(function() {
-                    var fieldName = $(this).attr('name');
-                    $(this).val(data[fieldName]);
-                });
-
-                // Optionally, display a success message or perform other actions
-                alert('Form data saved success');
-
-                // Switch to the next tab
-                var nextTab = currentTab.next('.tab-pane');
-                var nextTabButton = $('button.nav-link[aria-controls="' + nextTab.attr('id') + '"]');
-
-                if (nextTab.length > 0) { // Check if there is a next tab
-                    // Hide the current tab and remove its active class
-                    currentTab.removeClass('active show');
-                    currentTabButton.removeClass('active');
-
-                    // Show the next tab and add its active class
-                    nextTab.addClass('active show');
-                    nextTabButton.addClass('active');
-                } else {
-                    // Optionally, do something if there is no next tab
-                    if(un_completed_test.length!==0){
-                    un_completed_test[0].click()
-                    }
-
-                }
-            },
-            error: function (xhr, errmsg, err) {
-                // Handle errors if any
-                console.log(errmsg);
-            }
-        });
+     // Show custom date in no load test
+    showDateCheckbox.addEventListener("change", function () {
+      if (this.checked) {
+        dateInput.style.display = "block"; // Show the date input
+      } else {
+        dateInput.style.display = "none"; // Hide the date input
+      }
     });
-});
-    </script>
 
+    currentDate.addEventListener("change", function () {
+      if (this.checked) {
+        dateInput.style.display = "none"; // Show the date input
+        dateInput.value = 0;
+      }
+    });
 
+     // Show custom date inrotor test
+     showDateCheckboxRotor.addEventListener("change", function () {
+        console.log('Rotor checkbox')
+        if (this.checked) {
+          dateInputRotor.style.display = "block"; // Show the date input
+        } else {
+          dateInputRotor.style.display = "none"; // Hide the date input
+        }
+      });
+  
+      currentDateRotor.addEventListener("change", function () {
+        if (this.checked) {
+          dateInputRotor.style.display = "none"; // Show the date input
+          dateInputRotor.value = 0;
+        }
+      });
+    // Submitting Tests
+    $(".test-form").submit(function (e) {
+      e.preventDefault();
 
+      var formData = $(this).serialize();
+      var currentFormId = "#" + $(this).attr("id"); // Get the ID of the current form
+      var currentTab = $(this).closest(".tab-pane"); // Find the current tab containing the form
+      var currentTabButton = $(
+        'button.nav-link.active[aria-controls="' + currentTab.attr("id") + '"]'
+      ); // Find the button corresponding to the current tab
+
+      $.ajax({
+        type: "POST",
+        url: $(this).attr("action"),
+        data: formData,
+        success: function (data) {
+          // Filter out nav-links which have a fullfilled class in the button inside li of ul
+
+          const status = data.status;
+          if (data.all_test_completed) {
+            window.location.reload();
+          }
+          if (status === "completed") {
+            currentTabButton.addClass("fullfilled");
+            console.log("HTMLE");
+          }
+
+          // Update form fields with saved data
+          $(currentFormId + ' input[type="text"]').each(function () {
+            var fieldName = $(this).attr("name");
+            $(this).val(data[fieldName]);
+          });
+
+          // Optionally, display a success message or perform other actions
+          alert("Form data saved success");
+
+          // Switch to the next tab
+          var nextTab = currentTab.next(".tab-pane");
+          var nextTabButton = $(
+            'button.nav-link[aria-controls="' + nextTab.attr("id") + '"]'
+          );
+
+          if (nextTab.length > 0) {
+            // Check if there is a next tab
+            // Hide the current tab and remove its active class
+            currentTab.removeClass("active show");
+            currentTabButton.removeClass("active");
+
+            // Show the next tab and add its active class
+            nextTab.addClass("active show");
+            nextTabButton.addClass("active");
+          } else {
+            // Optionally, do something if there is no next tab
+            if (un_completed_test.length !== 0) {
+              un_completed_test[0].click();
+            }
+          }
+        },
+        error: function (xhr, errmsg, err) {
+          // Handle errors if any
+          console.log(errmsg);
+        },
+      });
+    });
+  });
+</script>
 
 {% endblock %}
