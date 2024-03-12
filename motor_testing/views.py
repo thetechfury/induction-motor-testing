@@ -359,13 +359,9 @@ class NoLoadFormSaveView(View):
             motor.no_load_test = NoLoadTest.objects.get_or_create(induction_motor=motor)
         file_path = Configuration.objects.all().first().no_load_test
         date = ''
-        if request.POST.get('date_checkbox'):
-            current_date_time = datetime.now()
-            current_date = current_date_time.date()
-            date = "{}{}{}".format(current_date.day, current_date.month, current_date.year)
         date_str = request.POST.get('selected_date')
         if date_str:
-            year, month, day = date_str.split('-')
+            month, day, year = date_str.split('/')
             if day.startswith('0'):
                 day = day[1:]
             if month.startswith('0'):
@@ -412,6 +408,7 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.speed = avg_rpm if avg_rpm else default
         # motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
+        motor.no_load_test._report_date = date
         motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
         PerformanceTest.objects.filter(motor=motor, test_type='no_load_test').update(status=PerformanceTest.COMPLETED)
 
@@ -520,13 +517,9 @@ class LockRotorFormSave(View):
 
         file_path = Configuration.objects.all().first().lock_rotor_test
         date = ''
-        if request.POST.get('date_checkbox'):
-            current_date_time = datetime.now()
-            current_date = current_date_time.date()
-            date = "{}{}{}".format(current_date.day, current_date.month, current_date.year)
         date_str = request.POST.get('selected_date')
         if date_str:
-            year, month, day = date_str.split('-')
+            month, day, year = date_str.split('/')
             if day.startswith('0'):
                 day = day[1:]
             if month.startswith('0'):
@@ -576,6 +569,7 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.current = avg_amp if avg_amp else default
         motor.lock_rotor_test.power = power if power else default
         motor.lock_rotor_test.report_date = table_name
+        motor.lock_rotor_test._report_date = table_name
         # motor.lock_rotor_test.mdb_data = filtered_data
         PerformanceTest.objects.filter(motor=motor, test_type='lock_rotor_test').update(
             status=PerformanceTest.COMPLETED)

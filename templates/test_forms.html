@@ -485,174 +485,7 @@
                   </div>
                 </div>
 
-                {% comment %} {#
-                <div class="col-md-6 pt-md-5 ps-md-5">
-                  #} {#
-                  <div class="row" style="text-align: right">
-                    #} {#
-                    <div class="col-md-5">
-                      #} {#
-                      <label
-                        for="id_performance_determination_test-file_1"
-                        #}
-                        {#
-                        class="col-form-label"
-                        >Performance Load 25%:</label
-                      >#} {#
-                    </div>
-                    #} {#
-                    <div
-                      class="col-md-5 {% if not files.file_25 %}empty{% endif %}"
-                    >
-                      #} {# {{ performance_determination_test.file_1 }}#} {# {%
-                      if files.file_25 %}#} {#
-                      <span class="pt-3"
-                        >#} {#
-                        <span class="fst-italic"
-                          >{{ files.file_25_name }} - </span
-                        >#} {#
-                        <a
-                          href="{{ files.file_25.url }}"
-                          #}
-                          {#
-                          class="text-decoration-none"
-                          >#} {# Download File <i class="bi bi-download"></i></a
-                        >#} {# </span
-                      >#} {# {% else %}#} {#
-                      <span class="fst-italic"
-                        >Please upload the excel file.</span
-                      >#} {# {% endif %}#} {#
-                    </div>
-                    #} {#
-                  </div>
-                  #} {#
-                </div>
-                #} {##} {#
-                <div class="col-md-6 pt-5">
-                  #} {#
-                  <div class="row" style="text-align: right">
-                    #} {#
-                    <div class="col-md-5">
-                      <label
-                        for="id_performance_determination_test-file_2"
-                        #}
-                        {#
-                        class="col-form-label"
-                        >Performance Load 50%:</label
-                      >#} {#
-                    </div>
-                    #} {#
-                    <div
-                      class="col-md-5 {% if not files.file_50 %}empty{% endif %}"
-                    >
-                      #} {# {{ performance_determination_test.file_2 }}#} {# {%
-                      if files.file_50 %}#} {#
-                      <span class="pt-3"
-                        >#} {#
-                        <span class="fst-italic"
-                          >{{ files.file_50_name }} - </span
-                        >#} {#
-                        <a
-                          href="{{ files.file_50.url }}"
-                          #}
-                          {#
-                          class="text-decoration-none"
-                          >#} {# Download File <i class="bi bi-download"></i></a
-                        >#} {# </span
-                      >#} {# {% else %}#} {#
-                      <span class="fst-italic"
-                        >Please upload the excel file.</span
-                      >#} {# {% endif %}#} {#
-                    </div>
-                    #} {#
-                  </div>
-                  #} {#
-                </div>
-                #} {##} {#
-                <div class="col-md-6 pt-md-5 ps-md-5">
-                  #} {#
-                  <div class="row" style="text-align: right">
-                    #} {#
-                    <div class="col-md-5">
-                      <label
-                        for="id_performance_determination_test-file_3"
-                        #}
-                        {#
-                        class="col-form-label"
-                        >Performance Load 75%:</label
-                      >#} {#
-                    </div>
-                    #} {#
-                    <div
-                      class="col-md-5 {% if not files.file_75 %}empty{% endif %}"
-                    >
-                      #} {# {{ performance_determination_test.file_3 }}#} {# {%
-                      if files.file_75 %}#} {#
-                      <span class="pt-3"
-                        >#} {#
-                        <span class="fst-italic"
-                          >{{ files.file_75_name }} - </span
-                        >#} {#
-                        <a
-                          href="{{ files.file_75.url }}"
-                          #}
-                          {#
-                          class="text-decoration-none"
-                          >#} {# Download File <i class="bi bi-download"></i>#}
-                          {# </a
-                        >#} {# </span
-                      >#} {# {% else %}#} {#
-                      <span class="fst-italic"
-                        >Please upload the excel file.</span
-                      >#} {# {% endif %}#} {#
-                    </div>
-                    #} {#
-                  </div>
-                  #} {#
-                </div>
-                #} {##} {#
-                <div class="col-md-6 pt-5">
-                  #} {#
-                  <div class="row" style="text-align: right">
-                    #} {#
-                    <div class="col-md-5">
-                      <label
-                        for="id_performance_determination_test-file_4"
-                        #}
-                        {#
-                        class="col-form-label"
-                        >Performance Load 100%:</label
-                      >#} {#
-                    </div>
-                    #} {#
-                    <div
-                      class="col-md-5 {% if not files.file_100 %}empty{% endif %}"
-                    >
-                      #} {# {{ performance_determination_test.file_4 }}#} {# {%
-                      if files.file_100 %}#} {#
-                      <span class="pt-3"
-                        >#} {#
-                        <span class="fst-italic"
-                          >{{ files.file_100_name }} - </span
-                        >#} {#
-                        <a
-                          href="{{ files.file_100.url }}"
-                          #}
-                          {#
-                          class="text-decoration-none"
-                          >#} {# Download File <i class="bi bi-download"></i>#}
-                          {# </a
-                        >#} {# </span
-                      >#} {# {% else %}#} {#
-                      <span class="fst-italic"
-                        >Please upload the excel file.</span
-                      >#} {# {% endif %}#} {#
-                    </div>
-                    #} {#
-                  </div>
-                  #} {#
-                </div>
-                #} {% endcomment %}
+              
 
                 <div class="text-center py-5">
                   <button type="submit" class="btn btn-primary">Save</button>
@@ -668,71 +501,17 @@
             >
               <form
                 id="noload-form"
-                class="row g-3 test-form"
+                class="row g-3 test-form d-flex justify-content-center"
                 action="{% url 'noload-form' inductionMotorReport.id %}"
                 method="post"
               >
                 {% csrf_token %}
 
-                <!--                  <div class="col-md-4 pt-5">-->
-                <!--    <div class="row" style="text-align: right">-->
-                <!--        <div class="col">-->
-                <!--            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>-->
-                <!--        </div>-->
-                <!--&lt;!&ndash;        <div class="col">&ndash;&gt;-->
-                <!--&lt;!&ndash;            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">&ndash;&gt;-->
-                <!--&lt;!&ndash;        </div>&ndash;&gt;-->
-                <!--    </div>-->
-                <!--</div>-->
-                <!--    <div class="row" style="text-align: right">-->
-
-                {% comment %} <div class="col-md-4" style="text-align: left">
-                  <div class="form-check" style="width: 50%; margin-left: 50%">
-                    <input
-                      type="radio"
-                      id="id_no_load_test_current_date"
-                      name="date_checkbox"
-                      class="form-check-input"
-                    checked
-                    />
-                    <label
-                      for="id_no_load_test_current_date"
-                      class="form-check-label"
-                      style="text-align: left"
-                      >Current date</label
-                    >
-                  </div>
-                </div>
-                <div class="col-4" style="text-align: left">
-                  <div class="form-check">
-                    <input
-                      type="radio"
-                      id="select_date"
-                      class="form-check-input"
-                      type="radio"
-                      name="date_checkbox"
-                    />
-                    <label
-                      for="select_date"
-                      class="form-check-label"
-                      style="text-align: left"
-                      >Select custom date</label
-                    >
-                    <input
-                      type="date"
-                      id="id_no_load_test_selected_date"
-                      class="form-control"
-                      name="selected_date"
-                      style="
-                        display: none;
-                        margin-top: 10px;
-                        margin-left: -1rem;
-                        width: 224px;
-                      "
-                    />
-                  </div>
-                </div> {% endcomment %}
-
+                <!-- <div class="form-group ">
+                  <label for="datepicker">Select a Date:</label>
+                  <input type="text" class="form-control col-8" id="datepicker">
+                </div> -->
+                
                 <div class="col-md-4">
                   <div
                     class="row"
@@ -751,95 +530,31 @@
                   </div>
                 </div>
 
+                <div class="col-md-4">
+                  <div
+                    class="row form-group "
+
+                  >
+                    <div class="col-6">
+                      <label
+                      for="datepickerEl"
+                        class="col-form-label"
+                        >Select report date:</label
+                      >
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control col-8 datepicker" id="datepickerEl" name="selected_date">
+                      <!-- <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div> -->
+                    </div>
+                  </div>
+                </div>
+                
                 <div class="text-center py-5">
                   <button type="submit" class="btn btn-primary">Save</button>
                 </div>
-                <!--        <div class="col">-->
-                <!--            <input type="date" id="id_no_load_test_selected_date" name="selected_date">-->
-                <!--        </div>-->
-                <!--    </div>-->
-
-                {% comment %} {#
-                <div class="col-md-4 pt-5">
-                  #} {#
-                  <div class="row" style="text-align: right">
-                    #} {#
-                    <div class="col">
-                      <label
-                        for="id_no_load_test-current"
-                        #}
-                        {#
-                        class="col-form-label"
-                        >Current (A):</label
-                      >#} {#
-                    </div>
-                    #} {#
-                    <div class="col">{{ no_load_test.current }}</div>
-                    #} {#
-                  </div>
-                  #} {#
-                </div>
-                #} {#
-                <div class="col-md-4 pt-5">
-                  #} {#
-                  <div class="row" style="text-align: right">
-                    #} {#
-                    <div class="col">
-                      <label
-                        for="id_no_load_test-power"
-                        #}
-                        {#
-                        class="col-form-label"
-                        >Power (W):</label
-                      >#} {#
-                    </div>
-                    #} {#
-                    <div class="col">{{ no_load_test.power }}</div>
-                    #} {#
-                  </div>
-                  #} {#
-                </div>
-                #} {#
-                <div class="col-md-4 pt-5">
-                  #} {#
-                  <div class="row" style="text-align: right">
-                    #} {#
-                    <div class="col">
-                      <label
-                        for="id_no_load_test-frequency"
-                        #}
-                        {#
-                        class="col-form-label"
-                        >Frequency (Hz):</label
-                      >#} {#
-                    </div>
-                    #} {#
-                    <div class="col">{{ no_load_test.frequency }}</div>
-                    #} {#
-                  </div>
-                  #} {#
-                </div>
-                #} {#
-                <div class="col-md-4 pt-5">
-                  #} {#
-                  <div class="row" style="text-align: right">
-                    #} {#
-                    <div class="col">
-                      <label
-                        for="id_no_load_test-speed"
-                        #}
-                        {#
-                        class="col-form-label"
-                        >Speed (rpm):</label
-                      >#} {#
-                    </div>
-                    #} {#
-                    <div class="col">{{ no_load_test.speed }}</div>
-                    #} {#
-                  </div>
-                  #} {#
-                </div>
-                #} {% endcomment %}
+                
               </form>
             </div>
             {% endif %} {% if withstand_voltage_ac_test %}
@@ -1032,76 +747,7 @@
               >
                 {% csrf_token %}
                
-                {% comment %} <div class="col-md-4 pt-5" style="text-align: left">
-                  <div class="form-check" style="width: 50%; margin-left: 50%">
-                    <input
-                      type="radio"
-                      id="id_rotor_test_current_date"
-                      name="date_checkbox"
-                      class="form-check-input"
-                      checked
-                    />
-                    <label
-                      for="id_rotor_test_current_date"
-                      class="form-check-label"
-                      style="text-align: left"
-                      >Current date</label
-                    >
-                  </div>
-                </div>
-                <div class="col-md-4 pt-5" style="text-align: left;  
-                  transform: translateX(157px);
-                ">
-                  <div class="form-check">
-                    <input
-                      type="radio"
-                      id="select_rotor_date"
-                      class="form-check-input"
-                      type="radio"
-                      name="date_checkbox"
-                    />
-                    <label
-                      for="select_rotor_date"
-                      class="form-check-label"
-                      style="text-align: left"
-                      >Select custom date</label
-                    >
-                    <input
-                      type="date"
-                      id="id_rotor_test_selected_date"
-                      class="form-control"
-                      name="selected_date"
-                      style="
-                        display: none;
-                        margin-top: 10px;
-                        margin-left: -1rem;
-                        width: 224px;
-                      "
-                    />
-                  </div>
-                </div> {% endcomment %}
-
-                <!--      <div class="col-md-4 pt-5">-->
-                <!--    <div class="row" style="text-align: right">-->
-                <!--        <div class="col">-->
-                <!--            <label for="id_no_load_test_current_date" class="col-form-label">Current Date:</label>-->
-                <!--        </div>-->
-                <!--        <div class="col">-->
-                <!--            <input type="checkbox" id="id_no_load_test_current_date" name="date_checkbox">-->
-                <!--        </div>-->
-                <!--    </div>-->
-                <!--</div>-->
-                <!--                                        <div class="col-md-4 pt-5">-->
-                <!--    <div class="row" style="text-align: right">-->
-                <!--        <div class="col">-->
-                <!--            <label for="id_no_load_test_selected_date" class="col-form-label">Select Date:</label>-->
-                <!--        </div>-->
-                <!--        <div class="col">-->
-
-                <!--            <input type="date" id="id_no_load_test_selected_date" name="selected_date">-->
-                <!--        </div>-->
-                <!--    </div>-->
-                <!--</div>-->
+               
 
                 <div class="col-md-4 pt-5">
                   <div class="row" style="text-align: right">
@@ -1128,7 +774,27 @@
                     <div class="col">{{ lock_rotor_test.noise }}</div>
                   </div>
                 </div>
+                <div class="col-md-4 pt-5">
+                  <div
+                    class="row form-group "
 
+                  >
+                    <div class="col-6">
+                      <label
+                      for="datepickerRot"
+                        class="col-form-label"
+                        >Select report date:</label
+                      >
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control col-8 datepicker" id="datepickerRot" name="selected_date">
+                      <!-- <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
                 <div class="col-md-4 pt-5">
                   <div class="row" style="text-align: right">
                     <div class="col">
@@ -1141,7 +807,9 @@
                     <div class="col">{{ lock_rotor_test.temperature }}</div>
                   </div>
                 </div>
-        
+              </div>
+                
+                
                 <!-- Include other form fields specific to lock rotor test here -->
 
                 <div class="text-center py-5">
@@ -1189,45 +857,7 @@
       });
   }
 </script>
-{% comment %} {#
-<script>
-  #}
-  {#    function validateForm(tbodyId) {#}
-  {#        console.log(tbodyId)#}
-  {#        // Get the <tbody> element by its id#}
-  {#        var tbody = document.getElementById(tbodyId);#}
-  {##}
-  {#        // Get all checkboxes inside the <tbody>#}
-  {#        var checkboxes = tbody.querySelectorAll('input[type="checkbox"]');#}
-  {##}
-  {#        // Check if any checkbox is checked#}
-  {#        var isChecked = false;#}
-  {#        checkboxes.forEach(function(checkbox) {#}
-  {#            if (checkbox.checked) {#}
-  {#                isChecked = true;#}
-  {#            }#}
-  {#        });#}
-  {##}
-  {#        // If no checkbox is checked, alert the user and do not proceed#}
-  {#        if (!isChecked) {#}
-  {#            alert("Please select at least one checkbox.");#}
-  {##}
-  {#            // Change button color to red#}
-  {#          // Change button color to red#}
-  {# // Add border around the button#}
-  {#    var button = document.getElementById('edit_performed_tests');#}
-  {#    button.style.border = "2px solid red";#}
-  {##}
-  {#            return false;#}
-  {#        }#}
-  {##}
-  {#        // If validation passes, close the modal programmatically#}
-  {#        $('#edit-modal').modal('hide');#}
-  {#        return true;#}
-  {#    }#}
-  {#
-</script>
-#} {% endcomment %}
+
 <script>
   $(document).ready(function () {
     let un_completed_test = $("#testFormTabs .nav-link:not(.fullfilled)");
@@ -1235,52 +865,11 @@
     console.log(un_completed_test.length, completed_test[0]);
     if (un_completed_test.length === 0) {
       completed_test[0].click();
-    } else {
-      console.log(" Not All uncompleted");
+    } else {     
       un_completed_test[0].click();
     }
-    // Eelements of no load test
-   /* const showDateCheckbox = document.getElementById("select_date");
-    const dateInput = document.getElementById("id_no_load_test_selected_date");
-    const currentDate = document.getElementById("id_no_load_test_current_date");
-    // Elements of Rotor Test
-    const showDateCheckboxRotor = document.getElementById("select_rotor_date");
-    const dateInputRotor = document.getElementById("id_rotor_test_selected_date");
-    const currentDateRotor = document.getElementById("id_rotor_test_current_date");
-
-     // Show custom date in no load test
-    showDateCheckbox.addEventListener("change", function () {
-      if (this.checked) {
-        dateInput.style.display = "block"; // Show the date input
-      } else {
-        dateInput.style.display = "none"; // Hide the date input
-      }
-    });
-
-    currentDate.addEventListener("change", function () {
-      if (this.checked) {
-        dateInput.style.display = "none"; // Show the date input
-        dateInput.value = 0;
-      }
-    });
-
-     // Show custom date inrotor test
-     showDateCheckboxRotor.addEventListener("change", function () {
-        console.log('Rotor checkbox')
-        if (this.checked) {
-          dateInputRotor.style.display = "block"; // Show the date input
-        } else {
-          dateInputRotor.style.display = "none"; // Hide the date input
-        }
-      });
-  
-      currentDateRotor.addEventListener("change", function () {
-        if (this.checked) {
-          dateInputRotor.style.display = "none"; // Show the date input
-          dateInputRotor.value = 0;
-        }
-      });
-      */
+   
+     
     // Submitting Tests
     $(".test-form").submit(function (e) {
       e.preventDefault();
@@ -1305,7 +894,7 @@
           }
           if (status === "completed") {
             currentTabButton.addClass("fullfilled");
-            console.log("HTMLE");
+            
           }
 
           // Update form fields with saved data
