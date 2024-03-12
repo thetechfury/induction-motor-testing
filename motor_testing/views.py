@@ -781,21 +781,45 @@ def mdb_to_csv_conversion(input_file_path, csv_output_path):
 #
 #     return data
 
-def read_mdb_table(table_name, mdb_path):
+# def read_mdb_table(table_name, mdb_path):
+#
+#     from mdb_parser import MDBParser, MDBTable
+#
+#     db = MDBParser(file_path=mdb_path)
+#     table = db.get_table(table_name)
+#     table = MDBTable(file_path=mdb_path, table=table_name)
+#
+#     data = []
+#     data.append(table.columns)
+#     for row in table:
+#         data.append(row)
+#     # formatted_data = [[date.split()[0][6:] + date.split()[0][0:2] + date.split()[0][3:5]] + row[1:] for date, *row
+#     #                       in data]
+#     return data
 
-    from mdb_parser import MDBParser, MDBTable
 
-    db = MDBParser(file_path=mdb_path)
-    table = db.get_table(table_name)
-    table = MDBTable(file_path=mdb_path, table=table_name)
+# read_mdb_table('732024', r'C:\Users\Rana Awais Ahmad\Downloads\3.4.mdb')
 
-    data = []
-    data.append(table.columns)
-    for row in table:
+
+
+
+
+import pyodbc
+def read_mdb_table(table_name, file_path):
+# Establish connection to the MDB file
+    conn_str = r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=' + file_path + ';'
+    conn = pyodbc.connect(conn_str)
+
+# Create a cursor to execute SQL queries
+    cursor = conn.cursor()
+    sql_query = 'SELECT * FROM {}'.format(table_name)
+    cursor.execute(sql_query)
+    data=[]
+# Fetch and print the results
+    for row in cursor.fetchall():
         data.append(row)
-    # formatted_data = [[date.split()[0][6:] + date.split()[0][0:2] + date.split()[0][3:5]] + row[1:] for date, *row
-    #                       in data]
+
+# Close cursor and connection
+    cursor.close()
+    conn.close()
     return data
-
-
-# read_mdb_table('732024', '/home/thetechfury/Downloads/3.3.mdb')
