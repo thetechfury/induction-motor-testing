@@ -20,8 +20,7 @@ import subprocess
 import math
 from datetime import datetime
 
-from core_settings.settings import MDB_TO_CSV_EXE_LOCATION, MDB_TO_CSV_OUTPUT_PATH_FOR_NO_LOAD, \
-    MDB_TO_CSV_OUTPUT_PATH_FOR_LOCK_ROTOR, WK_HTML_TO_PDF_PATH
+from core_settings.settings import MDB_TO_CSV_EXE_LOCATION, WK_HTML_TO_PDF_PATH
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm, LockRotorTestForm
