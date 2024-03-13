@@ -411,7 +411,7 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.power = power if power else default
         motor.no_load_test.frequency = avg_speed if avg_speed else default
         motor.no_load_test.speed = avg_rpm if avg_rpm else default
-        # motor.no_load_test.mdb_data = filtered_data
+        motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
         date_object = datetime.strptime(date_str, "%m/%d/%Y")
         _formatted_date = date_object.strftime("%Y-%m-%d")
@@ -579,7 +579,7 @@ class LockRotorFormSave(View):
         date_object = datetime.strptime(date_str, "%m/%d/%Y")
         _formatted_date = date_object.strftime("%Y-%m-%d")
         motor.lock_rotor_test._report_date = _formatted_date
-        # motor.lock_rotor_test.mdb_data = filtered_data
+        motor.lock_rotor_test.mdb_data = filtered_data
         PerformanceTest.objects.filter(motor=motor, test_type='lock_rotor_test').update(
             status=PerformanceTest.COMPLETED)
 
@@ -685,10 +685,15 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.voltage = voltage if voltage else default
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
+        performance_determination_test.table_name = table_name
+        date_object = datetime.strptime(date_str, "%m/%d/%Y")
+        _formatted_date = date_object.strftime("%Y-%m-%d")
+        performance_determination_test.report_date = _formatted_date
 
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
             status=PerformanceTest.COMPLETED)
         filtered_determine_data = self.align_load_data(motor.serial_number, self.get_performance_tests_data(table_name))
+        performance_determination_test.mdb_data=filtered_determine_data
         performance_determination_test.save()
         self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data)
         statues = get_form_statuses(motor_id)

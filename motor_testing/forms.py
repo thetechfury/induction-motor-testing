@@ -62,7 +62,11 @@ class ElectricResistanceTestForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
-            self.fields[field].widget.attrs["class"] = "form-control"
+            if field == "unbalance_percentage":
+                self.fields[field].widget.attrs["readonly"] = True
+            self.fields[field].widget.attrs["class"] = "form-control resistance"
+            self.fields[field].widget.attrs["id"] = field
+
 
     class Meta:
         model = ElectricResistanceTest

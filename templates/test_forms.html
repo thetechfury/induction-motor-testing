@@ -321,7 +321,7 @@
                         >Unbalance (%):</label
                       >
                     </div>
-                    <div class="col " >
+                    <div class="col" >
                       {{ electric_resistance_test.unbalance_percentage }}
                     </div>
                   </div>
@@ -889,7 +889,33 @@
       un_completed_test[0].click();
     }
    
-     
+
+    // ELectric resistance test 
+    const resistance1El = $("[name='electric_resistance_test-resistance_ohm_1']");
+    const resistance2El = $("[name='electric_resistance_test-resistance_ohm_2']");
+    const resistance3El = $("[name='electric_resistance_test-resistance_ohm_3']");
+    const unbalanceEl = $("[name='electric_resistance_test-unbalance_percentage']");
+    const resistance = $('.resistance')
+    console.log(resistance1El,resistance2El,resistance3El,unbalanceEl)
+
+    // Function to calculate the average and update the unbalance element
+    function updateUnbalance() {
+        const resistance1 = parseFloat(resistance1El.val()) || 0;
+        const resistance2 = parseFloat(resistance2El.val()) || 0;
+        const resistance3 = parseFloat(resistance3El.val()) || 0;
+
+        const averageResistance = (resistance1 + resistance2 + resistance3) / 3;
+        unbalanceEl.val(averageResistance.toFixed(3));
+    }
+
+    // Event listeners for changes in resistance inputs
+    $(".resistance").on("change", function(){
+        updateUnbalance();
+    });
+
+  
+    
+
     // Submitting Tests
     $(".test-form").submit(function (e) {
       e.preventDefault();
