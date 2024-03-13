@@ -1,0 +1,20 @@
+.chart-box{
+    display: flex;
+    justify-content: center;
+    width:100%;
+}
+.chart{
+    height:50vh;
+    width:50vw;
+}
+
+.chart .custom-legend-item{
+    margin-left:10px;
+}
+
+#chartContainer .custom-legend-item {
+    margin-bottom: 10px; /* Adjust as needed */
+}
+.custom-legend-item {
+    margin-bottom: 100px !important; /* Adjust as needed */
+}

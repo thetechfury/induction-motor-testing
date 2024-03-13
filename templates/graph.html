@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'assets/css/chart.css' %}">
 
+{% endblock css_files %}
 {% block content %}
 
     <div class="pagetitle">
@@ -13,81 +16,237 @@
 
                 <div class="card-body">
                     <h5 class="card-title">Report <span>/Today</span></h5>
-                    <button class="btn btn-outline-primary" id="downloadBtn">Download Graph as Image</button>
-                    <script type="text/javascript" src="{% static 'assets/js/chart.js' %}"></script>
-                    <br><br>
-                    <div class="align-center" id="chart_div"></div>
+                    <button class="btn btn-outline-primary mb-5 "id="downloadBtn">Download Graph as Image</button>
+                   
+                    <div class="align-center chart-box"  id="chart_div">
+                        <div class="chart">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
 
                 </div>
             </div>
         </div>
     </div>
-
+    <script type="text/javascript" src="{% static 'assets/js/chartJs.js' %}"></script>
 {% endblock %}
 {% block scripts %}
+
     <script>
-        google.charts.load('current', {'packages': ['line', 'corechart']});
-        google.charts.setOnLoadCallback(drawChart);
 
-        function drawChart() {
-
-            var button = document.getElementById('change-chart');
-            var chartDiv = document.getElementById('chart_div');
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'Speed [RPM]');
-            data.addColumn('number', "Torque [lb.in]");
-            data.addColumn('number', "Amplitude [Hz]");
-            data.addColumn('number', "Efficiency [%]");
-            data.addColumn('number', "Watts OUT");
-            data.addColumn('number', "Horsepower [HP]");
-
-            data.addRows([
-                [0, - .5, 5.7, 12, 10.3, 0.02],
-                [50, .4, 8.7, 7.3, 23.6, 0.04],
-                [100, .5, 12, 4.2, 36.2, 0.10],
-                [150, 2.9, 15.3, 1.9, 53.8, 0.14],
-                [200, 6.3, 18.6, 17.3, 63.3, 0.20],
-            ]);
-
-            var materialOptions = {
-                chart: {
-                    title: 'Motor Performance against RPM'
-                },
-                width: 1405,
-                height: 500,
-                series: {
-                    // Gives each series an axis name that matches the Y-axis below.
-                    0: {axis: 'Torque'},
-                    1: {axis: 'Efficiency'},
-                    2: {axis: 'Watts'},
-                    3: {axis: 'Amps'},
-                    4: {axis: 'Horsepower'},
-                },
-                axes: {
-                    // Adds labels to each axis; they don't have to match the axis names.
-                    y: {
-                        Torque: {label: 'Torque [lb.in]'},
-                        Amps: {label: 'Amps 1'},
-                        Efficiency: {label: 'Efficiency'},
-                        Watts: {label: 'Watts OUT'},
-                        Horsepower: {label: 'Horsepower [HP]'},
+        const ctx = document.getElementById('myChart').getContext('2d')
+        const data = {
+            labels :[1,3,4,5,6,7,10,15],
+            
+            datasets :[
+                {
+                label:'Torque',
+                data: [18,12,2,9,3,9,12,12],
+                tension:0.4,
+                yAxisID: 'torque',
+            },
+            {
+                label:'Amplitude',
+                data: [10,52,32,29,13,99],
+                tension:0.4,
+                yAxisID: 'amplitude',
+            },
+            {
+                label:'Efficiency',
+                data: [11,22,-32,29,23,19],
+                tension:0.4,
+                yAxisID: 'efficiency',
+            },
+            {
+                label:'Horsepower',
+                data: [11,22,-32,29,23,19],
+                tension:0.4,
+                yAxisID: 'horsepower',
+            },
+            {
+                label:'Watts Out',
+                data: [11,22,32,29,-23,10],
+                tension:0.4,
+                yAxisID: 'watt',
+            },
+        ]
+        }
+        
+        const xScalePadding = {
+            id: 'xScalePadding',
+            beforeDatasetsDraw(chart,args,pluginOptions){
+                const {ctx,data,scales:{x,y}}= chart;
+                console.log(x)
+            }
+        }
+        
+        const legendMargin = {
+            id: 'legendMargin',
+            beforeInit(chart,legend,optins){
+                console.log(chart.legend.fit);
+            }
+        }
+        
+        const config = {
+                type: 'line',
+                data,
+                options: {
+        
+                    plugins:{
+                        legend:{
+                            labels:{
+                                padding: 100
+                            }
+                        }
+                    },
+        
+                    scales:{
+                      
+                        x:{
+                            title :{
+                                color: 'black',
+                                display: true,
+                                text: 'Speed[RPM]',
+                                font :{
+                                    size: 16,
+                                    
+                                }
+                            },
+                            ticks:{
+                                font: {
+                                    size:16,
+                                    
+                                }
+                            }
+                        },
+                      
+                        amplitude: {
+                            beginAtZero: true,
+                            type: 'linear',
+                            position: 'right',
+                            title : {
+                                display: true,
+                                text: " Amps 1 ",
+                                color:  "red"
+                            },
+                            grid:{
+                                drawOnChartArea:false
+                            },
+                            ticks:{
+                                font: {
+                                    size:16,
+                                    
+                                }
+                            }
+                        },
+                        horsepower:{
+                            beginAtZero: true,
+                            type: 'linear',
+                            position: 'right',
+                            title : {
+                                display: true,
+                                text: " Horsepower ",
+                                color:'blue'
+                            },
+                            grid:{
+                                drawOnChartArea:false
+                            },
+                            ticks:{
+                                font: {
+                                    size:16,
+                                    
+                                }
+                            }
+                        },
+                        watt:{
+                            beginAtZero: true,
+                            type: 'linear',
+                            position: 'left',
+                            title : {
+                                display: true,
+                                text: " Watts Out ",
+                                color: 'pink'
+                            },
+                            grid:{
+                                drawOnChartArea:false
+                            },
+                            ticks:{
+                                font: {
+                                    size:16,
+                                    
+                                }
+                            }
+                        },
+                         
+                        efficiency:{
+                            beginAtZero: true,
+                            type: 'linear',
+                            position: 'left',
+                            title : {
+                                display: true,
+                                text: " Efficiency ",
+                                color: 'green'
+                            },
+                            grid:{
+                                drawOnChartArea:false
+                            },
+                            ticks:{
+                                font: {
+                                    size:16,
+                                    
+                                }
+                            }
+                        },
+                        torque:{
+                            beginAtZero: true,
+                            type: 'linear',
+                            position: 'left',
+                            
+                            title : {
+                                display: true,
+                                text: "Torque[Ib.in] "
+                            },
+                            grid:{
+                                drawOnChartArea:false
+                            },
+                            ticks:{
+                                font: {
+                                    size:16,
+                                    
+                                },
+                                
+                            }
+                        },
+                    },
+                    plugins:{
+                        layout: {
+                            padding:40
+                        },
+                        
+                         
+                        
+                        legend:{
+                            position:'bottom',
+                            align:'top',
+                            
+        
+                            labels: {
+                                color: 'black',
+                                font: {
+                                    size: 14
+                                }
+                                
+                            }
+                           
+                        }
                     }
                 }
-            };
-
-            function drawMaterialChart() {
-                var materialChart = new google.charts.Line(chartDiv);
-                materialChart.draw(data, materialOptions);
-                button.innerText = 'Change to Classic';
-                button.onclick = drawClassicChart;
             }
+        
+            const myChart = new Chart(ctx,config );
 
-            drawMaterialChart();
 
-        }
-    </script>
-    <script>
+
         // Function to download the chart as an image
         function downloadChartAsImage() {
             // Get the chart container element
