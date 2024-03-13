@@ -166,7 +166,8 @@ class PerformanceDeterminationTest(TimeStampedModel):
     )
     is_current_date = models.BooleanField(default=False, verbose_name="Use current date")
     test_date = models.DateField(null=True, blank=True, verbose_name="Test Date")
-
+    table_name = models.CharField(max_length=20, null=True, blank=True)
+    report_date = models.DateField(null= True,blank= True)
 
 class PerformanceTestParameters(models.Model):
     performance_determination_test = models.ForeignKey(PerformanceDeterminationTest, on_delete=models.CASCADE,

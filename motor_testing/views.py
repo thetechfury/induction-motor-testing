@@ -658,8 +658,23 @@ class PerformanceDeterminationFormSave(View):
         motor_id = kwargs['id']
         motor = get_object_or_404(InductionMotor, id=motor_id)
 
+
         if not hasattr(motor, 'performance_determination_test'):
             motor.performance_determination_test = PerformanceDeterminationTest(induction_motor=motor)
+
+        date = ''
+        date_str = request.POST.get('selected_date')
+        if date_str:
+            month, day, year = date_str.split('/')
+            if day.startswith('0'):
+                day = day[1:]
+            if month.startswith('0'):
+                month = month[1:]
+            formatted_date = day + month + year
+            date = formatted_date
+
+        table_name = date
+
         performance_determination_test = motor.performance_determination_test
         default = Decimal('0.00')
         voltage = request.POST.get('performance_determination_test-voltage')
