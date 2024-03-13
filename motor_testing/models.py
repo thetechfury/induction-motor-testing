@@ -221,7 +221,7 @@ class NoLoadTest(TimeStampedModel):
     direction_of_rotation = models.CharField(max_length=20, choices=DIRECTION_CHOICES, blank=True, null=True)
     report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
-    _report_date= models.DateField(null = True,blank= True)
+    reported_date= models.DateField(null = True,blank= True)
 
 
 

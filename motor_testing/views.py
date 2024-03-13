@@ -359,7 +359,7 @@ class NoLoadFormSaveView(View):
             motor.no_load_test = NoLoadTest.objects.get_or_create(induction_motor=motor)
         file_path = Configuration.objects.all().first().no_load_test
         date = ''
-        date_str = request.POST.get('selected_date')
+        date_str = request.POST.get('no_load_test-reported_date')
         if date_str:
             month, day, year = date_str.split('/')
             if day.startswith('0'):
@@ -416,7 +416,7 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.report_date = table_name
         date_object = datetime.strptime(date_str, "%m/%d/%Y")
         _formatted_date = date_object.strftime("%Y-%m-%d")
-        motor.no_load_test._report_date = _formatted_date
+        motor.no_load_test.reported_date = _formatted_date
         motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
         PerformanceTest.objects.filter(motor=motor, test_type='no_load_test').update(status=PerformanceTest.COMPLETED)
 

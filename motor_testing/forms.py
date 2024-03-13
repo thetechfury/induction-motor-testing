@@ -117,7 +117,11 @@ class NoLoadTestForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
-            self.fields[field].widget.attrs["class"] = "form-control"
+            if field == "reported_date":
+                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker'})
+
+            else:
+                self.fields[field].widget.attrs["class"] = "form-control"
 
     class Meta:
         model = NoLoadTest

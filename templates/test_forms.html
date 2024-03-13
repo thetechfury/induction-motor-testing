@@ -557,13 +557,14 @@
                   >
                     <div class="col-6">
                       <label
-                      for="datepickerElm"
+
                         class="col-form-label"
                         >Select report date:</label
                       >
                     </div>
                     <div class="col-6">
-                      <input type="text" class="form-control col-8 datepicker" id="datepickerElm" name="selected_date" placeholder="mm/dd/yyyy">
+                      {{ no_load_test.reported_date }}
+<!--                      <input type="text" class="form-control col-8 datepicker"  name="selected_date" >-->
                       <!-- <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th"></span>
                     </div> -->
@@ -940,7 +941,8 @@
           }
           if (status === "completed") {
             currentTabButton.addClass("fullfilled");
-            
+            window.location.reload();
+
           }
 
           // Update form fields with saved data
