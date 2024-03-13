@@ -13,8 +13,10 @@ from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
 from django_pdfkit import PDFView
 # import pandas as pd
+from mdb_parser import MDBParser, MDBTable
+import platform
+import pyodbc
 import subprocess
-
 import math
 from datetime import datetime
 
@@ -408,7 +410,9 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.speed = avg_rpm if avg_rpm else default
         # motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
-        motor.no_load_test._report_date = date
+        date_object = datetime.strptime(date_str, "%m/%d/%Y")
+        _formatted_date = date_object.strftime("%Y-%m-%d")
+        motor.no_load_test._report_date = _formatted_date
         motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
         PerformanceTest.objects.filter(motor=motor, test_type='no_load_test').update(status=PerformanceTest.COMPLETED)
 
@@ -530,7 +534,7 @@ class LockRotorFormSave(View):
         table_name = date
         serial_number = motor.serial_number
         csv_data = read_mdb_table(table_name,file_path)
-        filtered_data = [item for item in csv_data if item[1][3] == serial_number]
+        filtered_data = [item for item in csv_data if item[1] == serial_number]
 
         # Initialize sums
         sum_speed = 0
@@ -569,7 +573,9 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.current = avg_amp if avg_amp else default
         motor.lock_rotor_test.power = power if power else default
         motor.lock_rotor_test.report_date = table_name
-        motor.lock_rotor_test._report_date = table_name
+        date_object = datetime.strptime(date_str, "%m/%d/%Y")
+        _formatted_date = date_object.strftime("%Y-%m-%d")
+        motor.lock_rotor_test._report_date = _formatted_date
         # motor.lock_rotor_test.mdb_data = filtered_data
         PerformanceTest.objects.filter(motor=motor, test_type='lock_rotor_test').update(
             status=PerformanceTest.COMPLETED)
@@ -766,13 +772,6 @@ def mdb_to_csv_conversion(input_file_path, csv_output_path):
     return process.stdout
 
 
-
-
-
-
-from mdb_parser import MDBParser, MDBTable
-import platform
-import pyodbc
 
 def read_mdb_table(table_name, file_path):
     system = platform.system()
