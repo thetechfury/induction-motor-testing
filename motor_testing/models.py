@@ -112,13 +112,13 @@ class ElectricResistanceTest(TimeStampedModel):
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE,
                                            related_name="electric_resistance_test")
     resistance_ohm_1 = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=5, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     resistance_ohm_2 = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=5, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     resistance_ohm_3 = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=5, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     ambient_temperature_C = models.DecimalField(
         max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
