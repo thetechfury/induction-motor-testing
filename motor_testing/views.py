@@ -641,10 +641,9 @@ class PerformanceDeterminationFormSave(View):
             'cos': 0
         }}
 
-    def get_performance_tests_data(self, table_name='732024'):
+    def get_performance_tests_data(self, table_name):
         configuration = Configuration.objects.all().first()
-        csv_data = read_mdb_table(configuration.performance_determination,
-                                  MDB_TO_CSV_OUTPUT_PATH_FOR_NO_LOAD, table_name)
+        csv_data = read_mdb_table(table_name,configuration.performance_determination)
         return csv_data
 
     def align_load_data(self, serial_no, csv_data):
@@ -654,7 +653,7 @@ class PerformanceDeterminationFormSave(View):
             '75': [],
             '100': [],
         }
-        for data in csv_data.values:
+        for data in csv_data:
             if data[3] == serial_no:
                 filtered_data[f'{data[7]}'].append(data)
 
@@ -692,7 +691,7 @@ class PerformanceDeterminationFormSave(View):
 
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
             status=PerformanceTest.COMPLETED)
-        filtered_determine_data = self.align_load_data(motor.serial_number, self.get_performance_tests_data())
+        filtered_determine_data = self.align_load_data(motor.serial_number, self.get_performance_tests_data(table_name))
         performance_determination_test.save()
         self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data)
         statues = get_form_statuses(motor_id)
