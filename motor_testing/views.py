@@ -317,11 +317,9 @@ class TemperatureFormSaveView(View):
     def post(self, request, *args, **kwargs):
         motor_id = kwargs['id']
         motor = get_object_or_404(InductionMotor, id=motor_id)
-
         # Check if the InductionMotor instance has an associated ElectricResistanceTest
         if not hasattr(motor, 'temperature_rise_test'):
             motor.temperature_rise_test = TemperatureRiseTest.objects.get_or_create(induction_motor=motor)
-
         default = Decimal('0.00')
         voltage = request.POST.get('temperature_rise_test-voltage')
         winding = request.POST.get('temperature_rise_test-winding')
@@ -733,11 +731,11 @@ class PerformanceDeterminationFormSave(View):
             voltage = 0
             torque = 0
             for determine_data in filtered_determine_data:
-                current_amp += determine_data[6]
-                speed_rpm += determine_data[4]
-                hertz_freq += determine_data[1]
-                voltage += determine_data[2]
-                torque += determine_data[5]
+                current_amp += float(determine_data[6])
+                speed_rpm += int(determine_data[4])
+                hertz_freq += int(determine_data[1])
+                voltage += int(determine_data[2])
+                torque += int(determine_data[5])
             avg_current = current_amp / len(filtered_determine_data)
             avg_speed_rpm = speed_rpm / len(filtered_determine_data)
             avg_hertz_freq = hertz_freq / len(filtered_determine_data)
