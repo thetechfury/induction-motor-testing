@@ -376,30 +376,36 @@ class NoLoadFormSaveView(View):
         csv_data = read_mdb_table(table_name,file_path)
         filtered_data = [item for item in csv_data if item[1] == serial_number]
         # Initialize sums
+
         sum_rpm = 0
         sum_speed = 0
         sum_volt = 0
         sum_amp = 0
+        avg_rpm = 0
+        avg_speed = 0
+        avg_volt = 0
+        avg_amp = 0
+        power = 0
+        if len(filtered_data):
+            # Number of entries
+            num_entries = len(filtered_data)
 
-        # Number of entries
-        num_entries = len(filtered_data)
+            # Sum up the values
+            for entry in filtered_data:
+                sum_rpm += float(entry[5])
+                sum_speed += float(entry[4])
+                sum_volt += float(entry[3])
+                sum_amp += float(entry[2])
 
-        # Sum up the values
-        for entry in filtered_data:
-            sum_rpm += float(entry[5])
-            sum_speed += float(entry[4])
-            sum_volt += float(entry[3])
-            sum_amp += float(entry[2])
+            # Calculate averages
+            avg_rpm = sum_rpm / num_entries
+            avg_speed = sum_speed / num_entries
+            avg_volt = sum_volt / num_entries
+            avg_amp = sum_amp / num_entries
 
-        # Calculate averages
-        avg_rpm = sum_rpm / num_entries
-        avg_speed = sum_speed / num_entries
-        avg_volt = sum_volt / num_entries
-        avg_amp = sum_amp / num_entries
+            PF = 0.89
 
-        PF = 0.89
-
-        power = avg_volt * avg_amp * PF * math.sqrt(3)
+            power = avg_volt * avg_amp * PF * math.sqrt(3)
 
         default = Decimal('0.00')
         direction_of_rotation = request.POST.get('no_load_test-direction_of_rotation')

@@ -311,11 +311,11 @@
                 </h1>
                 <ul class="section-ul-3">
                     <li>Voltage (V): {{ induction_motor.no_load_test.voltage }}</li>
-                    <li style="padding-left:17px;">Current (A): {{ induction_motor.no_load_test.current }}</li>
-                    <li>Power (W): {{ induction_motor.no_load_test.power }}</li>
+                    <li >Current (A): {{ induction_motor.no_load_test.current }}</li>
+                    <li style="margin-left:-40px;">Power (W): {{ induction_motor.no_load_test.power }}</li>
                     <li>Frequency (Hz): {{ induction_motor.no_load_test.frequency }}</li>
-                    <li style="padding-left:17px;">Speed (rpm): {{ induction_motor.no_load_test.speed }}</li>
-                    <li>Direction of Rotation: {{ induction_motor.no_load_test.direction_of_rotation }}</li>
+                    <li >Speed (rpm): {{ induction_motor.no_load_test.speed }}</li>
+                    <li style="margin-left:-40px;width: 40%;">Direction of Rotation: {{ induction_motor.no_load_test.direction_of_rotation }}</li>
                 </ul>
             {% endif %}
             {% comment %} {% endfor %} {% endcomment %}
