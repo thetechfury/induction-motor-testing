@@ -367,7 +367,7 @@ class NoLoadFormSaveView(View):
             csv_data = read_mdb_table(table_name, file_path)
         except Exception as e:
             error_message = str(e)
-            return JsonResponse({'error': f'No record found against this {date_str}'}, status=500)
+            return JsonResponse({'error': f'No record found against this date {date_str}'}, status=500)
         filtered_data = [item for item in csv_data if item[1] == serial_number]
         if filtered_data ==[]:
             return JsonResponse({'error': f'No record found against this serial number {serial_number}'}, status=500)
@@ -540,7 +540,7 @@ class LockRotorFormSave(View):
             csv_data = read_mdb_table(table_name, file_path)
         except Exception as e:
             error_message = str(e)
-            return JsonResponse({'error': f'No record found against this {date_str}'}, status=500)
+            return JsonResponse({'error': f'No record found against this date {date_str}'}, status=500)
         filtered_data = [item for item in csv_data if item[1] == serial_number]
         if filtered_data ==[]:
             return JsonResponse({'error': f'No record found against this serial number {serial_number}'}, status=500)
@@ -698,7 +698,7 @@ class PerformanceDeterminationFormSave(View):
                                                            self.get_performance_tests_data(table_name))
         except Exception as e:
             error_message = str(e)
-            return JsonResponse({'error': f'No record found against this {date_str}'}, status=500)
+            return JsonResponse({'error': f'No record found against this date {date_str}'}, status=500)
         if filtered_determine_data['25'] == [] and filtered_determine_data['50'] == [] and filtered_determine_data[
             '75'] == [] and filtered_determine_data['100'] == []:
             return JsonResponse({'error': f'No record found against this serial number {motor.serial_number}'}, status=500)
