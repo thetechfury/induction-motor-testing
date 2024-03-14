@@ -64,6 +64,7 @@ class ElectricResistanceTestForm(forms.ModelForm):
         for field in self.fields:
             if field == "unbalance_percentage":
                 self.fields[field].widget.attrs["readonly"] = True
+
             self.fields[field].widget.attrs["class"] = "form-control resistance"
             self.fields[field].widget.attrs["id"] = field
 

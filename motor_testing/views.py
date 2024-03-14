@@ -698,6 +698,7 @@ class PerformanceDeterminationFormSave(View):
         self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data)
         statues = get_form_statuses(motor_id)
 
+
         response_data = {
             'voltage': motor.performance_determination_test.voltage,
             'frequency': motor.performance_determination_test.frequency,
