@@ -574,7 +574,7 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.report_date = table_name
         date_object = datetime.strptime(date_str, "%m/%d/%Y")
         _formatted_date = date_object.strftime("%Y-%m-%d")
-        motor.lock_rotor_test._report_date = _formatted_date
+        motor.lock_rotor_test.reported_date = _formatted_date
         motor.lock_rotor_test.mdb_data = filtered_data
         PerformanceTest.objects.filter(motor=motor, test_type='lock_rotor_test').update(
             status=PerformanceTest.COMPLETED)
@@ -661,7 +661,7 @@ class PerformanceDeterminationFormSave(View):
             motor.performance_determination_test = PerformanceDeterminationTest(induction_motor=motor)
 
         date = ''
-        date_str = request.POST.get('selected_date')
+        date_str = request.POST.get('performance_determination_test-report_date')
         if date_str:
             date = format_date(date_str)
 

@@ -276,7 +276,7 @@ class LockRotorTest(TimeStampedModel):
     )
     report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
-    _report_date = models.DateField(null=True, blank=True)
+    reported_date = models.DateField(null=True, blank=True)
 
 
 class Configuration(models.Model):

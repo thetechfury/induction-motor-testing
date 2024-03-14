@@ -98,18 +98,17 @@ class PerformanceDeterminationTestForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
-            self.fields[field].widget.attrs["class"] = "form-control"
-    #     self.fields['file_1'].widget.attrs["accept"] = self.file_format
-    #     self.fields['file_2'].widget.attrs["accept"] = self.file_format
-    #     self.fields['file_3'].widget.attrs["accept"] = self.file_format
-    #     self.fields['file_4'].widget.attrs["accept"] = self.file_format
+             if field == "report_date":
+                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker'})
+             else:
+                 self.fields[field].widget.attrs["class"] = "form-control"
+ 
 
     class Meta:
         model = PerformanceDeterminationTest
-        fields = ['voltage', 'frequency', 'nominal_t','is_current_date', 'test_date']
-        widgets = {
-            'test_date': forms.DateInput(attrs={'type': 'date'}),
-        }
+        fields = ['voltage', 'frequency', 'nominal_t','is_current_date', 'report_date']
+        
+        
 
 
 class NoLoadTestForm(forms.ModelForm):
@@ -161,7 +160,10 @@ class LockRotorTestForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
-            self.fields[field].widget.attrs["class"] = "form-control"
+            if field == "reported_date":
+                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker'})
+            else:
+                self.fields[field].widget.attrs["class"] = "form-control"
 
     class Meta:
         model = LockRotorTest
