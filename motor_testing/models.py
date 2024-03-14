@@ -167,28 +167,19 @@ class PerformanceDeterminationTest(TimeStampedModel):
     is_current_date = models.BooleanField(default=False, verbose_name="Use current date")
     test_date = models.DateField(null=True, blank=True, verbose_name="Test Date")
     table_name = models.CharField(max_length=20, null=True, blank=True)
-    report_date = models.DateField(null= True,blank= True)
+    report_date = models.DateField(null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
+
 
 class PerformanceTestParameters(models.Model):
     performance_determination_test = models.ForeignKey(PerformanceDeterminationTest, on_delete=models.CASCADE,
                                                        related_name="parameters")
     load = models.PositiveSmallIntegerField(blank=True, null=True)
-    current = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
-    )
-    slip = models.DecimalField(
-        max_digits=6, decimal_places=4, blank=True, null=True, validators=[MinValueValidator(Decimal('0.0000'))]
-    )
-    speed = models.DecimalField(
-        max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
-    )
-    efficiency = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
-    )
-    cos = models.DecimalField(
-        max_digits=4, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
-    )
+    current = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True)
+    slip = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True)
+    speed = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True)
+    efficiency = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True)
+    cos = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True)
 
 
 class NoLoadTest(TimeStampedModel):
@@ -285,7 +276,7 @@ class LockRotorTest(TimeStampedModel):
     )
     report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
-    _report_date = models.DateField(null = True,blank = True)
+    _report_date = models.DateField(null=True, blank=True)
 
 
 class Configuration(models.Model):
