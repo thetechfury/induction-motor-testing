@@ -360,14 +360,7 @@ class NoLoadFormSaveView(View):
         date = ''
         date_str = request.POST.get('no_load_test-reported_date')
         if date_str:
-            month, day, year = date_str.split('/')
-            if day.startswith('0'):
-                day = day[1:]
-            if month.startswith('0'):
-                month = month[1:]
-            formatted_date = day + month + year
-            date = formatted_date
-
+            date = format_date(date_str)
         table_name = date
         serial_number = motor.serial_number
         csv_data = read_mdb_table(table_name,file_path)
@@ -435,6 +428,8 @@ class NoLoadFormSaveView(View):
         }
 
         return JsonResponse(response_data)
+
+
 
 
 class WithStandVoltageFormSaveView(View):
@@ -526,13 +521,14 @@ class LockRotorFormSave(View):
         date = ''
         date_str = request.POST.get('selected_date')
         if date_str:
-            month, day, year = date_str.split('/')
-            if day.startswith('0'):
-                day = day[1:]
-            if month.startswith('0'):
-                month = month[1:]
-            formatted_date = day + month + year
-            date = formatted_date
+            date = format_date(date_str)
+            # month, day, year = date_str.split('/')
+            # if day.startswith('0'):
+            #     day = day[1:]
+            # if month.startswith('0'):
+            #     month = month[1:]
+            # formatted_date = day + month + year
+            # date = formatted_date
 
         table_name = date
         serial_number = motor.serial_number
@@ -667,13 +663,7 @@ class PerformanceDeterminationFormSave(View):
         date = ''
         date_str = request.POST.get('selected_date')
         if date_str:
-            month, day, year = date_str.split('/')
-            if day.startswith('0'):
-                day = day[1:]
-            if month.startswith('0'):
-                month = month[1:]
-            formatted_date = day + month + year
-            date = formatted_date
+            date = format_date(date_str)
 
         table_name = date
 
@@ -767,6 +757,31 @@ class PerformanceDeterminationFormSave(View):
             performance_test_param.efficiency = self.performancetest.get(key)['efficiency']
             performance_test_param.cos = self.performancetest.get(key)['cos']
         return performance_test_param
+
+
+
+def format_date(date_str):
+    # Try to detect the format and convert to datetime object
+    try:
+        # If the date is in 'DD/MM/YYYY' format
+        date_obj = datetime.strptime(date_str, '%m/%d/%Y')
+    except ValueError:
+        try:
+            # If the date is in 'YYYY-MM-DD' format
+            date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        except ValueError:
+            # If the date format is unknown
+            return None
+
+    # Format the date to remove leading zeros from day and month, and then concatenate
+    day = str(date_obj.day)
+    month = str(date_obj.month)
+    year = str(date_obj.year)
+
+    formatted_date = day + month + year  # Assuming you want to drop the century from the year
+    return formatted_date
+
+
 
 
 class ChartView(View):
