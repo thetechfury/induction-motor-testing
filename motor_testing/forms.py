@@ -99,7 +99,7 @@ class PerformanceDeterminationTestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
              if field == "report_date":
-                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker'})
+                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker','placeholder':'yyyy-mm-dd'})
              else:
                  self.fields[field].widget.attrs["class"] = "form-control"
  
@@ -118,7 +118,7 @@ class NoLoadTestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             if field == "reported_date":
-                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker'})
+                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker','placeholder':'yyyy-mm-dd'})
 
             else:
                 self.fields[field].widget.attrs["class"] = "form-control"
@@ -161,7 +161,7 @@ class LockRotorTestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             if field == "reported_date":
-                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker'})
+                self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker','placeholder':'yyyy-mm-dd'})
             else:
                 self.fields[field].widget.attrs["class"] = "form-control"
 
