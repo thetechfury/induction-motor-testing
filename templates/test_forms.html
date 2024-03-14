@@ -984,7 +984,9 @@
         console.error('AJAX Error:', error);
         // Optionally, you can also log the error message returned from the server
         console.error('Error message:', xhr.responseText);
-         alert(xhr.responseText);
+          var errorMessage = JSON.parse(xhr.responseText).error;
+        // Show the error message in an alert
+        alert(errorMessage);
     }
       });
     });

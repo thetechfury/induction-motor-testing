@@ -367,10 +367,10 @@ class NoLoadFormSaveView(View):
             csv_data = read_mdb_table(table_name, file_path)
         except Exception as e:
             error_message = str(e)
-            return JsonResponse({'error': 'No record found against this Date'}, status=500)
+            return JsonResponse({'error': f'No record found against this {date_str}'}, status=500)
         filtered_data = [item for item in csv_data if item[1] == serial_number]
         if filtered_data ==[]:
-            return JsonResponse({'error': 'No record found against this serial number'}, status=500)
+            return JsonResponse({'error': f'No record found against this serial number {serial_number}'}, status=500)
 
         # Initialize sums
 
@@ -540,10 +540,10 @@ class LockRotorFormSave(View):
             csv_data = read_mdb_table(table_name, file_path)
         except Exception as e:
             error_message = str(e)
-            return JsonResponse({'error': 'No record found against this Date'}, status=500)
+            return JsonResponse({'error': f'No record found against this {date_str}'}, status=500)
         filtered_data = [item for item in csv_data if item[1] == serial_number]
         if filtered_data ==[]:
-            return JsonResponse({'error': 'No record found against this serial number'}, status=500)
+            return JsonResponse({'error': f'No record found against this serial number {serial_number}'}, status=500)
 
         # Initialize sums
         sum_speed = 0
@@ -698,10 +698,10 @@ class PerformanceDeterminationFormSave(View):
                                                            self.get_performance_tests_data(table_name))
         except Exception as e:
             error_message = str(e)
-            return JsonResponse({'error': 'No record found against this Date'}, status=500)
+            return JsonResponse({'error': f'No record found against this {date_str}'}, status=500)
         if filtered_determine_data['25'] == [] and filtered_determine_data['50'] == [] and filtered_determine_data[
             '75'] == [] and filtered_determine_data['100'] == []:
-            return JsonResponse({'error': 'No record found against this serial number'}, status=500)
+            return JsonResponse({'error': f'No record found against this serial number {motor.serial_number}'}, status=500)
         performance_determination_test.mdb_data = filtered_determine_data
         performance_determination_test.save()
         electric_resistance = ElectricResistanceTest.objects.filter(induction_motor=motor).first()
