@@ -64,14 +64,14 @@ document.getElementById("edit-form").addEventListener("submit", function (event)
     }
 
     if (!atLeastOneChecked) {
-        document.getElementById("edit-error-message").style.display = "block";
+        document.getElementsByName("edit-error-message")[0].style.display = "block";
         document.querySelector('#edit-v-pills-home').classList.remove('show', 'active');
         document.querySelector('#edit_motor_identification').classList.remove('active');
         document.querySelector('#edit-v-pills-profile').classList.add('show', 'active');
         document.querySelector('#edit_performed_tests').classList.add('active');
         event.preventDefault(); // Prevent form submission
     } else {
-        document.getElementById("edit-error-message").style.display = "none";
+        document.getElementsByName("edit-error-message")[0].style.display = "none";
     }
 
     if (atLeastOneChecked) {
