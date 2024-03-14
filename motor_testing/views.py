@@ -406,8 +406,7 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.speed = avg_rpm if avg_rpm else default
         motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
-        date_object = datetime.strptime(date_str, "%m/%d/%Y")
-        _formatted_date = date_object.strftime("%Y-%m-%d")
+        _formatted_date = format_date_to_ymd(date_str)
         motor.no_load_test.reported_date = _formatted_date
         motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
         PerformanceTest.objects.filter(motor=motor, test_type='no_load_test').update(status=PerformanceTest.COMPLETED)
@@ -572,8 +571,7 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.current = avg_amp if avg_amp else default
         motor.lock_rotor_test.power = power if power else default
         motor.lock_rotor_test.report_date = table_name
-        date_object = datetime.strptime(date_str, "%m/%d/%Y")
-        _formatted_date = date_object.strftime("%Y-%m-%d")
+        _formatted_date = format_date_to_ymd(date_str)
         motor.lock_rotor_test.reported_date = _formatted_date
         motor.lock_rotor_test.mdb_data = filtered_data
         PerformanceTest.objects.filter(motor=motor, test_type='lock_rotor_test').update(
@@ -676,8 +674,8 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
         performance_determination_test.table_name = table_name
-        date_object = datetime.strptime(date_str, "%m/%d/%Y")
-        _formatted_date = date_object.strftime("%Y-%m-%d")
+        # date_object = datetime.strptime(date_str, "%m/%d/%Y")
+        _formatted_date = format_date_to_ymd(date_str)
         performance_determination_test.report_date = _formatted_date
 
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
@@ -782,6 +780,33 @@ def format_date(date_str):
     return formatted_date
 
 
+def format_date_to_ymd(date_str):
+    # Try to determine the format based on the position of the year in the string
+    if date_str.count('/') == 2:  # Likely 'MM/DD/YYYY' or 'DD/MM/YYYY'
+        splitter = date_str.split('/')
+        if len(splitter[2]) == 4:
+            # If the last part is 4 digits long, assume 'MM/DD/YYYY'
+            try_format = "%m/%d/%Y"
+        else:
+            # Otherwise, it might be in a different format or invalid
+            try_format = None
+    elif date_str.count('-') == 2:
+        # If the string contains hyphens, assume 'YYYY-MM-DD'
+        try_format = "%Y-%m-%d"
+    else:
+        # Unknown or unsupported format
+        try_format = None
+
+    if try_format:
+        try:
+            # Try to parse the date string with the determined format
+            date_object = datetime.strptime(date_str, try_format)
+            formatted_date = date_object.strftime("%Y-%m-%d")
+            return formatted_date
+        except ValueError:
+            pass  # Parsing failed, the format might have been guessed incorrectly
+
+    return None
 
 
 class ChartView(View):
