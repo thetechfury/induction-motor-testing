@@ -518,7 +518,7 @@ class LockRotorFormSave(View):
 
         file_path = Configuration.objects.all().first().lock_rotor_test
         date = ''
-        date_str = request.POST.get('selected_date')
+        date_str = request.POST.get('lock_rotor_test-reported_date')
         if date_str:
             date = format_date(date_str)
             # month, day, year = date_str.split('/')
