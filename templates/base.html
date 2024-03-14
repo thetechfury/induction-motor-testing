@@ -135,6 +135,7 @@
         // Get all checkboxes inside the <tbody>
         let checkboxes = tbody.querySelectorAll('input[type="checkbox"]');
         let required = document.querySelector("#test-required");
+        let required_two = document.querySelector("#test-required-two");
 
         // Check if any checkbox is checked
         let isChecked = false;
@@ -147,7 +148,8 @@
         // If no checkbox is checked, alert the user and do not proceed
         if (!isChecked) {
           required.classList.remove("d-none");
-      
+          required_two.classList.remove("d-none");
+
           var button = document.getElementById("performed_tests");
           button.click();
           return false;

@@ -363,8 +363,15 @@ class NoLoadFormSaveView(View):
             date = format_date(date_str)
         table_name = date
         serial_number = motor.serial_number
-        csv_data = read_mdb_table(table_name,file_path)
+        try:
+            csv_data = read_mdb_table(table_name, file_path)
+        except Exception as e:
+            error_message = str(e)
+            return JsonResponse({'error': 'No record found against this Date'}, status=500)
         filtered_data = [item for item in csv_data if item[1] == serial_number]
+        if filtered_data ==[]:
+            return JsonResponse({'error': 'No record found against this serial number'}, status=500)
+
         # Initialize sums
 
         sum_rpm = 0
@@ -427,8 +434,6 @@ class NoLoadFormSaveView(View):
         }
 
         return JsonResponse(response_data)
-
-
 
 
 class WithStandVoltageFormSaveView(View):
@@ -531,8 +536,14 @@ class LockRotorFormSave(View):
 
         table_name = date
         serial_number = motor.serial_number
-        csv_data = read_mdb_table(table_name,file_path)
+        try:
+            csv_data = read_mdb_table(table_name, file_path)
+        except Exception as e:
+            error_message = str(e)
+            return JsonResponse({'error': 'No record found against this Date'}, status=500)
         filtered_data = [item for item in csv_data if item[1] == serial_number]
+        if filtered_data ==[]:
+            return JsonResponse({'error': 'No record found against this serial number'}, status=500)
 
         # Initialize sums
         sum_speed = 0
@@ -634,7 +645,7 @@ class PerformanceDeterminationFormSave(View):
 
     def get_performance_tests_data(self, table_name):
         configuration = Configuration.objects.all().first()
-        csv_data = read_mdb_table(table_name,configuration.performance_determination)
+        csv_data = read_mdb_table(table_name, configuration.performance_determination)
         return csv_data
 
     def align_load_data(self, serial_no, csv_data):
@@ -644,16 +655,18 @@ class PerformanceDeterminationFormSave(View):
             '75': [],
             '100': [],
         }
+        # for data in csv_data:
         for data in csv_data:
             if data[3] == serial_no:
-                filtered_data[f'{data[7]}'].append(data)
+                key = data[7].strip('%')  # Remove leading and trailing percentage signs
+                filtered_data[key].append(data)
+                # filtered_data[f'{data[7]}'].append(data)
 
         return filtered_data
 
     def post(self, request, *args, **kwargs):
         motor_id = kwargs['id']
         motor = get_object_or_404(InductionMotor, id=motor_id)
-
 
         if not hasattr(motor, 'performance_determination_test'):
             motor.performance_determination_test = PerformanceDeterminationTest(induction_motor=motor)
@@ -680,12 +693,23 @@ class PerformanceDeterminationFormSave(View):
 
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
             status=PerformanceTest.COMPLETED)
-        filtered_determine_data = self.align_load_data(motor.serial_number, self.get_performance_tests_data(table_name))
-        performance_determination_test.mdb_data=filtered_determine_data
+        try:
+            filtered_determine_data = self.align_load_data(motor.serial_number,
+                                                           self.get_performance_tests_data(table_name))
+        except Exception as e:
+            error_message = str(e)
+            return JsonResponse({'error': 'No record found against this Date'}, status=500)
+        if filtered_determine_data['25'] == [] and filtered_determine_data['50'] == [] and filtered_determine_data[
+            '75'] == [] and filtered_determine_data['100'] == []:
+            return JsonResponse({'error': 'No record found against this serial number'}, status=500)
+        performance_determination_test.mdb_data = filtered_determine_data
         performance_determination_test.save()
-        self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data)
+        electric_resistance = ElectricResistanceTest.objects.filter(induction_motor=motor).first()
+        if electric_resistance.resistance_ohm_1 == 0 or electric_resistance.resistance_ohm_2 == 0 or electric_resistance.resistance_ohm_3 == 0:
+            return JsonResponse({'error': 'please fill Electric Resistance Test'}, status=500)
+        self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data,
+                                                  electric_resistance)
         statues = get_form_statuses(motor_id)
-
 
         response_data = {
             'voltage': motor.performance_determination_test.voltage,
@@ -693,16 +717,16 @@ class PerformanceDeterminationFormSave(View):
             'nominal_t': motor.performance_determination_test.nominal_t,
             'status': 'completed',
             'all_test_completed': all(value == 'COMPLETED' for value in statues.values())
-
         }
 
         return JsonResponse(response_data)
 
-    def save_performance_determination_tests(self, motor, performance_determination_test, filtered_determine_data):
+    def save_performance_determination_tests(self, motor, performance_determination_test, filtered_determine_data,
+                                             electric_resistance):
         PerformanceTestParameters.objects.filter(
             performance_determination_test=performance_determination_test).delete()
         performance_objects = []
-        electric_resistance = ElectricResistanceTest.objects.filter(induction_motor=motor).first()
+
         avg_resistance = (
                                  electric_resistance.resistance_ohm_1 + electric_resistance.resistance_ohm_2 + electric_resistance.resistance_ohm_3) / 3
         for key in self.performancetest:
@@ -755,7 +779,6 @@ class PerformanceDeterminationFormSave(View):
             performance_test_param.efficiency = self.performancetest.get(key)['efficiency']
             performance_test_param.cos = self.performancetest.get(key)['cos']
         return performance_test_param
-
 
 
 def format_date(date_str):
@@ -835,7 +858,6 @@ def mdb_to_csv_conversion(input_file_path, csv_output_path):
     return process.stdout
 
 
-
 def read_mdb_table(table_name, file_path):
     system = platform.system()
     data = []
@@ -867,6 +889,3 @@ def read_mdb_table(table_name, file_path):
         print(f"Running on {system}")
 
     return data
-
-
-
