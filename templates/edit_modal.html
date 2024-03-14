@@ -151,11 +151,7 @@
                         <div class="tab-pane fade" id="edit-v-pills-profile" role="tabpanel"
                              aria-labelledby="edit_performed_tests">
                             <div class="row g-3 px-5">
-                                <div class="italic card-title m-0 pt-2 pb-0 text-center">
-                                    <div id="edit-error-message" class="text-danger" style="display: none;">
-                                        Please select at least one test
-                                    </div>
-                                </div>
+                               
 
                                 <table class="table">
                                     <thead>
@@ -168,8 +164,10 @@
                                     </tr>
                                     </thead>
                                     <tbody id="edit-formset-body">
+                                        <div class="alert alert-danger d-none " name="edit-error-message" id="edit-required" role="alert"> At Least select one Test</div>
                                     {{ edit_formset.management_form }}
                                     {% for form in edit_formset %}
+
                                         <tr>
                                             <th class="text-center" scope="row">{{ forloop.counter }}</th>
                                             <td class="text-center w-50">{{ form.test_type }}</td>
@@ -194,7 +192,7 @@
 
                     <div class="d-grid gap-2 d-md-flex justify-content-center mt-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" onclick="return validateForm('edit-formset-body')">Save</button>
+                        <button type="submit" class="btn btn-primary" onclick="return validateForm('edit-formset-body','edit-required')">Save</button>
                     </div>
                 </form>
             </div>

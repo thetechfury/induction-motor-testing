@@ -127,14 +127,14 @@
       });
 
       function validateForm(tbodyId) {
-        console.log(tbodyId);
+
 
         // Get the <tbody> element by its id
         let tbody = document.getElementById(tbodyId);
 
         // Get all checkboxes inside the <tbody>
         let checkboxes = tbody.querySelectorAll('input[type="checkbox"]');
-        let required = document.querySelector("#test-required");
+        let required = document.querySelector(`#${errorClass}`);
 
         // Check if any checkbox is checked
         let isChecked = false;
