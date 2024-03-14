@@ -112,8 +112,3 @@ function deleteRecord(deletedRowID) {
 // Select the first form
 const firstTab = document.querySelector('#testFormTabs li:first-child');
 
-// if (firstTab) {
-//     firstTab.querySelector('button').click();
-// } else {
-//     console.error('The first li element was not found in the ul.');
-// }
