@@ -694,8 +694,6 @@ class PerformanceDeterminationFormSave(View):
         _formatted_date = format_date_to_ymd(date_str)
         performance_determination_test.report_date = _formatted_date
 
-        PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
-            status=PerformanceTest.COMPLETED)
         try:
             filtered_determine_data = self.align_load_data(motor.serial_number,
                                                            self.get_performance_tests_data(table_name))
@@ -713,6 +711,8 @@ class PerformanceDeterminationFormSave(View):
         self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data,
                                                   electric_resistance)
         statues = get_form_statuses(motor_id)
+        PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
+            status=PerformanceTest.COMPLETED)
 
         response_data = {
             'voltage': motor.performance_determination_test.voltage,
