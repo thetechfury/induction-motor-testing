@@ -136,6 +136,6 @@ INTERNAL_IPS = [
     # ...
 ]
 
-WK_HTML_TO_PDF_PATH = r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+WK_HTML_TO_PDF_PATH = r"/usr/local/bin/wkhtmltopdf"
 
 MDB_TO_CSV_EXE_LOCATION = r"C:\Program Files (x86)\MDBtoCSV\64"
