@@ -126,7 +126,10 @@
         });
       });
 
+
+
       function validateForm(tbodyId,errorClass) {
+
 
         // Get the <tbody> element by its id
         let tbody = document.getElementById(tbodyId);
@@ -143,6 +146,21 @@
           }
         });
 
+
+            var isForm2Checked = $('#id_form-2-routine').is(':checked') || $('#id_form-2-type').is(':checked') || $('#id_form-2-special').is(':checked');
+
+        // Check if any of the 'form-0-*' checkboxes are checked
+        var isForm0Checked = $('#id_form-0-routine').is(':checked') || $('#id_form-0-type').is(':checked') || $('#id_form-0-special').is(':checked');
+
+        // If any 'form-2-*' checkbox is checked, ensure at least one 'form-0-*' checkbox is also checked
+        if(isForm2Checked && !isForm0Checked) {
+            alert('If you select any option in Performance Determination Test, you must also select at least one option in the Electric Resistance Test.');
+              isChecked = false;
+
+        }
+
+
+
         // If no checkbox is checked, alert the user and do not proceed
         if (!isChecked) {
           required.classList.remove("d-none");
@@ -150,6 +168,8 @@
           var button = document.getElementById("performed_tests");
           button.click();
           return false;
+
+
         }
 
         // If validation passes, close the modal programmatically
