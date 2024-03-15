@@ -4,13 +4,15 @@ from decimal import Decimal
 import pdfkit
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import DatabaseError, models
-from django.db.models import Case, When, BooleanField
+from django.db.models import Case, When, BooleanField,Exists, OuterRef, Value, When,Subquery,CharField
 from django.forms import formset_factory, model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
+from django.db.models import Exists, OuterRef
+
 from django_pdfkit import PDFView
 
 from mdb_parser import MDBParser, MDBTable
@@ -49,10 +51,19 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search')
-        queryset = InductionMotor.objects.filter(status=InductionMotor.ACTIVE)
+        queryset = InductionMotor.objects.annotate(
+            has_completed_performance_determination_test=Exists(
+                PerformanceTest.objects.filter(
+                    motor_id=OuterRef('pk'),
+                    test_type='performance_determination_test',
+                    status='COMPLETED'
+                )
+            )
+        ).filter(status=InductionMotor.ACTIVE)
+
         if search_query:
-            queryset = InductionMotor.objects.filter(serial_number__icontains=search_query,
-                                                     status=InductionMotor.ACTIVE)
+            queryset = queryset.filter( status=InductionMotor.ACTIVE)
+
         return queryset.annotate(
             report_status=Case(When(
                 report_link__isnull=False, then=models.Value(True)), default=False, output_field=BooleanField())
@@ -72,16 +83,6 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         context['search_form'] = SearchForm(self.request.GET)
         context['formset'] = self.get_formset()
         all_motors = context['object_list']
-
-        all_test_with_status = []
-        def make_list_all_test_status(single_test):
-            all_test_with_status.append(single_test)
-
-        for motor in all_motors:
-            single_test = get_form_statuses(motor)
-            make_list_all_test_status(single_test)
-        context['all_test_status'] = all_test_with_status
-
         return context
 
     def save_formset(self, formset, motor):

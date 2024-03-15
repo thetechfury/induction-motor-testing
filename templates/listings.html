@@ -64,6 +64,8 @@
                                     <div class="btn-group" role="group" aria-label="Basic outlined example">
                                         <a href="{% url 'pdf' obj.id %}" type="button" class="btn btn-outline-info hover-button" target="_blank" data-name="view">
                                             <i class="bi bi-eye"></i></a>
+                                        {% endif %}
+                                        {% if obj.has_completed_performance_determination_test %}
                                         <a href="{% url 'chart' obj.id %}" type="button" class="btn btn-outline-primary hover-button" data-name="chart">
                                             <i class="bi bi-pie-chart-fill"></i></a>
                                         {% endif %}
