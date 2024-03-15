@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import JSONField
+from datetime import date
 
 
 class TimeStampedModel(models.Model):
@@ -167,7 +168,7 @@ class PerformanceDeterminationTest(TimeStampedModel):
     is_current_date = models.BooleanField(default=False, verbose_name="Use current date")
     test_date = models.DateField(null=True, blank=True, verbose_name="Test Date")
     table_name = models.CharField(max_length=20, null=True, blank=True)
-    report_date = models.DateField(null=True, blank=True)
+    report_date = models.DateField(default=date.today)
     mdb_data = JSONField(null=True, blank=True)
 
 
@@ -212,7 +213,7 @@ class NoLoadTest(TimeStampedModel):
     direction_of_rotation = models.CharField(max_length=20, choices=DIRECTION_CHOICES, blank=True, null=True)
     report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
-    reported_date= models.DateField(null = True,blank= True)
+    reported_date= models.DateField(default=date.today)
 
 
 
@@ -276,7 +277,7 @@ class LockRotorTest(TimeStampedModel):
     )
     report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
-    reported_date = models.DateField(null=True, blank=True)
+    reported_date = models.DateField(default=date.today)
 
 
 class Configuration(models.Model):
