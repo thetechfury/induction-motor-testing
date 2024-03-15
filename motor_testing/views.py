@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormMixin
 from django_pdfkit import PDFView
-# import pandas as pd
+
 from mdb_parser import MDBParser, MDBTable
 import platform
 import pyodbc
@@ -71,6 +71,17 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         context = super().get_context_data(**kwargs)
         context['search_form'] = SearchForm(self.request.GET)
         context['formset'] = self.get_formset()
+        all_motors = context['object_list']
+
+        all_test_with_status = []
+        def make_list_all_test_status(single_test):
+            all_test_with_status.append(single_test)
+
+        for motor in all_motors:
+            single_test = get_form_statuses(motor)
+            make_list_all_test_status(single_test)
+        context['all_test_status'] = all_test_with_status
+
         return context
 
     def save_formset(self, formset, motor):
@@ -116,17 +127,7 @@ class TestsView(LoginRequiredMixin, View):
     def get_object(self):
         return InductionMotor.objects.filter(id=self.kwargs['pk'], status=InductionMotor.ACTIVE).first()
 
-    # def get_performance_files(self, obj):
-    #     return {
-    #         'file_25': obj.performance_25 if obj.performance_25 else None,
-    #         'file_25_name': os.path.basename(obj.performance_25.name) if obj.performance_25 else None,
-    #         'file_50': obj.performance_50 if obj.performance_50 else None,
-    #         'file_50_name': os.path.basename(obj.performance_50.name) if obj.performance_50 else None,
-    #         'file_75': obj.performance_75 if obj.performance_75 else None,
-    #         'file_75_name': os.path.basename(obj.performance_75.name) if obj.performance_75 else None,
-    #         'file_100': obj.performance_100 if obj.performance_100 else None,
-    #         'file_100_name': os.path.basename(obj.performance_100.name) if obj.performance_100 else None
-    #     }
+
 
     def get(self, request, *args, **kwargs):
         inductionMotorReport = self.get_object()
@@ -181,6 +182,8 @@ class TestsView(LoginRequiredMixin, View):
             context['edit_formset'] = self.get_performance_tests_forms(inductionMotorReport)
             context['status'] = get_form_statuses(inductionMotorReport)
             context['all_test_completed'] = all(value == 'COMPLETED' for value in context['status'].values())
+            if(context['status'].get('performance_determination_test') == 'COMPLETED'):
+                context['performance_determination_test_completed'] = 'complete'
             # context['files'] = self.get_performance_files(inductionMotorReport.performance_determination_test)
             return render(request, "test_forms.html", context)
 
@@ -687,7 +690,6 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
         performance_determination_test.table_name = table_name
-        # date_object = datetime.strptime(date_str, "%m/%d/%Y")
         _formatted_date = format_date_to_ymd(date_str)
         performance_determination_test.report_date = _formatted_date
 

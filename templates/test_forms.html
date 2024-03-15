@@ -1,5 +1,4 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-
 <div class="d-flex justify-content-between">
   <div class="datatable-search datatable-top mb-2">
     <a href="{% url 'home' %}" type="button" class="btn btn-primary">
@@ -8,21 +7,21 @@
   </div>
 
   <div
-    class="mb-3 clearfix block {% if all_test_completed %} d-block {% else %} d-none {% endif %}"
+    class="mb-3 clearfix block "
   >
     <a
       href="{% url 'chart' inductionMotorReport.id %}"
-      class="text-white btn btn-primary"
+      class="text-white btn btn-primary {% if performance_determination_test_completed %} d-inline {% else %} d-none {% endif %}"
       target="_blank"
       type="button"
       ><i class="bi bi-file-earmark-pdf-fill"></i> Generate Graph</a
     >
     <a
       href="{% url 'pdf' inductionMotorReport.id %}"
-      class="text-white btn btn-success"
+      class="text-white btn btn-success {% if all_test_completed %} d-inline{% else %} d-none {% endif %} "
       target="_blank"
       type="button"
-      ><i class="bi bi-file-earmark-pdf-fill"></i> Generate Report</a
+      ><i class="bi bi-file-earmark-pdf-fill "></i> Generate Report</a
     >
   </div>
 </div>
