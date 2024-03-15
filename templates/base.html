@@ -118,12 +118,29 @@
 
     <script src="{% static 'assets/js/html_to_image.js' %}"></script>
     <script>
+
       $(document).ready(function () {
-        $(".datepicker").datepicker({
-          setDate: new Date(),
+    var datepickers = document.getElementsByClassName('datepicker');
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = (today.getMonth() + 1).toString().padStart(2, '0');
+    var day = today.getDate().toString().padStart(2, '0');
+    var formattedDate = year + '-' + month + '-' + day;
+    console.log(formattedDate)
+       for (var i = 0; i < datepickers.length; i++) {
+        if (!datepickers[i].value) {
+            datepickers[i].value = formattedDate;
+        }
+    }
+
+    $('.datepicker').datepicker({
+        dateFormat: 'yy-mm-dd',
+        setDate: new Date(),
           maxDate: new Date(),
-         
-        });
+
+    });
+
+
       });
 
 
