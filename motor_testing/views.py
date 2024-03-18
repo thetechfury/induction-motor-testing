@@ -706,8 +706,13 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.mdb_data = filtered_determine_data
         performance_determination_test.save()
         electric_resistance = ElectricResistanceTest.objects.filter(induction_motor=motor).first()
-        if not electric_resistance.resistance_ohm_1  or not electric_resistance.resistance_ohm_2  or not electric_resistance.resistance_ohm_3:
-            return JsonResponse({'error': 'please fill Electric Resistance Test'}, status=500)
+        if not electric_resistance.resistance_ohm_1:
+            return JsonResponse({'error': 'Please fill Resistance 1 in  Electric Resistance Test'}, status=500)
+        elif not electric_resistance.resistance_ohm_2:
+            return JsonResponse({'error': 'Please fill Resistance 2 in  Electric Resistance Test'}, status=500)
+        elif not electric_resistance.resistance_ohm_3:
+            return JsonResponse({'error': 'Please fill Resistance 3 in  Electric Resistance Test'}, status=500)
+
         self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data,
                                                   electric_resistance)
         statues = get_form_statuses(motor_id)

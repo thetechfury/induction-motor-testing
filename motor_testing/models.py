@@ -1,6 +1,6 @@
 from decimal import Decimal
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator,MaxValueValidator
 from django.db import models
 from django.db.models import JSONField
 from datetime import date
@@ -113,7 +113,7 @@ class ElectricResistanceTest(TimeStampedModel):
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE,
                                            related_name="electric_resistance_test")
     resistance_ohm_1 = models.DecimalField(
-        max_digits=5, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=5, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00')),MaxValueValidator(Decimal('99.999'))]
     )
     resistance_ohm_2 = models.DecimalField(
         max_digits=5, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]

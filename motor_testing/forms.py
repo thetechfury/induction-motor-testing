@@ -64,9 +64,14 @@ class ElectricResistanceTestForm(forms.ModelForm):
         for field in self.fields:
             if field == "unbalance_percentage":
                 self.fields[field].widget.attrs["readonly"] = True
+            if not field == "ambient_temperature_C":
+                self.fields[field].widget.attrs.update({'min': 0.000, 'max': 99.999})
 
             self.fields[field].widget.attrs["class"] = "form-control resistance"
             self.fields[field].widget.attrs["id"] = field
+
+
+
 
 
     class Meta:
@@ -88,11 +93,6 @@ class TemperatureRiseTestForm(forms.ModelForm):
 
 
 class PerformanceDeterminationTestForm(forms.ModelForm):
-    # file_format = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-    # file_1 = forms.FileField()
-    # file_2 = forms.FileField()
-    # file_3 = forms.FileField()
-    # file_4 = forms.FileField()
     prefix = 'performance_determination_test'
     #
     def __init__(self, *args, **kwargs):
