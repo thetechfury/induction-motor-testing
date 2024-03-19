@@ -712,8 +712,8 @@ class PerformanceDeterminationFormSave(View):
             return JsonResponse({'error': 'Please fill Resistance 3 in  Electric Resistance Test'}, status=400)
         avg_resistance = (electric_resistance.resistance_ohm_1+electric_resistance.resistance_ohm_2+electric_resistance.resistance_ohm_3)/3
         determine_data_list = self.convert_determine_data_in_list(filtered_determine_data)
-        calculated_determine_data_list = self.perform_calculation_and_extend_list(determine_data_list,avg_resistance)
-        performance_determination_test.mdb_data = calculated_determine_data_list
+        extended_determine_data_list = self.perform_calculation_and_extend_list(determine_data_list,avg_resistance)
+        performance_determination_test.mdb_data = extended_determine_data_list
         performance_determination_test.save()
         self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data,
                                                   electric_resistance)
@@ -740,19 +740,15 @@ class PerformanceDeterminationFormSave(View):
             extended_list = []
             current_amp = 0
             speed_rpm = 0
-            hortz_freq = 0
             torque = 0
             for determine_data in determine_data_list:
                 current_amp = float(determine_data[6])
                 speed_rpm =   float(determine_data[4])
-                hertz_freq = float(determine_data[1])
                 voltage = float(determine_data[2])
                 torque = float(determine_data[5])
                 machainal_power = torque * speed_rpm
                 loses = float(avg_resistance) * current_amp * current_amp
                 electrical_power = current_amp * voltage
-                real_power = voltage * current_amp * POWER_FACTOR * 1.732
-                apperent_power = voltage * current_amp * 1.732
                 efficiency = (machainal_power / (electrical_power + machainal_power + loses)) * 100
                 horsepower = (torque* speed_rpm) / 5252
                 watts_output = voltage * current_amp * POWER_FACTOR
@@ -763,8 +759,7 @@ class PerformanceDeterminationFormSave(View):
             return extended_list
 
 
-    def save_performance_determination_tests(self, motor, performance_determination_test, filtered_determine_data,
-                                             electric_resistance):
+    def save_performance_determination_tests(self, motor, performance_determination_test, filtered_determine_data,electric_resistance):
         PerformanceTestParameters.objects.filter(
             performance_determination_test=performance_determination_test).delete()
         performance_objects = []
