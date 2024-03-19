@@ -701,8 +701,8 @@ class PerformanceDeterminationFormSave(View):
         if filtered_determine_data['25'] == [] and filtered_determine_data['50'] == [] and filtered_determine_data[
             '75'] == [] and filtered_determine_data['100'] == []:
             return JsonResponse({'error': f'No record found against this serial number {motor.serial_number}'}, status=400)
-        performance_determination_test.mdb_data = filtered_determine_data
-        performance_determination_test.save()
+
+
         electric_resistance = ElectricResistanceTest.objects.filter(induction_motor=motor).first()
         if not electric_resistance.resistance_ohm_1:
             return JsonResponse({'error': 'Please fill Resistance 1 in  Electric Resistance Test'}, status=400)
@@ -710,9 +710,14 @@ class PerformanceDeterminationFormSave(View):
             return JsonResponse({'error': 'Please fill Resistance 2 in  Electric Resistance Test'}, status=400)
         elif not electric_resistance.resistance_ohm_3:
             return JsonResponse({'error': 'Please fill Resistance 3 in  Electric Resistance Test'}, status=400)
-
+        avg_resistance = (electric_resistance.resistance_ohm_1+electric_resistance.resistance_ohm_2+electric_resistance.resistance_ohm_3)/3
+        determine_data_list = self.convert_determine_data_in_list(filtered_determine_data)
+        calculated_determine_data_list = self.perform_calculation_and_extend_list(determine_data_list,avg_resistance)
+        performance_determination_test.mdb_data = calculated_determine_data_list
+        performance_determination_test.save()
         self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data,
                                                   electric_resistance)
+
         statues = get_form_statuses(motor_id)
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
             status=PerformanceTest.COMPLETED)
@@ -726,6 +731,37 @@ class PerformanceDeterminationFormSave(View):
         }
 
         return JsonResponse(response_data)
+
+    def convert_determine_data_in_list(self,determine_dict):
+        determine_list = [item for sublist in determine_dict.values() for item in sublist if len(item) > 0]
+        return determine_list
+
+    def perform_calculation_and_extend_list(self,determine_data_list,avg_resistance):
+            extended_list = []
+            current_amp = 0
+            speed_rpm = 0
+            hortz_freq = 0
+            torque = 0
+            for determine_data in determine_data_list:
+                current_amp = float(determine_data[6])
+                speed_rpm =   float(determine_data[4])
+                hertz_freq = float(determine_data[1])
+                voltage = float(determine_data[2])
+                torque = float(determine_data[5])
+                machainal_power = torque * speed_rpm
+                loses = float(avg_resistance) * current_amp * current_amp
+                electrical_power = current_amp * voltage
+                real_power = voltage * current_amp * POWER_FACTOR * 1.732
+                apperent_power = voltage * current_amp * 1.732
+                efficiency = (machainal_power / (electrical_power + machainal_power + loses)) * 100
+                horsepower = (torque* speed_rpm) / 5252
+                watts_output = voltage * current_amp * POWER_FACTOR
+                determine_data.append(horsepower)
+                determine_data.append(watts_output)
+                determine_data.append(efficiency)
+                extended_list.append(determine_data)
+            return extended_list
+
 
     def save_performance_determination_tests(self, motor, performance_determination_test, filtered_determine_data,
                                              electric_resistance):
@@ -840,7 +876,37 @@ def format_date_to_ymd(date_str):
 
 class ChartView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'graph.html')
+        performance_determination_data= PerformanceDeterminationTest.objects.get(id= kwargs['id']).mdb_data
+        torque_values = []
+        speed_values = []
+        amplitude_values = []
+        efficiency_values = []
+        horsepower_values = []
+        watts_out_values = []
+        for data in performance_determination_data:
+            current_amp = data[6]
+            speed_rpm = int(data[4])
+            torque = data[5]
+            horsepower = data[8]
+            watts_out = data[9]
+            efficiency = data[10]
+            speed_values.append(speed_rpm)
+            amplitude_values.append(current_amp)
+            torque_values.append(torque)
+            efficiency_values.append(efficiency)
+            horsepower_values.append(horsepower)
+            watts_out_values.append(watts_out)
+
+        context = {
+            'torque':torque_values,
+            'amplitude':amplitude_values,
+            'speed':speed_values,
+            'efficiency':efficiency_values,
+            'horse_power':horsepower_values,
+            'watts_out': watts_out_values
+        }
+
+        return render(request, 'graph.html',context)
 
 
 class Remarks(View):
