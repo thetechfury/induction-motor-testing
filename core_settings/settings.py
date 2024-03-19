@@ -129,7 +129,7 @@ LOGOUT_REDIRECT_URL = "login"
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
-
+POWER_FACTOR = 0.89
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",

@@ -22,7 +22,7 @@ import subprocess
 import math
 from datetime import datetime
 
-from core_settings.settings import MDB_TO_CSV_EXE_LOCATION, WK_HTML_TO_PDF_PATH
+from core_settings.settings import MDB_TO_CSV_EXE_LOCATION, WK_HTML_TO_PDF_PATH,POWER_FACTOR
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm, LockRotorTestForm
@@ -404,7 +404,7 @@ class NoLoadFormSaveView(View):
             avg_volt = sum_volt / num_entries
             avg_amp = sum_amp / num_entries
 
-            PF = 0.89
+            PF = POWER_FACTOR
 
             power = avg_volt * avg_amp * PF * math.sqrt(3)
 
@@ -567,7 +567,7 @@ class LockRotorFormSave(View):
         avg_speed = sum_speed / num_entries
         avg_amp = sum_amp / num_entries
         avg_volt = sum_volt / num_entries
-        PF = 0.89
+        PF = POWER_FACTOR
 
         power = avg_volt * avg_amp * PF * math.sqrt(3)
 
@@ -675,12 +675,10 @@ class PerformanceDeterminationFormSave(View):
         if not hasattr(motor, 'performance_determination_test'):
             motor.performance_determination_test = PerformanceDeterminationTest(induction_motor=motor)
 
-        date = ''
+        table_name = ''
         date_str = request.POST.get('performance_determination_test-report_date')
         if date_str:
-            date = format_date(date_str)
-
-        table_name = date
+            table_name = format_date(date_str)
 
         performance_determination_test = motor.performance_determination_test
         default = Decimal('0.00')
@@ -770,14 +768,14 @@ class PerformanceDeterminationFormSave(View):
             machainal_power = avg_torque * avg_speed_rpm
             loses = float(avg_resistance) * avg_current * avg_current
             electrical_power = avg_current * avg_voltage
-            real_power = avg_voltage * avg_current * 0.89 * 1.732
+            real_power = avg_voltage * avg_current * POWER_FACTOR * 1.732
             apperent_power = avg_voltage * avg_current * 1.732
 
             performance_test_param.load = self.performancetest.get(key)['load']
             performance_test_param.current = avg_current
             performance_test_param.slip = ((ns - avg_speed_rpm) / ns) * 100
             performance_test_param.speed = avg_speed_rpm
-            performance_test_param.efficiency = (machainal_power / (electrical_power + machainal_power + loses)) * 100
+            performance_test_param.efficiency = (machainal_power / (electrical_power + machainal_power +loses )) * 100
             performance_test_param.cos = real_power / apperent_power
         else:
             performance_test_param.load = self.performancetest.get(key)['load']
