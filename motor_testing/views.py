@@ -887,8 +887,6 @@ def read_mdb_table(table_name, file_path):
         conn.close()
     elif system == "Linux":
         print("Running on Linux")
-        db = MDBParser(file_path=file_path)
-        table = db.get_table(table_name)
         table = MDBTable(file_path=file_path, table=table_name)
         data.append(table.columns)
         for row in table:
