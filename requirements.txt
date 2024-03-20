@@ -1,6 +1,5 @@
 django==5.0.2
 django-pdfkit==0.3.1
-django-debug-toolbar==4.3.0
 mdbtools==0.3.14
 mdb-parser==0.0.3
 pyodbc==5.1.0
