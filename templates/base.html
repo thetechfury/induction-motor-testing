@@ -126,7 +126,7 @@
     var month = (today.getMonth() + 1).toString().padStart(2, '0');
     var day = today.getDate().toString().padStart(2, '0');
     var formattedDate = year + '-' + month + '-' + day;
-    console.log(formattedDate)
+
        for (var i = 0; i < datepickers.length; i++) {
         if (!datepickers[i].value) {
             datepickers[i].value = formattedDate;
@@ -178,7 +178,7 @@
         }
         else{
                $('#report-required').text("At least select one from these test");
-               $('#report-required').text("At least select one from these test")
+               $('#edit-required').text("At least select one from these test")
         }
 
 
