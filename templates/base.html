@@ -200,10 +200,14 @@
         return true;
       }
       
-$('#update-modal').click(function(){
-    $('#report-required').addClass('d-none');
-    $('#edit-required').addClass('d-none');
-})
+      $('#update-modal').click(function(){
+          $('#report-required').addClass('d-none');
+          $('#edit-required').addClass('d-none');
+      })
+      $('#create-record').click(function(){
+          $('#report-required').addClass('d-none');
+          $('#edit-required').addClass('d-none');
+      })
     </script>
 
     {% block scripts %} {% endblock %}
