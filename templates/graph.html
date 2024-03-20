@@ -16,9 +16,10 @@
 
                 <div class="card-body">
                     <h5 class="card-title">Report <span>/Today</span></h5>
-                    <button class="btn btn-outline-primary mb-5 "id="downloadBtn">Download Graph as Image</button>
+                    <button class="btn btn-outline-primary mb-2 "id="downloadBtn">Download Graph as Image</button>
                    
                     <div class="align-center chart-box"  id="chart_div" style="padding:30px;">
+
                         <div class="chart">
                             <canvas id="myChart"></canvas>
                         </div>
@@ -45,7 +46,7 @@
                 yAxisID: 'torque',
             },
             {
-                label:'Amplitude',
+                label:'Ampares',
                 data: {{amplitude|safe}},
                 tension:0.4,
                 yAxisID: 'amplitude',

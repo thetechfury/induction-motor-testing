@@ -106,7 +106,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         return render(self.request, "listings.html", {"form": form, "error": "error", "formset": formset})
 
 
-def get_form_statuses(inductionMotorReport):
+def get_performance_test_statuses(inductionMotorReport):
     test_statuses = PerformanceTest.objects.filter(motor=inductionMotorReport,
                                                    status__in=[PerformanceTest.PENDING, PerformanceTest.COMPLETED])
     tests = {test.test_type: test.status for test in test_statuses}
@@ -181,7 +181,7 @@ class TestsView(LoginRequiredMixin, View):
             context['inductionMotorReport'] = inductionMotorReport
             context['edit_form'] = InitialForm(initial=model_to_dict(inductionMotorReport))
             context['edit_formset'] = self.get_performance_tests_forms(inductionMotorReport)
-            context['status'] = get_form_statuses(inductionMotorReport)
+            context['status'] =  get_performance_test_statuses(inductionMotorReport)
             context['all_test_completed'] = all(value == 'COMPLETED' for value in context['status'].values())
             if(context['status'].get('performance_determination_test') == 'COMPLETED'):
                 context['performance_determination_test_completed'] = 'complete'
@@ -302,7 +302,7 @@ class ElectricFormSaveView(View):
         PerformanceTest.objects.filter(motor=motor, test_type='electric_resistance_test').update(
             status=PerformanceTest.COMPLETED)
         motor.electric_resistance_test.save()
-        statues = get_form_statuses(motor_id)
+        statues = get_performance_test_statuses(motor_id)
         response_data = {
             'resistance_ohm_1': motor.electric_resistance_test.resistance_ohm_1,
             'resistance_ohm_2': motor.electric_resistance_test.resistance_ohm_2,
@@ -337,7 +337,7 @@ class TemperatureFormSaveView(View):
         PerformanceTest.objects.filter(motor=motor, test_type='temperature_rise_test').update(
             status=PerformanceTest.COMPLETED)
         motor.temperature_rise_test.save()
-        statues = get_form_statuses(motor_id)
+        statues =  get_performance_test_statuses(motor_id)
 
         response_data = {
             'voltage': motor.temperature_rise_test.voltage,
@@ -423,7 +423,7 @@ class NoLoadFormSaveView(View):
         PerformanceTest.objects.filter(motor=motor, test_type='no_load_test').update(status=PerformanceTest.COMPLETED)
 
         motor.no_load_test.save()
-        statues = get_form_statuses(motor_id)
+        statues =  get_performance_test_statuses(motor_id)
 
         response_data = {
             'voltage': motor.no_load_test.voltage,
@@ -459,7 +459,7 @@ class WithStandVoltageFormSaveView(View):
             status=PerformanceTest.COMPLETED)
 
         motor.withstand_voltage_ac_test.save()
-        statues = get_form_statuses(motor_id)
+        statues =  get_performance_test_statuses(motor_id)
 
         response_data = {
             'description': motor.withstand_voltage_ac_test.description,
@@ -499,7 +499,7 @@ class InsulationFormSaveView(View):
             status=PerformanceTest.COMPLETED)
 
         motor.insulation_resistance_test.save()
-        statues = get_form_statuses(motor_id)
+        statues = get_performance_test_statuses(motor_id)
 
         response_data = {
             'description': motor.insulation_resistance_test.description,
@@ -530,13 +530,6 @@ class LockRotorFormSave(View):
         date_str = request.POST.get('lock_rotor_test-reported_date')
         if date_str:
             date = format_date(date_str)
-            # month, day, year = date_str.split('/')
-            # if day.startswith('0'):
-            #     day = day[1:]
-            # if month.startswith('0'):
-            #     month = month[1:]
-            # formatted_date = day + month + year
-            # date = formatted_date
 
         table_name = date
         serial_number = motor.serial_number
@@ -652,7 +645,7 @@ class PerformanceDeterminationFormSave(View):
         csv_data = read_mdb_table(table_name, configuration.performance_determination)
         return csv_data
 
-    def align_load_data(self, serial_no, csv_data):
+    def align_load_data(self, motor_serial_number, csv_data):
         filtered_data = {
             '25': [],
             '50': [],
@@ -661,9 +654,11 @@ class PerformanceDeterminationFormSave(View):
         }
         # for data in csv_data:
         for data in csv_data:
-            if data[3] == serial_no:
-                key = data[7].strip('%')  # Remove leading and trailing percentage signs
-                filtered_data[key].append(data)
+            csv_serial_number = data[3]
+            csv_load_percentage = data[7]
+            if csv_serial_number == motor_serial_number:
+                filtered_data_key = csv_load_percentage.strip('%')  # Remove leading and trailing percentage signs
+                filtered_data[filtered_data_key].append(data)
                 # filtered_data[f'{data[7]}'].append(data)
 
         return filtered_data
@@ -689,8 +684,8 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
         performance_determination_test.table_name = table_name
-        _formatted_date = format_date_to_ymd(date_str)
-        performance_determination_test.report_date = _formatted_date
+        # _formatted_date = format_date_to_ymd(date_str)
+        performance_determination_test.report_date = date_str
 
         try:
             filtered_determine_data = self.align_load_data(motor.serial_number,
@@ -703,22 +698,23 @@ class PerformanceDeterminationFormSave(View):
             return JsonResponse({'error': f'No record found against this serial number {motor.serial_number}'}, status=400)
 
 
-        electric_resistance = ElectricResistanceTest.objects.filter(induction_motor=motor).first()
-        if not electric_resistance.resistance_ohm_1:
+        # electric_resistance = ElectricResistanceTest.objects.filter(induction_motor=motor).first()
+        electric_resistance_object = ElectricResistanceTest.objects.get(induction_motor = motor)
+        if not electric_resistance_object.resistance_ohm_1:
             return JsonResponse({'error': 'Please fill Resistance 1 in  Electric Resistance Test'}, status=400)
-        elif not electric_resistance.resistance_ohm_2:
+        elif not electric_resistance_object.resistance_ohm_2:
             return JsonResponse({'error': 'Please fill Resistance 2 in  Electric Resistance Test'}, status=400)
-        elif not electric_resistance.resistance_ohm_3:
+        elif not electric_resistance_object.resistance_ohm_3:
             return JsonResponse({'error': 'Please fill Resistance 3 in  Electric Resistance Test'}, status=400)
-        avg_resistance = (electric_resistance.resistance_ohm_1+electric_resistance.resistance_ohm_2+electric_resistance.resistance_ohm_3)/3
+        average_resistance = (electric_resistance_object.resistance_ohm_1 + electric_resistance_object.resistance_ohm_2 + electric_resistance_object.resistance_ohm_3)/3
         determine_data_list = self.convert_determine_data_in_list(filtered_determine_data)
-        calculated_determine_data_list = self.perform_calculation_and_extend_list(determine_data_list,avg_resistance)
-        performance_determination_test.mdb_data = calculated_determine_data_list
+        extended_determine_data_list = self.perform_calculation_and_extend_determine_data_list(determine_data_list,average_resistance)
+        performance_determination_test.mdb_data = extended_determine_data_list
         performance_determination_test.save()
-        self.save_performance_determination_tests(motor, performance_determination_test, filtered_determine_data,
-                                                  electric_resistance)
+        self.save_performance_test_parameters(motor, performance_determination_test, filtered_determine_data,
+                                                  electric_resistance_object)
 
-        statues = get_form_statuses(motor_id)
+        performance_test_statues = get_performance_test_statuses(motor_id)
         PerformanceTest.objects.filter(motor=motor, test_type='performance_determination_test').update(
             status=PerformanceTest.COMPLETED)
 
@@ -727,7 +723,7 @@ class PerformanceDeterminationFormSave(View):
             'frequency': motor.performance_determination_test.frequency,
             'nominal_t': motor.performance_determination_test.nominal_t,
             'status': 'completed',
-            'all_test_completed': all(value == 'COMPLETED' for value in statues.values())
+            'all_test_completed': all(value == 'COMPLETED' for value in performance_test_statues.values())
         }
 
         return JsonResponse(response_data)
@@ -736,23 +732,19 @@ class PerformanceDeterminationFormSave(View):
         determine_list = [item for sublist in determine_dict.values() for item in sublist if len(item) > 0]
         return determine_list
 
-    def perform_calculation_and_extend_list(self,determine_data_list,avg_resistance):
+    def perform_calculation_and_extend_determine_data_list(self,determine_data_list,avg_resistance):
             extended_list = []
             current_amp = 0
             speed_rpm = 0
-            hortz_freq = 0
             torque = 0
             for determine_data in determine_data_list:
                 current_amp = float(determine_data[6])
                 speed_rpm =   float(determine_data[4])
-                hertz_freq = float(determine_data[1])
                 voltage = float(determine_data[2])
                 torque = float(determine_data[5])
                 machainal_power = torque * speed_rpm
                 loses = float(avg_resistance) * current_amp * current_amp
                 electrical_power = current_amp * voltage
-                real_power = voltage * current_amp * POWER_FACTOR * 1.732
-                apperent_power = voltage * current_amp * 1.732
                 efficiency = (machainal_power / (electrical_power + machainal_power + loses)) * 100
                 horsepower = (torque* speed_rpm) / 5252
                 watts_output = voltage * current_amp * POWER_FACTOR
@@ -763,8 +755,7 @@ class PerformanceDeterminationFormSave(View):
             return extended_list
 
 
-    def save_performance_determination_tests(self, motor, performance_determination_test, filtered_determine_data,
-                                             electric_resistance):
+    def save_performance_test_parameters(self, motor, performance_determination_test, filtered_determine_data,electric_resistance):
         PerformanceTestParameters.objects.filter(
             performance_determination_test=performance_determination_test).delete()
         performance_objects = []
