@@ -586,7 +586,7 @@ class LockRotorFormSave(View):
             status=PerformanceTest.COMPLETED)
 
         motor.lock_rotor_test.save()
-        statues = get_form_statuses(motor_id)
+        statues = get_performance_test_statuses(motor_id)
 
         response_data = {
             'vibration': vibration,
@@ -691,7 +691,6 @@ class PerformanceDeterminationFormSave(View):
             filtered_determine_data = self.align_load_data(motor.serial_number,
                                                            self.get_performance_tests_data(table_name))
         except Exception as e:
-            error_message = str(e)
             return JsonResponse({'error': f'No record found against this date {date_str}'}, status=400)
         if filtered_determine_data['25'] == [] and filtered_determine_data['50'] == [] and filtered_determine_data[
             '75'] == [] and filtered_determine_data['100'] == []:
@@ -734,9 +733,6 @@ class PerformanceDeterminationFormSave(View):
 
     def perform_calculation_and_extend_determine_data_list(self,determine_data_list,avg_resistance):
             extended_list = []
-            current_amp = 0
-            speed_rpm = 0
-            torque = 0
             for determine_data in determine_data_list:
                 current_amp = float(determine_data[6])
                 speed_rpm =   float(determine_data[4])

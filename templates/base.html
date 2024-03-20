@@ -199,14 +199,17 @@
         $("#edit-modal").modal("hide");
         return true;
       }
+
+      const initialErrorMessage = function(){
+         $('#report-required').addClass('d-none');
+          $('#edit-required').addClass('d-none');
+      }
       
       $('#update-modal').click(function(){
-          $('#report-required').addClass('d-none');
-          $('#edit-required').addClass('d-none');
+         initialErrorMessage()
       })
       $('#create-record').click(function(){
-          $('#report-required').addClass('d-none');
-          $('#edit-required').addClass('d-none');
+         initialErrorMessage()
       })
     </script>
 
