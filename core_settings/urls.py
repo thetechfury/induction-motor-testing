@@ -12,7 +12,6 @@ urlpatterns = [
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("accounts/login/", views.LoginView.as_view(authentication_form=UserLoginForm), name="login"),
     path("", include("motor_testing.urls")),
-    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 if settings.DEBUG:
