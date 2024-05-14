@@ -227,6 +227,28 @@
                             {% endif %}
                         {% endfor %}
                         </tr>
+                    <tr>
+                            <td class="same-width-td">7. Lock Rotor Test</td>
+                            {% for selected_test in all_tests %}
+                            {% if selected_test.test_type == 'lock_rotor_test' %}
+                                {% if selected_test.routine == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.type == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                {% if selected_test.special == True %}
+                                    <td>X</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
                 </table>
             </section>
 

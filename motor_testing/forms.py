@@ -66,7 +66,8 @@ class ElectricResistanceTestForm(forms.ModelForm):
                 self.fields[field].widget.attrs["readonly"] = True
 
             if field == "remarks":
-                self.fields[field].widget = forms.Textarea(attrs={'rows': 2, 'cols': 50})
+                self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
+                self.fields[field].widget.attrs["maxlength"] = 250
 
             # if not field == "ambient_temperature_C":
             #     self.fields[field].widget.attrs.update({'min': 0.000, 'max': 999.999})
@@ -90,7 +91,8 @@ class TemperatureRiseTestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             if field == "remarks":
-                self.fields[field].widget = forms.Textarea(attrs={'rows': 2, 'cols': 50})
+                self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
+                self.fields[field].widget.attrs["maxlength"] = 250
             self.fields[field].widget.attrs["class"] = "form-control"
 
     class Meta:
@@ -105,7 +107,8 @@ class PerformanceDeterminationTestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
              if field == "remarks":
-                 self.fields[field].widget = forms.Textarea(attrs={'rows': 2, 'cols': 50})
+                 self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
+                 self.fields[field].widget.attrs["maxlength"] = 250
              if field == "report_date":
                 self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker','placeholder':'yyyy-mm-dd'})
 
@@ -128,8 +131,9 @@ class NoLoadTestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             if field == "remarks":
-                self.fields[field].widget = forms.Textarea(attrs={'rows': 2, 'cols': 50})
+                self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
                 self.fields[field].widget.attrs["class"] = "form-control"
+                self.fields[field].widget.attrs["maxlength"] = 250
 
             if field == "reported_date":
                 self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker','placeholder':'yyyy-mm-dd'})
@@ -151,8 +155,9 @@ class WithstandVoltageACTestForm(forms.ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
             if field == "remarks":
-                self.fields[field].widget = forms.Textarea(attrs={'rows': 2, 'cols': 50})
+                self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
                 self.fields[field].widget.attrs["class"] = "form-control"
+                self.fields[field].widget.attrs["maxlength"] = 250
 
     class Meta:
         model = WithstandVoltageACTest
@@ -167,8 +172,9 @@ class InsulationResistanceTestForm(forms.ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
             if field == "remarks":
-                self.fields[field].widget = forms.Textarea(attrs={'rows': 2, 'cols': 50})
+                self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
                 self.fields[field].widget.attrs["class"] = "form-control"
+                self.fields[field].widget.attrs["maxlength"] = 250
 
     class Meta:
         model = InsulationResistanceTest
@@ -182,8 +188,9 @@ class LockRotorTestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             if field == "remarks":
-                self.fields[field].widget = forms.Textarea(attrs={'rows': 2, 'cols': 50})
+                self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
                 self.fields[field].widget.attrs["class"] = "form-control"
+                self.fields[field].widget.attrs["maxlength"] = 250
             if field == "reported_date":
                 self.fields[field].widget=forms.DateInput(attrs={'class': 'form-control col-8 datepicker','placeholder':'yyyy-mm-dd'})
             else:
