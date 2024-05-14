@@ -4,3 +4,5 @@ db.sqlite3
 generatedReports/*.pdf
 node_modules
 media
+/*.spec
+*.zip

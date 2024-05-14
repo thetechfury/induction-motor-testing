@@ -6,6 +6,7 @@ from django.db.models import JSONField
 from datetime import date
 
 
+
 class TimeStampedModel(models.Model):
     """ TimeStamped Abstract Model """
 
@@ -45,13 +46,13 @@ class InductionMotor(TimeStampedModel):
     design = models.CharField(max_length=50, blank=True, null=True)
     insulation_class = models.CharField(max_length=50, blank=True, null=True)
     temperature_rise_K = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     ambient_temperature_C = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     service_factor = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=5, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     voltage = models.PositiveIntegerField(blank=True, null=True)
     current = models.PositiveIntegerField(blank=True, null=True)
@@ -103,6 +104,7 @@ class PerformanceTest(models.Model):
     page_number = models.IntegerField(default=1)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
 
+
     def __str__(self):
         return f'{self.motor.serial_number} - {self.test_type}'
 
@@ -113,7 +115,7 @@ class ElectricResistanceTest(TimeStampedModel):
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE,
                                            related_name="electric_resistance_test")
     resistance_ohm_1 = models.DecimalField(
-        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00')),MaxValueValidator(Decimal('99.999'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     resistance_ohm_2 = models.DecimalField(
         max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
@@ -122,11 +124,13 @@ class ElectricResistanceTest(TimeStampedModel):
         max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     ambient_temperature_C = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     unbalance_percentage = models.DecimalField(
         max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+    remarks = models.TextField(max_length=250, blank=True, null=True)
+
 
 
 class TemperatureRiseTest(TimeStampedModel):
@@ -135,20 +139,22 @@ class TemperatureRiseTest(TimeStampedModel):
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE,
                                            related_name="temperature_rise_test")
     voltage = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     winding = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     frequency = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     de_bearing = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     nde_bearing = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+    remarks = models.TextField(max_length=250, blank=True, null=True)
+
 
 
 class PerformanceDeterminationTest(TimeStampedModel):
@@ -157,19 +163,20 @@ class PerformanceDeterminationTest(TimeStampedModel):
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE,
                                            related_name="performance_determination_test")
     voltage = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True
     )
     frequency = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True
     )
     nominal_t = models.DecimalField(
-        max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=7, decimal_places=3, blank=True, null=True
     )
     is_current_date = models.BooleanField(default=False, verbose_name="Use current date")
     test_date = models.DateField(null=True, blank=True, verbose_name="Test Date")
     table_name = models.CharField(max_length=20, null=True, blank=True)
     report_date = models.DateField(default=date.today)
     mdb_data = JSONField(null=True, blank=True)
+    remarks = models.TextField(max_length=250, blank=True, null=True)
 
 
 class PerformanceTestParameters(models.Model):
@@ -196,24 +203,25 @@ class NoLoadTest(TimeStampedModel):
 
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="no_load_test")
     voltage = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     current = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     power = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     frequency = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     speed = models.DecimalField(
-        max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=7, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
-    direction_of_rotation = models.CharField(max_length=20, choices=DIRECTION_CHOICES, blank=True, null=True)
+    direction_of_rotation = models.CharField(max_length=20, choices=DIRECTION_CHOICES,default=DIRECTION_CHOICES[0])
     report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
     reported_date= models.DateField(default=date.today)
+    remarks = models.TextField(max_length=250, blank=True, null=True)
 
 
 
@@ -224,9 +232,10 @@ class WithstandVoltageACTest(TimeStampedModel):
                                            related_name="withstand_voltage_ac_test")
     description = models.CharField(max_length=50, blank=True, null=True)
     voltage_kv = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     time_in_seconds = models.PositiveIntegerField(blank=True, null=True)
+    remarks = models.TextField(max_length=250, blank=True, null=True)
 
 
 class InsulationResistanceTest(TimeStampedModel):
@@ -236,18 +245,19 @@ class InsulationResistanceTest(TimeStampedModel):
                                            related_name="insulation_resistance_test")
     description = models.CharField(max_length=50, blank=True, null=True)
     voltage = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     insulation_resistance = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     time_in_seconds = models.PositiveIntegerField(blank=True, null=True)
     ambient_temperature_C = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     humidity_percentage = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
+    remarks = models.TextField(max_length=250, blank=True, null=True)
 
 
 class LockRotorTest(TimeStampedModel):
@@ -255,29 +265,30 @@ class LockRotorTest(TimeStampedModel):
 
     induction_motor = models.OneToOneField(InductionMotor, on_delete=models.CASCADE, related_name="lock_rotor_test")
     vibration = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     noise = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     temperature = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     speed = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     voltage = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     current = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     power = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=8, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
     reported_date = models.DateField(default=date.today)
+    remarks = models.TextField(max_length=250, blank=True, null=True)
 
 
 class Configuration(models.Model):

@@ -459,9 +459,34 @@
                     5{% else %}4{% endif %}. Result</h1>
             <section class="section-4">
 
-                <p>
-                    {{ induction_motor.remarks }}
-                </p>
+                {% if induction_motor.remarks %}
+                <p><b>Final Remarks</b>: {{induction_motor.remarks}}</p>
+                {% endif %}
+
+                {% if induction_motor.electric_resistance_test.remarks %}
+                <p><b>Electric Resistance Test Remarks</b>: {{induction_motor.electric_resistance_test.remarks}}</p>
+                {% endif %}
+
+
+                {% if induction_motor.temperature_rise_test.remarks %}
+                <p><b>Temperature Rise Test Remarks</b>: {{induction_motor.temperature_rise_test.remarks}}</p>
+                {% endif %}
+                {% if induction_motor.performance_determination_test.remarks %}
+                <p><b>Performance Determination Test Remarks</b>: {{induction_motor.performance_determination_test.remarks}}</p>
+                {% endif %}
+                {% if induction_motor.no_load_test.remarks %}
+                <p><b>No Load Test Remarks</b>: {{induction_motor.no_load_test.remarks}}</p>
+                {% endif %}
+                {% if induction_motor.withstand_voltage_ac_test.remarks %}
+                <p><b>With Stand Voltage AC Test Remarks</b>: {{induction_motor.withstand_voltage_ac_test.remarks}}</p>
+                {% endif %}
+                {% if induction_motor.insulation_resistance_test.remarks %}
+                <p><b>Insulation Resistance Test Remarks</b>: {{induction_motor.insulation_resistance_test.remarks}}</p>
+                {% endif %}
+                 {% if induction_motor.lock_rotor_test.remarks %}
+                <p><b>Lock Rotor  Test Remarks</b>: {{induction_motor.lock_rotor_test.remarks}}</p>
+                {% endif %}
+
             </section>
         </section>
 

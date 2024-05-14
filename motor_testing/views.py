@@ -82,7 +82,6 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         context = super().get_context_data(**kwargs)
         context['search_form'] = SearchForm(self.request.GET)
         context['formset'] = self.get_formset()
-        all_motors = context['object_list']
         return context
 
     def save_formset(self, formset, motor):
@@ -299,6 +298,8 @@ class ElectricFormSaveView(View):
         motor.electric_resistance_test.resistance_ohm_3 = resistance_ohm_3 if resistance_ohm_3 else default
         motor.electric_resistance_test.ambient_temperature_C = ambient_temperature_C if ambient_temperature_C else default
         motor.electric_resistance_test.unbalance_percentage = unbalance_percentage if unbalance_percentage else default
+        remarks = request.POST.get('electric_resistance_test-remarks')
+        motor.electric_resistance_test.remarks = remarks
         PerformanceTest.objects.filter(motor=motor, test_type='electric_resistance_test').update(
             status=PerformanceTest.COMPLETED)
         motor.electric_resistance_test.save()
@@ -311,6 +312,7 @@ class ElectricFormSaveView(View):
             'unbalance_percentage': motor.electric_resistance_test.unbalance_percentage,
             'status': 'completed',
             'all_test_completed': all(value == 'COMPLETED' for value in statues.values())
+
         }
 
         return JsonResponse(response_data)
@@ -334,6 +336,8 @@ class TemperatureFormSaveView(View):
         motor.temperature_rise_test.frequency = frequency if frequency else default
         motor.temperature_rise_test.de_bearing = de_bearing if de_bearing else default
         motor.temperature_rise_test.nde_bearing = nde_bearing if nde_bearing else default
+        remarks = request.POST.get('temperature_rise_test-remarks')
+        motor.temperature_rise_test.remarks = remarks
         PerformanceTest.objects.filter(motor=motor, test_type='temperature_rise_test').update(
             status=PerformanceTest.COMPLETED)
         motor.temperature_rise_test.save()
@@ -417,6 +421,9 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.speed = avg_rpm if avg_rpm else default
         motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
+        remarks = request.POST.get('noload_test-remarks')
+        motor.no_load_test_test.remarks = remarks
+
         _formatted_date = format_date_to_ymd(date_str)
         motor.no_load_test.reported_date = _formatted_date
         motor.no_load_test.direction_of_rotation = direction_of_rotation if direction_of_rotation else NoLoadTest.CLOCKWISE
@@ -454,6 +461,8 @@ class WithStandVoltageFormSaveView(View):
         time_in_seconds = request.POST.get('withstand_voltage_ac_test-time_in_seconds')
         motor.withstand_voltage_ac_test.description = description if description else ''
         motor.withstand_voltage_ac_test.voltage_kv = voltage_kv if voltage_kv else Decimal('0.00')
+        remarks = request.POST.get('withstand_voltage_ac_test-remarks')
+        motor.withstand_voltage_ac_test.remarks = remarks
         motor.withstand_voltage_ac_test.time_in_seconds = time_in_seconds if time_in_seconds else 0
         PerformanceTest.objects.filter(motor=motor, test_type='withstand_voltage_ac_test').update(
             status=PerformanceTest.COMPLETED)
@@ -495,6 +504,8 @@ class InsulationFormSaveView(View):
         motor.insulation_resistance_test.time_in_seconds = time_in_seconds if time_in_seconds else 0
         motor.insulation_resistance_test.ambient_temperature_C = ambient_temperature_C if ambient_temperature_C else default
         motor.insulation_resistance_test.humidity_percentage = humidity_percentage if humidity_percentage else default
+        remarks = request.POST.get('insulation_resistance_test-remarks')
+        motor.insulation_resistance_test.remarks = remarks
         PerformanceTest.objects.filter(motor=motor, test_type='insulation_resistance_test').update(
             status=PerformanceTest.COMPLETED)
 
@@ -578,6 +589,8 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.voltage = avg_volt if avg_volt else default
         motor.lock_rotor_test.current = avg_amp if avg_amp else default
         motor.lock_rotor_test.power = power if power else default
+        remarks = request.POST.get('lock_rotor_test-remarks')
+        motor.lock_rotor_test.remarks = remarks
         motor.lock_rotor_test.report_date = table_name
         _formatted_date = format_date_to_ymd(date_str)
         motor.lock_rotor_test.reported_date = _formatted_date
@@ -680,6 +693,8 @@ class PerformanceDeterminationFormSave(View):
         voltage = request.POST.get('performance_determination_test-voltage')
         frequency = request.POST.get('performance_determination_test-frequency')
         nominal_t = request.POST.get('performance_determination_test-nominal_t')
+        remarks = request.POST.get('performance_determination_test-remarks')
+        motor.performance_determination_test.remarks = remarks
         performance_determination_test.voltage = voltage if voltage else default
         performance_determination_test.frequency = frequency if frequency else default
         performance_determination_test.nominal_t = nominal_t if nominal_t else default
@@ -861,9 +876,20 @@ def format_date_to_ymd(date_str):
     return None
 
 
+
+
+
 class ChartView(View):
+
+    def get_performance_dertermination_id(self,motor_id):
+        motor = InductionMotor.objects.get(id=motor_id)
+        return motor.performance_determination_test.id
     def get(self, request, *args, **kwargs):
-        performance_determination_data= PerformanceDeterminationTest.objects.get(id= kwargs['id']).mdb_data
+        #
+        # get motor object
+        # get performace determination id from motor object
+        performace_determination_id=self.get_performance_dertermination_id(kwargs['id'])
+        performance_determination_data= PerformanceDeterminationTest.objects.get(id= performace_determination_id).mdb_data
         torque_values = []
         speed_values = []
         amplitude_values = []
