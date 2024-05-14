@@ -422,7 +422,7 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
         remarks = request.POST.get('noload_test-remarks')
-        motor.no_load_test_test.remarks = remarks
+        motor.no_load_test.remarks = remarks
 
         _formatted_date = format_date_to_ymd(date_str)
         motor.no_load_test.reported_date = _formatted_date
