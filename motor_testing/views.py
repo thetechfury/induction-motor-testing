@@ -914,6 +914,7 @@ class ChartView(View):
             watts_out_values.append(watts_out)
 
         context = {
+            'motor_id':kwargs['id'],
             'torque':torque_values,
             'amplitude':amplitude_values,
             'speed':speed_values,
