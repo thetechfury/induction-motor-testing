@@ -4,9 +4,12 @@
     width:100%;
 }
 .chart{
-    height:60vh;
-    width:80vw;
-    position:relative;
+     height: 60vh;
+     width: 80vw;
+    position: relative;
+    display: flex;
+    /*flex-direction: row-reverse;*/
+    justify-content: space-between;
 }
 
 .chart .custom-legend-item{
@@ -21,7 +24,6 @@
 }
 
 .cerad-image{
-    position: absolute;
-    left: 78%;
-    top: 0%;
-}
+      width: 150px;
+     height: 150px;
+    }
