@@ -743,12 +743,15 @@ class PerformanceDeterminationFormSave(View):
         return JsonResponse(response_data)
 
     def convert_determine_data_in_list(self,determine_dict):
-        determine_list = [item for sublist in determine_dict.values() for item in sublist if len(item) > 0]
+        determine_list = [list(item) for sublist in determine_dict.values() for item in sublist if len(item) > 0]
         return determine_list
 
     def perform_calculation_and_extend_determine_data_list(self,determine_data_list,avg_resistance):
             extended_list = []
             for determine_data in determine_data_list:
+                is_determine_date_dateobject = check_is_date_dateobject(determine_data[0])
+                if is_determine_date_dateobject:
+                    determine_data[0] = str(determine_data[0])
                 current_amp = float(determine_data[6])
                 speed_rpm =   float(determine_data[4])
                 voltage = float(determine_data[2])
@@ -885,9 +888,6 @@ class ChartView(View):
         motor = InductionMotor.objects.get(id=motor_id)
         return motor.performance_determination_test.id
     def get(self, request, *args, **kwargs):
-        #
-        # get motor object
-        # get performace determination id from motor object
         performace_determination_id=self.get_performance_dertermination_id(kwargs['id'])
         performance_determination_data= PerformanceDeterminationTest.objects.get(id= performace_determination_id).mdb_data
         torque_values = []
@@ -972,3 +972,8 @@ def read_mdb_table(table_name, file_path):
         print(f"Running on {system}")
 
     return data
+
+
+def check_is_date_dateobject(date):
+    determine_date = date
+    return isinstance(determine_date, datetime)
