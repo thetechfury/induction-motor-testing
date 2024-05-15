@@ -749,9 +749,6 @@ class PerformanceDeterminationFormSave(View):
     def perform_calculation_and_extend_determine_data_list(self,determine_data_list,avg_resistance):
             extended_list = []
             for determine_data in determine_data_list:
-                is_determine_date_dateobject = check_is_date_dateobject(determine_data[0])
-                if is_determine_date_dateobject:
-                    determine_data[0] = str(determine_data[0])
                 current_amp = float(determine_data[6])
                 speed_rpm =   float(determine_data[4])
                 voltage = float(determine_data[2])
@@ -958,6 +955,9 @@ def read_mdb_table(table_name, file_path):
 
         # Fetch and print the results
         for row in cursor.fetchall():
+            is_date_dateobject = check_is_date_dateobject(row[0])
+            if is_date_dateobject:
+                row[0] = str(row[0])
             data.append(row)
         # Close cursor and connection
         cursor.close()
@@ -967,7 +967,12 @@ def read_mdb_table(table_name, file_path):
         table = MDBTable(file_path=file_path, table=table_name)
         data.append(table.columns)
         for row in table:
+            is_date_dateobject = check_is_date_dateobject(row[0])
+            if is_date_dateobject:
+                row[0] = str(row[0])
             data.append(row)
+            print(row)
+
     else:
         print(f"Running on {system}")
 
