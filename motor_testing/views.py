@@ -376,7 +376,7 @@ class NoLoadFormSaveView(View):
         except Exception as e:
             error_message = str(e)
             return JsonResponse({'error': f'No record found against this date {date_str}'}, status=400)
-        filtered_data = [item for item in csv_data if item[1] == serial_number]
+        filtered_data = [list(item) for item in csv_data if item[1] == serial_number]
         if filtered_data ==[]:
             return JsonResponse({'error': f'No record found against this serial number {serial_number}'}, status=400)
 
@@ -549,7 +549,7 @@ class LockRotorFormSave(View):
         except Exception as e:
             error_message = str(e)
             return JsonResponse({'error': f'No record found against this date {date_str}'}, status=400)
-        filtered_data = [item for item in csv_data if item[1] == serial_number]
+        filtered_data = [list(item) for item in csv_data if item[1] == serial_number]
         if filtered_data ==[]:
             return JsonResponse({'error': f'No record found against this serial number {serial_number}'}, status=400)
 
@@ -670,8 +670,13 @@ class PerformanceDeterminationFormSave(View):
             csv_serial_number = data[3]
             csv_load_percentage = data[7]
             if csv_serial_number == motor_serial_number:
-                filtered_data_key = csv_load_percentage.strip('%')  # Remove leading and trailing percentage signs
-                filtered_data[filtered_data_key].append(data)
+                speed_rpm = float(data[4])
+                voltage = float(data[2])
+                torque = float(data[5])
+                current_amp = float(data[6])
+                if voltage and torque and speed_rpm and current_amp:
+                    filtered_data_key = csv_load_percentage.strip('%')  # Remove leading and trailing percentage signs
+                    filtered_data[filtered_data_key].append(data)
                 # filtered_data[f'{data[7]}'].append(data)
 
         return filtered_data
@@ -703,6 +708,7 @@ class PerformanceDeterminationFormSave(View):
         performance_determination_test.report_date = date_str
 
         try:
+
             filtered_determine_data = self.align_load_data(motor.serial_number,
                                                            self.get_performance_tests_data(table_name))
         except Exception as e:
@@ -967,11 +973,8 @@ def read_mdb_table(table_name, file_path):
         table = MDBTable(file_path=file_path, table=table_name)
         data.append(table.columns)
         for row in table:
-            is_date_dateobject = check_is_date_dateobject(row[0])
-            if is_date_dateobject:
-                row[0] = str(row[0])
             data.append(row)
-            print(row)
+
 
     else:
         print(f"Running on {system}")
