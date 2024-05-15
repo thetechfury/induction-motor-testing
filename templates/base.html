@@ -71,8 +71,7 @@
             >
               <li class="dropdown-header">
                 <h6>
-                  {% if user.first_name %} {{ user.first_name }} {{
-                  user.last_name }} {% else %} {{ user.username }} {% endif %}
+                  {% if user.first_name %} {{ user.first_name }} {{user.last_name }} {% else %} {{ user.username }} {% endif %}
                 </h6>
               </li>
               <li>
