@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
 from motor_testing.models import InductionMotor, ElectricResistanceTest, TemperatureRiseTest, \
     PerformanceDeterminationTest, NoLoadTest, WithstandVoltageACTest, InsulationResistanceTest, LockRotorTest, \
     PerformanceTest
@@ -50,6 +51,11 @@ class LockRotorTestAdmin(admin.ModelAdmin):
     list_display = ('vibration', 'noise', 'temperature')
 
 admin.site.register(PerformanceTest)
+
+# admin.site.unregister(User)
+# @admin.register(User)
+# class VocherAdmin(admin.ModelAdmin):
+#     change_form_template = 'admin/admin_user.html'
 
 
 class ConfigAdmin(admin.ModelAdmin):
