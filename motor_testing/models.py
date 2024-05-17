@@ -56,7 +56,7 @@ class InductionMotor(TimeStampedModel):
     )
     voltage = models.PositiveIntegerField(blank=True, null=True)
     current = models.PositiveIntegerField(blank=True, null=True)
-    power = models.PositiveIntegerField(blank=True, null=False)
+    power = models.PositiveIntegerField(blank=False, null=False)
     frequency = models.PositiveIntegerField(blank=True, null=True)
     speed = models.PositiveIntegerField(blank=True, null=True)
     p_f = models.DecimalField(
