@@ -812,15 +812,13 @@ class PerformanceDeterminationFormSave(View):
             machainal_power = avg_torque * avg_speed_rpm
             loses = float(avg_resistance) * avg_current * avg_current
             electrical_power = avg_current * avg_voltage
-            real_power = avg_voltage * avg_current * POWER_FACTOR * 1.732
-            apperent_power = avg_voltage * avg_current * 1.732
-
+            POWER = performance_determination_test.induction_motor.power
             performance_test_param.load = self.performancetest.get(key)['load']
             performance_test_param.current = avg_current
             performance_test_param.slip = ((ns - avg_speed_rpm) / ns) * 100
             performance_test_param.speed = avg_speed_rpm
             performance_test_param.efficiency = (machainal_power / (electrical_power + machainal_power +loses )) * 100
-            performance_test_param.cos = real_power / apperent_power
+            performance_test_param.cos = (POWER * 1000)/(1.732*avg_voltage*avg_current)
         else:
             performance_test_param.load = self.performancetest.get(key)['load']
             performance_test_param.current = self.performancetest.get(key)['current']
