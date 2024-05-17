@@ -22,7 +22,7 @@ import subprocess
 import math
 from datetime import datetime
 
-from core_settings.settings import MDB_TO_CSV_EXE_LOCATION, WK_HTML_TO_PDF_PATH,POWER_FACTOR
+from core_settings.settings import MDB_TO_CSV_EXE_LOCATION, WK_HTML_TO_PDF_PATH
 from motor_testing.forms import (
     InitialForm, SearchForm, ElectricResistanceTestForm, TemperatureRiseTestForm, PerformanceDeterminationTestForm,
     NoLoadTestForm, WithstandVoltageACTestForm, InsulationResistanceTestForm, PerformanceTestForm, LockRotorTestForm
@@ -407,10 +407,9 @@ class NoLoadFormSaveView(View):
             avg_speed = sum_speed / num_entries
             avg_volt = sum_volt / num_entries
             avg_amp = sum_amp / num_entries
-
-            PF = POWER_FACTOR
-
-            power = avg_volt * avg_amp * PF * math.sqrt(3)
+            motor_power = motor.power
+            power_factor = (motor_power * 1000)/(1.732*avg_volt*avg_amp)
+            power = avg_volt * avg_amp * power_factor * math.sqrt(3)
 
         default = Decimal('0.00')
         direction_of_rotation = request.POST.get('no_load_test-direction_of_rotation')
@@ -571,9 +570,9 @@ class LockRotorFormSave(View):
         avg_speed = sum_speed / num_entries
         avg_amp = sum_amp / num_entries
         avg_volt = sum_volt / num_entries
-        PF = POWER_FACTOR
-
-        power = avg_volt * avg_amp * PF * math.sqrt(3)
+        motor_power= motor.power
+        power_factor = (motor_power * 1000) / (1.732 * avg_volt * avg_amp)
+        power = avg_volt * avg_amp * power_factor * math.sqrt(3)
 
         default = Decimal('0.00')
 
@@ -728,7 +727,7 @@ class PerformanceDeterminationFormSave(View):
             return JsonResponse({'error': 'Please fill Resistance 3 in  Electric Resistance Test'}, status=400)
         average_resistance = (electric_resistance_object.resistance_ohm_1 + electric_resistance_object.resistance_ohm_2 + electric_resistance_object.resistance_ohm_3)/3
         determine_data_list = self.convert_determine_data_in_list(filtered_determine_data)
-        extended_determine_data_list = self.perform_calculation_and_extend_determine_data_list(determine_data_list,average_resistance)
+        extended_determine_data_list = self.perform_calculation_and_extend_determine_data_list(determine_data_list,average_resistance,motor)
         performance_determination_test.mdb_data = extended_determine_data_list
         performance_determination_test.save()
         self.save_performance_test_parameters(motor, performance_determination_test, filtered_determine_data,
@@ -752,7 +751,7 @@ class PerformanceDeterminationFormSave(View):
         determine_list = [list(item) for sublist in determine_dict.values() for item in sublist if len(item) > 0]
         return determine_list
 
-    def perform_calculation_and_extend_determine_data_list(self,determine_data_list,avg_resistance):
+    def perform_calculation_and_extend_determine_data_list(self,determine_data_list,avg_resistance,motor):
             extended_list = []
             for determine_data in determine_data_list:
                 current_amp = float(determine_data[6])
@@ -764,7 +763,9 @@ class PerformanceDeterminationFormSave(View):
                 electrical_power = current_amp * voltage
                 efficiency = (machainal_power / (electrical_power + machainal_power + loses)) * 100
                 horsepower = (torque* speed_rpm) / 5252
-                watts_output = voltage * current_amp * POWER_FACTOR
+                motor_power = motor.power
+                power_factor = (motor_power * 1000)/(1.732*voltage*current_amp)
+                watts_output = voltage * current_amp * power_factor
                 determine_data.append(horsepower)
                 determine_data.append(watts_output)
                 determine_data.append(efficiency)
@@ -812,13 +813,14 @@ class PerformanceDeterminationFormSave(View):
             machainal_power = avg_torque * avg_speed_rpm
             loses = float(avg_resistance) * avg_current * avg_current
             electrical_power = avg_current * avg_voltage
-            POWER = performance_determination_test.induction_motor.power
+            motor_power = performance_determination_test.induction_motor.power
+            power_factor = (motor_power * 1000)/(1.732*avg_voltage*avg_current)
             performance_test_param.load = self.performancetest.get(key)['load']
             performance_test_param.current = avg_current
             performance_test_param.slip = ((ns - avg_speed_rpm) / ns) * 100
             performance_test_param.speed = avg_speed_rpm
             performance_test_param.efficiency = (machainal_power / (electrical_power + machainal_power +loses )) * 100
-            performance_test_param.cos = (POWER * 1000)/(1.732*avg_voltage*avg_current)
+            performance_test_param.cos = power_factor
         else:
             performance_test_param.load = self.performancetest.get(key)['load']
             performance_test_param.current = self.performancetest.get(key)['current']
