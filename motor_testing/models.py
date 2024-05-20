@@ -1,10 +1,9 @@
 from decimal import Decimal
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator,MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import JSONField
 from datetime import date
-
 
 
 class TimeStampedModel(models.Model):
@@ -30,8 +29,8 @@ class InductionMotor(TimeStampedModel):
     Test_Type_45 = '45kw'
     Test_Type_5 = '5kw'
     TestType = (
-        (Test_Type_45,"up to 45KW"),
-        (Test_Type_5,"5KW")
+        (Test_Type_45, "45KW"),
+        (Test_Type_5, "Up to 5KW")
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="induction_motor")
@@ -74,7 +73,7 @@ class InductionMotor(TimeStampedModel):
     status = models.CharField(max_length=7, choices=REPORT_STATUS, default=ACTIVE, blank=True)
     report_link = models.CharField(max_length=50, null=True, blank=True)
     remarks = models.CharField(max_length=500, blank=True, null=True)
-    test_type = models.CharField(max_length=6,choices=TestType,default=TestType[0])
+    test_type = models.CharField(max_length=6, choices=TestType, default=TestType[0])
 
     def __str__(self):
         return self.serial_number
@@ -111,7 +110,6 @@ class PerformanceTest(models.Model):
     page_number = models.IntegerField(default=1)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
 
-
     def __str__(self):
         return f'{self.motor.serial_number} - {self.test_type}'
 
@@ -139,7 +137,6 @@ class ElectricResistanceTest(TimeStampedModel):
     remarks = models.TextField(max_length=250, blank=True, null=True)
 
 
-
 class TemperatureRiseTest(TimeStampedModel):
     """ 3.2. Temperature Rise - Nominal Condition - Direct Test Report """
 
@@ -161,7 +158,6 @@ class TemperatureRiseTest(TimeStampedModel):
         max_digits=6, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
     remarks = models.TextField(max_length=250, blank=True, null=True)
-
 
 
 class PerformanceDeterminationTest(TimeStampedModel):
@@ -224,12 +220,11 @@ class NoLoadTest(TimeStampedModel):
     speed = models.DecimalField(
         max_digits=7, decimal_places=3, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))]
     )
-    direction_of_rotation = models.CharField(max_length=20, choices=DIRECTION_CHOICES,default=DIRECTION_CHOICES[0])
+    direction_of_rotation = models.CharField(max_length=20, choices=DIRECTION_CHOICES, default=DIRECTION_CHOICES[0])
     report_date = models.CharField(max_length=20, null=True, blank=True)
     mdb_data = JSONField(null=True, blank=True)
-    reported_date= models.DateField(default=date.today)
+    reported_date = models.DateField(default=date.today)
     remarks = models.TextField(max_length=250, blank=True, null=True)
-
 
 
 class WithstandVoltageACTest(TimeStampedModel):
