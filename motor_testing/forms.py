@@ -28,6 +28,8 @@ class InitialForm(ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
+            if field == 'test_type':
+                self.fields[field].widget.attrs["class"] = "form-select"
 
 
 class PerformanceTestForm(ModelForm):
@@ -68,9 +70,6 @@ class ElectricResistanceTestForm(forms.ModelForm):
             if field == "remarks":
                 self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
                 self.fields[field].widget.attrs["maxlength"] = 250
-
-            # if not field == "ambient_temperature_C":
-            #     self.fields[field].widget.attrs.update({'min': 0.000, 'max': 999.999})
 
             self.fields[field].widget.attrs["class"] = "form-control resistance"
             self.fields[field].widget.attrs["id"] = field
@@ -130,6 +129,9 @@ class NoLoadTestForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
+            if field == 'direction_of_rotation':
+                self.fields[field].widget.attrs["class"] = "form-select"
+
             if field == "remarks":
                 self.fields[field].widget = forms.Textarea(attrs={'rows': 4, 'cols': 150})
                 self.fields[field].widget.attrs["class"] = "form-control"

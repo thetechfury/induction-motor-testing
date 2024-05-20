@@ -314,6 +314,7 @@
                         <th>Cos Ø</th>
                     </tr>
                     {% for parameter in parameters %}
+                        {% if parameter.load %}
                         <tr>
                             <td>{{ parameter.load }}</td>
                             <td>{{ parameter.current }}</td>
@@ -322,6 +323,7 @@
                             <td>{{ parameter.efficiency }}</td>
                             <td>{{ parameter.cos }}</td>
                         </tr>
+                    {% endif %}
                     {% endfor %}
                 {% endif %}
             {% comment %} {% endfor %} {% endcomment %}

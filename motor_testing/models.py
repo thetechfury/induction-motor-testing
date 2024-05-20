@@ -30,7 +30,7 @@ class InductionMotor(TimeStampedModel):
     Test_Type_45 = '45kw'
     Test_Type_5 = '5kw'
     TestType = (
-        (Test_Type_45,"upto 45KW"),
+        (Test_Type_45,"up to 45KW"),
         (Test_Type_5,"5KW")
     )
 
