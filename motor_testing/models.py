@@ -27,6 +27,12 @@ class InductionMotor(TimeStampedModel):
         (ACTIVE, "Active"),
         (DELETE, "DELETED"),
     )
+    Test_Type_45 = '45kw'
+    Test_Type_5 = '5kw'
+    TestType = (
+        (Test_Type_45,"upto 45KW"),
+        (Test_Type_5,"5KW")
+    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="induction_motor")
     serial_number = models.CharField(max_length=20)
@@ -68,6 +74,7 @@ class InductionMotor(TimeStampedModel):
     status = models.CharField(max_length=7, choices=REPORT_STATUS, default=ACTIVE, blank=True)
     report_link = models.CharField(max_length=50, null=True, blank=True)
     remarks = models.CharField(max_length=500, blank=True, null=True)
+    test_type = models.CharField(max_length=6,choices=TestType,default=TestType[0])
 
     def __str__(self):
         return self.serial_number

@@ -657,7 +657,7 @@ class PerformanceDeterminationFormSave(View):
         csv_data = read_mdb_table(table_name, configuration.performance_determination)
         return csv_data
 
-    def align_load_data(self, motor_serial_number, csv_data):
+    def align_load_data(self, motor_serial_number, csv_data,motor):
         filtered_data = {
             '25': [],
             '50': [],
@@ -669,10 +669,16 @@ class PerformanceDeterminationFormSave(View):
             csv_serial_number = data[3]
             csv_load_percentage = data[7]
             if csv_serial_number == motor_serial_number:
-                speed_rpm = float(data[4])
-                voltage = float(data[2])
                 torque = float(data[5])
-                current_amp = float(data[6])
+                if motor.test_type == '45kw':
+                    speed_rpm = float(data[4])
+                    voltage = float(data[2])
+                    current_amp = float(data[6])
+                else:
+                    speed_rpm = float(data[9])
+                    voltage = float(data[10])
+                    current_amp = float(data[8])
+
                 if voltage and torque and speed_rpm and current_amp:
                     filtered_data_key = csv_load_percentage.strip('%')  # Remove leading and trailing percentage signs
                     filtered_data[filtered_data_key].append(data)
@@ -709,7 +715,7 @@ class PerformanceDeterminationFormSave(View):
         try:
 
             filtered_determine_data = self.align_load_data(motor.serial_number,
-                                                           self.get_performance_tests_data(table_name))
+                                                           self.get_performance_tests_data(table_name),motor)
         except Exception as e:
             return JsonResponse({'error': f'No record found against this date {date_str}'}, status=400)
         if filtered_determine_data['25'] == [] and filtered_determine_data['50'] == [] and filtered_determine_data[
