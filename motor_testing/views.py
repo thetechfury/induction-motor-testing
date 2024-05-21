@@ -398,12 +398,11 @@ class NoLoadFormSaveView(View):
             # Sum up the values
             for entry in filtered_data:
                 sum_rpm += float(entry[5])
+                sum_speed += float(entry[4])
                 if motor.test_type == '45kw':
-                    sum_speed += float(entry[4])
                     sum_volt += float(entry[3])
                     sum_amp += float(entry[2])
                 else:
-                    sum_speed += float(entry[9])
                     sum_volt += float(entry[10])
                     sum_amp += float(entry[8])
 
@@ -568,12 +567,11 @@ class LockRotorFormSave(View):
 
         # Sum up the values
         for entry in filtered_data:
+            sum_speed += float(entry[4])
             if motor.test_type == '45kw':
-                sum_speed +=float(entry[4])
                 sum_amp += float(entry[2])
                 sum_volt += float(entry[3])
             else:
-                sum_speed += float(entry[9])
                 sum_amp += float(entry[8])
                 sum_volt += float(entry[10])
 
@@ -681,12 +679,11 @@ class PerformanceDeterminationFormSave(View):
             csv_load_percentage = data[7]
             if csv_serial_number == motor_serial_number:
                 torque = float(data[5])
+                speed_rpm = float(data[4])
                 if motor.test_type == '45kw':
-                    speed_rpm = float(data[4])
                     voltage = float(data[2])
                     current_amp = float(data[6])
                 else:
-                    speed_rpm = float(data[9])
                     voltage =  float(data[10])
                     current_amp = float(data[8])
 
@@ -772,13 +769,12 @@ class PerformanceDeterminationFormSave(View):
     def perform_calculation_and_extend_determine_data_list(self,determine_data_list,avg_resistance,motor):
             extended_list = []
             for determine_data in determine_data_list:
+                speed_rpm = float(determine_data[4])
                 if motor.test_type == '45kw':
                     current_amp = float(determine_data[6])
-                    speed_rpm =   float(determine_data[4])
                     voltage = float(determine_data[2])
                 else:
                     current_amp = float(determine_data[8])
-                    speed_rpm = float(determine_data[9])
                     voltage = float(determine_data[10])
 
                 if current_amp and speed_rpm and voltage:
@@ -825,22 +821,22 @@ class PerformanceDeterminationFormSave(View):
             voltage = 0
             torque = 0
             for determine_data in filtered_determine_data:
+                speed_rpm += float(determine_data[4])
                 if performance_determination_test.induction_motor.test_type == '45kw':
                     current_amp += float(determine_data[6])
-                    speed_rpm += float(determine_data[4])
                     voltage += float(determine_data[2])
+                    hertz_freq += float(determine_data[1])
                 else:
                     current_amp += float(determine_data[8])
-                    speed_rpm += float(determine_data[9])
                     voltage += float(determine_data[10])
+                    hertz_freq += float(determine_data[9])
 
-                hertz_freq += float(determine_data[1])
+
                 torque += float(determine_data[5])
-                avg_hertz_freq = hertz_freq / len(filtered_determine_data)
+            avg_hertz_freq = hertz_freq / len(filtered_determine_data)
             if current_amp and voltage and speed_rpm and avg_hertz_freq:
                 avg_current = current_amp / len(filtered_determine_data)
                 avg_speed_rpm = speed_rpm / len(filtered_determine_data)
-                # avg_hertz_freq = hertz_freq / len(filtered_determine_data)
                 avg_voltage = voltage / len(filtered_determine_data)
                 avg_torque = torque / len(filtered_determine_data)
                 ns = (avg_hertz_freq * 120) / 2
@@ -927,6 +923,7 @@ class ChartView(View):
     def get(self, request, *args, **kwargs):
         performace_determination_id=self.get_performance_dertermination_id(kwargs['id'])
         performance_determination_data= PerformanceDeterminationTest.objects.get(id= performace_determination_id).mdb_data
+        induction_motor = PerformanceDeterminationTest.objects.get(id= performace_determination_id).induction_motor
         torque_values = []
         speed_values = []
         amplitude_values = []
@@ -934,12 +931,16 @@ class ChartView(View):
         horsepower_values = []
         watts_out_values = []
         for data in performance_determination_data:
-            current_amp = data[6]
+            if induction_motor.test_type == '45kw':
+                current_amp = data[6]
+            else:
+                current_amp = data[9]
+
             speed_rpm = float(data[4])
             torque = data[5]
-            horsepower = data[8]
-            watts_out = data[9]
-            efficiency = data[10]
+            horsepower = data[11]
+            watts_out = data[12]
+            efficiency = data[13]
             speed_values.append(speed_rpm)
             amplitude_values.append(current_amp)
             torque_values.append(torque)
