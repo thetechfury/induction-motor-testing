@@ -263,7 +263,7 @@ class GeneratePDF(PDFView):
             InductionMotor.objects.filter(id=kwargs['id']).update(report_link=report_link)
         with open(report_link, 'rb') as pdf:
             response = HttpResponse(pdf.read(), content_type='application/pdf')
-            response['Content-Disposition'] = 'inline;filename=mypdf.pdf'
+            response['Content-Disposition'] = f'inline;filename={induction_motor.serial_number}-motor-report.pdf'
             return response
 
 
