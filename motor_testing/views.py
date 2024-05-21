@@ -399,9 +399,9 @@ class NoLoadFormSaveView(View):
             for entry in filtered_data:
                 sum_speed_rpm += float(entry[4])
                 if motor.test_type == '45kw':
-                    sum_frequency_hertz += float(entry[2])
-                    sum_volt += float(entry[3])
-                    sum_current_amp += float(entry[2])
+                    sum_frequency_hertz += float(entry[1])
+                    sum_volt += float(entry[2])
+                    sum_current_amp += float(entry[6])
                 else:
                     sum_frequency_hertz += float(entry[9])
                     sum_volt += float(entry[10])
@@ -689,10 +689,10 @@ class PerformanceDeterminationFormSave(View):
                     current_amp = float(data[8])
 
                 if voltage and torque and speed_rpm and current_amp:
-                    if csv_load_percentage !=' ':
+                    if len(csv_load_percentage.strip()):
                         filtered_data_key = csv_load_percentage.strip('%')  # Remove leading and trailing percentage signs
                         filtered_data[filtered_data_key].append(data)
-                # filtered_data[f'{data[7]}'].append(data)
+
 
         return filtered_data
 
