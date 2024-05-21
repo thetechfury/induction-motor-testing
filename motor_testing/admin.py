@@ -10,6 +10,10 @@ from .models import Configuration
 # Register your models here.
 
 
+admin.site.site_header = ' Motor Testing Admin '
+
+
+
 @register(InductionMotor)
 class InductionMotorAdmin(admin.ModelAdmin):
     list_display = ('serial_number', 'created_on', 'updated_on', 'status', 'user')
@@ -51,12 +55,6 @@ class LockRotorTestAdmin(admin.ModelAdmin):
     list_display = ('vibration', 'noise', 'temperature')
 
 admin.site.register(PerformanceTest)
-
-# admin.site.unregister(User)
-# @admin.register(User)
-# class VocherAdmin(admin.ModelAdmin):
-#     change_form_template = 'admin/admin_user.html'
-
 
 class ConfigAdmin(admin.ModelAdmin):
     list_display = ('no_load_test','performance_determination','lock_rotor_test',)
