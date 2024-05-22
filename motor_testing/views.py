@@ -426,7 +426,7 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.speed = avg_rpm if avg_rpm else default
         motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
-        remarks = request.POST.get('noload_test-remarks')
+        remarks = request.POST.get('no_load_test-remarks')
         motor.no_load_test.remarks = remarks
 
         _formatted_date = format_date_to_ymd(date_str)

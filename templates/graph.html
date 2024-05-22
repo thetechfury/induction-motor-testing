@@ -55,7 +55,7 @@
 
             },
             {
-                label:'Ampares',
+                label:'Amperes',
                 data: {{amplitude|safe}},
                 tension:0.4,
                 yAxisID: 'amplitude',
@@ -135,7 +135,7 @@
                             position: 'right',
                             title : {
                                 display: true,
-                                text: " Amps 1 ",
+                                text: " Amps ",
                                 color:  "red"
                             },
                             grid:{
@@ -268,7 +268,7 @@
 
                 // Create a temporary anchor element to trigger the download
                 var link = document.createElement('a');
-                link.download = 'chart_image.png';
+                link.download = `chart.png`;
                 link.href = dataURL;
                 document.body.appendChild(link);
                 link.click();
