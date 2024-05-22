@@ -382,11 +382,11 @@ class NoLoadFormSaveView(View):
 
         # Initialize sums
 
-        sum_speed_rpm = 0
+        sum_rpm = 0
         sum_frequency_hertz = 0
         sum_volt = 0
         sum_current_amp = 0
-        avg_speed_rpm = 0
+        avg_rpm = 0
         avg_frequency_hertz = 0
         avg_volt = 0
         avg_current_amp = 0
@@ -397,19 +397,19 @@ class NoLoadFormSaveView(View):
 
             # Sum up the values
             for entry in filtered_data:
-                sum_speed_rpm += float(entry[4])
+                sum_rpm += float(entry[5])
                 if motor.test_type == '45kw':
-                    sum_frequency_hertz += float(entry[1])
-                    sum_volt += float(entry[2])
-                    sum_current_amp += float(entry[6])
+                    sum_frequency_hertz += float(entry[4])
+                    sum_volt += float(entry[3])
+                    sum_current_amp += float(entry[2])
                 else:
-                    sum_frequency_hertz += float(entry[9])
-                    sum_volt += float(entry[10])
-                    sum_current_amp += float(entry[8])
+                    sum_frequency_hertz += float(entry[8])
+                    sum_volt += float(entry[7])
+                    sum_current_amp += float(entry[6])
 
 
             # Calculate averages
-            avg_speed_rpm = sum_speed_rpm / num_entries
+            avg_rpm = sum_rpm / num_entries
             avg_frequency_hertz = sum_frequency_hertz / num_entries
             avg_volt = sum_volt / num_entries
             avg_current_amp = sum_current_amp / num_entries
@@ -423,7 +423,7 @@ class NoLoadFormSaveView(View):
         motor.no_load_test.current = avg_current_amp if avg_current_amp else default
         motor.no_load_test.power = power if power else default
         motor.no_load_test.frequency = avg_frequency_hertz if avg_frequency_hertz else default
-        motor.no_load_test.speed = avg_speed_rpm if avg_speed_rpm else default
+        motor.no_load_test.speed = avg_rpm if avg_rpm else default
         motor.no_load_test.mdb_data = filtered_data
         motor.no_load_test.report_date = table_name
         remarks = request.POST.get('noload_test-remarks')
@@ -559,7 +559,7 @@ class LockRotorFormSave(View):
             return JsonResponse({'error': f'No record found against this serial number {serial_number}'}, status=400)
 
         # Initialize sums
-        sum_speed_rpm = 0
+        sum_frequency_hertz = 0
         sum_current_amp = 0
         sum_volt = 0
 
@@ -568,16 +568,17 @@ class LockRotorFormSave(View):
 
         # Sum up the values
         for entry in filtered_data:
-            sum_speed_rpm += float(entry[4])
             if motor.test_type == '45kw':
-                sum_current_amp += float(entry[6])
-                sum_volt += float(entry[2])
+                sum_current_amp += float(entry[2])
+                sum_volt += float(entry[3])
+                sum_frequency_hertz += float(entry[4])
             else:
-                sum_current_amp += float(entry[8])
-                sum_volt += float(entry[10])
+                sum_current_amp += float(entry[5])
+                sum_volt += float(entry[6])
+                sum_frequency_hertz += float(entry[7])
 
         # Calculate averages
-        avg_speed_rpm = sum_speed_rpm / num_entries
+        avg_frequency_hertz = sum_frequency_hertz / num_entries
         avg_current_amp = sum_current_amp / num_entries
         avg_volt = sum_volt / num_entries
         motor_power= motor.power
@@ -594,7 +595,7 @@ class LockRotorFormSave(View):
         motor.lock_rotor_test.vibration = vibration if vibration else default
         motor.lock_rotor_test.noise = noise if noise else default
         motor.lock_rotor_test.temperature = temperature if temperature else default
-        motor.lock_rotor_test.speed = avg_speed_rpm if avg_speed_rpm else default
+        motor.lock_rotor_test.speed = avg_frequency_hertz if avg_frequency_hertz else default
         motor.lock_rotor_test.voltage = avg_volt if avg_volt else default
         motor.lock_rotor_test.current = avg_current_amp if avg_current_amp else default
         motor.lock_rotor_test.power = power if power else default
@@ -615,7 +616,7 @@ class LockRotorFormSave(View):
             'noise': noise,
             'temperature': temperature,
             'avg_amp': avg_current_amp,
-            'avg_speed': avg_speed_rpm,
+            'avg_speed': avg_frequency_hertz,
             'avg_volt': avg_volt,
             'power': power,
             'status': 'completed',
@@ -955,7 +956,8 @@ class ChartView(View):
             'speed':speed_values,
             'efficiency':efficiency_values,
             'horse_power':horsepower_values,
-            'watts_out': watts_out_values
+            'watts_out': watts_out_values,
+            'motor_serial':induction_motor.serial_number,
         }
 
         return render(request, 'graph.html',context)
