@@ -51,6 +51,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search')
+        # The query is to check is performance determination is completed to show the graph button on listing screen
         queryset = InductionMotor.objects.annotate(
             has_completed_performance_determination_test=Exists(
                 PerformanceTest.objects.filter(
@@ -62,7 +63,7 @@ class InductionMotorListingsView(LoginRequiredMixin, ListView, FormMixin):
         ).filter(status=InductionMotor.ACTIVE)
 
         if search_query:
-            queryset = queryset.filter( status=InductionMotor.ACTIVE)
+            queryset = queryset.filter( serial_number__icontains=search_query, status=InductionMotor.ACTIVE)
 
         return queryset.annotate(
             report_status=Case(When(
