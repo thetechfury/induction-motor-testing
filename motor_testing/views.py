@@ -631,10 +631,34 @@ class LockRotorFormSave(View):
 class PerformanceDeterminationFormSave(View):
     list = []
     performancetest = {
-        '25': {
-            'load': 25,
+        '10': {
+            'load': 10,
             'current': 0,
             'slip': 0.0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
+        },
+        '20': {
+            'load': 20,
+            'current': 0,
+            'slip': 0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
+        },
+        '30': {
+            'load': 30,
+            'current': 0,
+            'slip': 0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
+        },
+        '40': {
+            'load': 40,
+            'current': 0,
+            'slip': 0,
             'speed': 0,
             'efficiency': 0,
             'cos': 0
@@ -642,13 +666,37 @@ class PerformanceDeterminationFormSave(View):
         '50': {
             'load': 50,
             'current': 0,
+            'slip': 0.0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
+        },
+        '60': {
+            'load': 60,
+            'current': 0,
             'slip': 0,
             'speed': 0,
             'efficiency': 0,
             'cos': 0
         },
-        '75': {
-            'load': 75,
+        '70': {
+            'load': 70,
+            'current': 0,
+            'slip': 0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
+        },
+        '80': {
+            'load': 80,
+            'current': 0,
+            'slip': 0,
+            'speed': 0,
+            'efficiency': 0,
+            'cos': 0
+        },
+        '90': {
+            'load': 90,
             'current': 0,
             'slip': 0,
             'speed': 0,
@@ -662,7 +710,9 @@ class PerformanceDeterminationFormSave(View):
             'speed': 0,
             'efficiency': 0,
             'cos': 0
-        }}
+        },
+
+    }
 
     def get_performance_tests_data(self, table_name):
         configuration = Configuration.objects.all().first()
@@ -671,9 +721,15 @@ class PerformanceDeterminationFormSave(View):
 
     def align_load_data(self, motor_serial_number, csv_data,motor):
         filtered_data = {
-            '25': [],
+            '10':[],
+            '20': [],
+            '30': [],
+            '40': [],
             '50': [],
-            '75': [],
+            '60': [],
+            '70': [],
+            '80': [],
+            '90': [],
             '100': [],
         }
         # for data in csv_data:
@@ -693,7 +749,9 @@ class PerformanceDeterminationFormSave(View):
                 if voltage and torque and speed_rpm and current_amp:
                     if len(csv_load_percentage.strip()):
                         filtered_data_key = csv_load_percentage.strip('%')  # Remove leading and trailing percentage signs
-                        filtered_data[filtered_data_key].append(data)
+                        if filtered_data_key == '10':
+                            filtered_data[filtered_data_key].append(data)
+                        # filtered_data[filtered_data_key].append(data)
 
 
         return filtered_data
@@ -730,8 +788,9 @@ class PerformanceDeterminationFormSave(View):
                                                            self.get_performance_tests_data(table_name),motor)
         except Exception as e:
             return JsonResponse({'error': f'No record found against this date {date_str}'}, status=400)
-        if filtered_determine_data['25'] == [] and filtered_determine_data['50'] == [] and filtered_determine_data[
-            '75'] == [] and filtered_determine_data['100'] == []:
+        if filtered_determine_data['10'] == [] and filtered_determine_data['20'] == [] and filtered_determine_data[
+            '30'] == [] and filtered_determine_data['40'] == [] and filtered_determine_data['50'] == [] and filtered_determine_data['60'] == [] and filtered_determine_data[
+            '70'] == [] and filtered_determine_data['80'] == []  and filtered_determine_data['90'] == []  and filtered_determine_data['100'] == [] :
             return JsonResponse({'error': f'No record found against this serial number {motor.serial_number}'}, status=400)
 
 
@@ -841,7 +900,8 @@ class PerformanceDeterminationFormSave(View):
                 avg_speed_rpm = speed_rpm / len(filtered_determine_data)
                 avg_voltage = voltage / len(filtered_determine_data)
                 avg_torque = torque / len(filtered_determine_data)
-                ns = (avg_hertz_freq * 120) / 2
+                # ns = (avg_hertz_freq * 120) / 2
+                ns = 3000
                 machainal_power = avg_torque * avg_speed_rpm
                 loses = float(avg_resistance) * avg_current_amp * avg_current_amp
                 electrical_power = avg_current_amp * avg_voltage
@@ -939,10 +999,11 @@ class ChartView(View):
                 current_amp = data[8]
 
             speed_rpm = float(data[4])
-            torque = data[5]
-            horsepower = data[11]
-            watts_out = data[12]
-            efficiency = data[13]
+            torque = float(data[5])
+            horsepower = float(data[11])
+            watts_out = float(data[12])
+            efficiency = float(data[13])
+            load = float(data[7])
             speed_values.append(speed_rpm)
             amplitude_values.append(current_amp)
             torque_values.append(torque)
@@ -959,6 +1020,7 @@ class ChartView(View):
             'horse_power':horsepower_values,
             'watts_out': watts_out_values,
             'motor_serial':induction_motor.serial_number,
+            'load':load
         }
 
         return render(request, 'graph.html',context)

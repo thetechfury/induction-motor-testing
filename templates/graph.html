@@ -44,7 +44,8 @@
     <script>
         const ctx = document.getElementById('myChart').getContext('2d')
         const data = {
-            labels : [0,250,500,750,1000,1250,1500,1750,2000,2250,2500,2575,3000],
+<!--            labels : [0,250,500,750,1000,1250,1500,1750,2000,2250,2500,2750,3000],-->
+            labels : {{speed|safe}},
 
             datasets :[
                 {
@@ -278,5 +279,8 @@
 
         // Add event listener to the download button
         document.getElementById('downloadBtn').addEventListener('click', downloadChartAsImage);
+
+ });
+
     </script>
 {% endblock %}
