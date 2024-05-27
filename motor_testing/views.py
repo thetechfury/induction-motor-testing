@@ -749,9 +749,9 @@ class PerformanceDeterminationFormSave(View):
                 if voltage and torque and speed_rpm and current_amp:
                     if len(csv_load_percentage.strip()):
                         filtered_data_key = csv_load_percentage.strip('%')  # Remove leading and trailing percentage signs
-                        if filtered_data_key == '10':
-                            filtered_data[filtered_data_key].append(data)
-                        # filtered_data[filtered_data_key].append(data)
+                        # if filtered_data_key == '10':
+                        #     filtered_data[filtered_data_key].append(data)
+                        filtered_data[filtered_data_key].append(data)
 
 
         return filtered_data
@@ -805,7 +805,9 @@ class PerformanceDeterminationFormSave(View):
         average_resistance = (electric_resistance_object.resistance_ohm_1 + electric_resistance_object.resistance_ohm_2 + electric_resistance_object.resistance_ohm_3)/3
         determine_data_list = self.convert_determine_data_in_list(filtered_determine_data)
         extended_determine_data_list = self.perform_calculation_and_extend_determine_data_list(determine_data_list,average_resistance,motor)
-        performance_determination_test.mdb_data = extended_determine_data_list
+        extended_determine_data_set = {tuple(inner_list) for inner_list in extended_determine_data_list}
+        unique_extended_determine_data_list = [list(inner_tuple) for inner_tuple in extended_determine_data_set]
+        performance_determination_test.mdb_data = unique_extended_determine_data_list
         performance_determination_test.save()
         self.save_performance_test_parameters(motor, performance_determination_test, filtered_determine_data,
                                                   electric_resistance_object)
