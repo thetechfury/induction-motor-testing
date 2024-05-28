@@ -1003,12 +1003,25 @@ class ChartView(View):
         performance_determination_data = PerformanceDeterminationTest.objects.get(
             id=performace_determination_id).mdb_data
         induction_motor = PerformanceDeterminationTest.objects.get(id=performace_determination_id).induction_motor
+        print("un sorted")
+        for item in performance_determination_data:
+            print(item)
+        print("un sorted end")
         torque_values = []
         speed_values = []
         amplitude_values = []
         efficiency_values = []
         horsepower_values = []
         watts_out_values = []
+        n = len(performance_determination_data)
+        for i in range(n):
+            for j in range(n - 1):
+                if performance_determination_data[j][4] > performance_determination_data[j + 1][4]:
+                    performance_determination_data[j], performance_determination_data[j + 1] = performance_determination_data[j + 1], performance_determination_data[j]
+        print("sorted")
+        for item in performance_determination_data:
+            print(item)
+        print("sorted end")
         for data in performance_determination_data:
             if induction_motor.test_type == '45kw':
                 current_amp = data[6]
@@ -1020,7 +1033,6 @@ class ChartView(View):
             horsepower = float(data[11])
             watts_out = float(data[12])
             efficiency = float(data[13])
-            load = float(data[7])
             speed_values.append(speed_rpm)
             amplitude_values.append(current_amp)
             torque_values.append(torque)
@@ -1037,7 +1049,7 @@ class ChartView(View):
             'horse_power': horsepower_values,
             'watts_out': watts_out_values,
             'motor_serial': induction_motor.serial_number,
-            'load': load
+
         }
 
         return render(request, 'graph.html', context)
