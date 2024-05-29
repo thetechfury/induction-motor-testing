@@ -56,6 +56,8 @@
       const efficiency = {{efficiency|safe}}
       const horsepower = {{horse_power|safe}}
       const watts_out = {{watts_out|safe}}
+
+      
       const speedRPMTorqueData = []
       const speedRPMAmplitudeData = []
       const speedRPMEfficiencyData = []
@@ -91,6 +93,8 @@
               speedRPMHorsepowerData.push(horsepower_item)
       }
 
+      console.log(`Torque : ${torque} \n Amplitide : ${amplitude}\n Horsepower : ${horsepower}`)
+
   // setup
   const data = {
 
@@ -112,7 +116,8 @@
       borderColor: 'red',
       showLine: true,
       tension:0.3,
-      borderWidth: 2
+      borderWidth: 2,
+      yAxisID:'amplitude',
     },
     {
       label: 'efficiency',
@@ -121,7 +126,8 @@
       borderColor: 'green',
       showLine: true,
       tension:0.3,
-      borderWidth: 3
+      borderWidth: 3,
+      yAxisID:'efficiency',
     },
     {
       label: 'watts output',
@@ -130,7 +136,9 @@
       borderColor: 'pink',
       showLine: true,
       tension:0.3,
-      borderWidth: 2
+      borderWidth: 2,
+      yAxisID:'watt',
+      
     },
     {
       label: 'horsepower',
@@ -139,7 +147,8 @@
       borderColor: 'blue',
       showLine: true,
       tension:0.3,
-      borderWidth: 2
+      borderWidth: 2,
+      yAxisID:'horsepower',
     },
     ]
   };
@@ -264,9 +273,9 @@
             }
         },
 
-        y: {
-          beginAtZero: true
-        }
+        // y: {
+        //   beginAtZero: true
+        // }
       }
     }
   };
