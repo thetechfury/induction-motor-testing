@@ -895,11 +895,11 @@ class PerformanceDeterminationFormSave(View):
             current_count = 0
             rpm_count = 0
             for determine_data in filtered_determine_data:
-                # if determine_data[4] < prev_rpm:
+                # if float(determine_data[4]) < prev_rpm:
                 speed_rpm += float(determine_data[4])
                     # rpm_count += 1
                 if performance_determination_test.induction_motor.test_type == '45kw':
-                    if determine_data[6] > prev_current:
+                    if float(determine_data[6]) > prev_current:
                         current_amp += float(determine_data[6])
                         current_count+=1
                     voltage += float(determine_data[2])
@@ -1003,10 +1003,6 @@ class ChartView(View):
         performance_determination_data = PerformanceDeterminationTest.objects.get(
             id=performace_determination_id).mdb_data
         induction_motor = PerformanceDeterminationTest.objects.get(id=performace_determination_id).induction_motor
-        print("un sorted")
-        for item in performance_determination_data:
-            print(item)
-        print("un sorted end")
         torque_values = []
         speed_values = []
         amplitude_values = []
@@ -1018,10 +1014,8 @@ class ChartView(View):
             for j in range(n - 1):
                 if performance_determination_data[j][4] > performance_determination_data[j + 1][4]:
                     performance_determination_data[j], performance_determination_data[j + 1] = performance_determination_data[j + 1], performance_determination_data[j]
-        print("sorted")
-        for item in performance_determination_data:
-            print(item)
-        print("sorted end")
+
+
         for data in performance_determination_data:
             if induction_motor.test_type == '45kw':
                 current_amp = data[6]
