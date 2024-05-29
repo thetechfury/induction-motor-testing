@@ -56,6 +56,9 @@
       const efficiency = {{efficiency|safe}}
       const horsepower = {{horse_power|safe}}
       const watts_out = {{watts_out|safe}}
+      let  motor_serial = `{{motor_serial|safe}}`
+     
+      
 
       
       const speedRPMTorqueData = []
@@ -93,7 +96,6 @@
               speedRPMHorsepowerData.push(horsepower_item)
       }
 
-      console.log(`Torque : ${torque} \n Amplitide : ${amplitude}\n Horsepower : ${horsepower}`)
 
   // setup
   const data = {
@@ -102,7 +104,6 @@
       label: 'torque',
       data : speedRPMTorqueData,
       backgroundColor:'gray',
-
       borderColor:'gray',
       showLine: true,
       tension:0.3,
@@ -299,13 +300,14 @@
 
               // Create a temporary anchor element to trigger the download
               var link = document.createElement('a');
-              link.download = `chart.png`;
+              link.download = `${motor_serial}-motor-chart.png`;
               link.href = dataURL;
               document.body.appendChild(link);
               link.click();
               document.body.removeChild(link);
           });
       }
+      
 
       // Add event listener to the download button
       document.getElementById('downloadBtn').addEventListener('click', downloadChartAsImage);
