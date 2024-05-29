@@ -1048,6 +1048,63 @@ class ChartView(View):
 
         return render(request, 'graph.html', context)
 
+class TestChartView(View):
+
+    def get_performance_dertermination_id(self, motor_id):
+        motor = InductionMotor.objects.get(id=motor_id)
+        return motor.performance_determination_test.id
+
+    def get(self, request, *args, **kwargs):
+        performace_determination_id = self.get_performance_dertermination_id(kwargs['id'])
+        performance_determination_data = PerformanceDeterminationTest.objects.get(
+            id=performace_determination_id).mdb_data
+        induction_motor = PerformanceDeterminationTest.objects.get(id=performace_determination_id).induction_motor
+        torque_values = []
+        speed_values = []
+        amplitude_values = []
+        efficiency_values = []
+        horsepower_values = []
+        watts_out_values = []
+        n = len(performance_determination_data)
+        for i in range(n):
+            for j in range(n - 1):
+                if performance_determination_data[j][4] > performance_determination_data[j + 1][4]:
+                    performance_determination_data[j], performance_determination_data[j + 1] = performance_determination_data[j + 1], performance_determination_data[j]
+
+
+        for data in performance_determination_data:
+            if induction_motor.test_type == '45kw':
+                current_amp = data[6]
+            else:
+                current_amp = data[8]
+
+            speed_rpm = float(data[4])
+            torque = float(data[5])
+            horsepower = float(data[11])
+            watts_out = float(data[12])
+            efficiency = float(data[13])
+            speed_values.append(speed_rpm)
+            amplitude_values.append(current_amp)
+            torque_values.append(torque)
+            efficiency_values.append(efficiency)
+            horsepower_values.append(horsepower)
+            watts_out_values.append(watts_out)
+
+        context = {
+            'motor_id': kwargs['id'],
+            'torque': torque_values,
+            'amplitude': amplitude_values,
+            'speed': speed_values,
+            'efficiency': efficiency_values,
+            'horse_power': horsepower_values,
+            'watts_out': watts_out_values,
+            'motor_serial': induction_motor.serial_number,
+
+        }
+
+        return render(request, 'graph-test.html', context)
+
+
 
 class Remarks(View):
     def post(self, request, *args, **kwargs):
