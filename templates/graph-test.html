@@ -103,7 +103,7 @@
       showLine: true,
       tension:0.3,
       borderWidth: 2,
-      yAxisID:'torque',
+      yAxisID:'y',
     },
     {
       label: 'amplitude',
@@ -112,7 +112,8 @@
       borderColor: 'red',
       showLine: true,
       tension:0.3,
-      borderWidth: 2
+      borderWidth: 2,
+      yAxisID:'amplitude',
     },
     {
       label: 'efficiency',
@@ -121,7 +122,8 @@
       borderColor: 'green',
       showLine: true,
       tension:0.3,
-      borderWidth: 3
+      borderWidth: 3,
+      yAxisID:'efficiency',
     },
     {
       label: 'watts output',
@@ -130,7 +132,8 @@
       borderColor: 'pink',
       showLine: true,
       tension:0.3,
-      borderWidth: 2
+      borderWidth: 2,
+      yAxisID:'watt',
     },
     {
       label: 'horsepower',
@@ -139,7 +142,8 @@
       borderColor: 'blue',
       showLine: true,
       tension:0.3,
-      borderWidth: 2
+      borderWidth: 2,
+      yAxisID:'horsepower',
     },
     ]
   };
@@ -166,6 +170,7 @@
                   }
       }
           },
+
           horsepower:{
             beginAtZero: true,
             type: 'linear',
@@ -224,10 +229,11 @@
                 }
             }
         },
-        torque:{
+        y:{
           beginAtZero: true,
           type: 'linear',
           position: 'left',
+
 
           title : {
               display: true,
