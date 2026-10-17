@@ -1,33 +1,30 @@
 {
-  "name": "induction-motor-testing-app",
+  "name": "induction-motor-testing",
   "productName": "Induction Motor Testing",
-  "version": "1.0.0",
-  "description": "A minimal Electron application to test induction motor",
+  "version": "2.0.0",
+  "description": "Offline desktop application for the UET Motor Testing Lab: records three-phase induction motor tests, computes performance and prints the test report.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build-installer": "electron-builder",
-    "package-win": "electron-packager . induction-motor-testing-app --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Induction Motor Testing\"",
-    "package-linux": "electron-packager . induction-motor-testing-app --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/linux/icon.png --prune=true --out=release-builds"
+    "test": "node --test test/",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "author": "GitHub",
+  "build": {
+    "appId": "pk.edu.uet.motorlab",
+    "productName": "Induction Motor Testing",
+    "files": ["main.js", "preload.js", "src/**", "renderer/**", "assets/**"],
+    "win": { "target": "nsis", "icon": "assets/icons/win/icon.ico" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true },
+    "linux": { "target": "AppImage", "icon": "assets/icons/linux/icon.png" }
+  },
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^28.2.2",
-    "electron-packager": "^17.1.2"
+    "chart.js": "^4.5.1",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.0"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "sequelize": "^6.37.0",
-    "sequelize-cli": "^6.6.2",
-    "sqlite3": "^5.1.7"
+    "mdb-reader": "^3.2.0"
   }
 }
