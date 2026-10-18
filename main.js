@@ -90,7 +90,7 @@ app.whenReady().then(() => {
         fs.writeFileSync(path.join(userData, 'report-print-full.html'), handlers['report.preview']({ id }));
         if (process.env.SMOKE_SHOTS) { // screenshots of each screen for visual review
           const steps = [['motors', "go('motors')"], ['workspace', "(async () => { state.motorId = (await api('motors.list', {}))[0].id; state.test = 'performance_determination_test'; await go('workspace'); })()"],
-            ['report', "(async () => { state.reportTab = 'report'; await go('report'); })()"], ['chart', "(async () => { state.reportTab = 'chart'; render(); await new Promise((r) => setTimeout(r, 600)); })()"], ['settings', "go('settings')"], ['form', "(async () => { state.screen = 'motor'; render(); })()"]];
+            ['report', "(async () => { state.reportTab = 'report'; await go('report'); })()"], ['chart', "(async () => { state.reportTab = 'chart'; render(); await new Promise((r) => setTimeout(r, 600)); })()"], ['settings', "go('settings')"], ['form', "(async () => { state.screen = 'motor'; render(); })()"], ['login', "(async () => { state.user = null; state.screen = 'login'; render(); })()"]];
           for (const [name, js] of steps) { await win.webContents.executeJavaScript(js); await new Promise((r) => setTimeout(r, 500)); fs.writeFileSync(path.join(process.env.SMOKE_SHOTS, `shot-${name}.png`), (await win.capturePage()).toPNG()); }
         }
         console.log(`SMOKE ${log} | pdf=${fs.statSync(pdf).size}B ${pdf} | rendererErrors=${JSON.stringify(errors)}`);
