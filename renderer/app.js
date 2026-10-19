@@ -29,7 +29,7 @@ const MOTOR_SECTIONS = [
   ['Nameplate', [['voltage', 'Voltage (V)'], ['current', 'Current (A)'], ['frequency', 'Frequency (Hz)'], ['speed', 'Speed (rpm)'], ['p_f', 'Power factor'], ['efficiency', 'Efficiency (%)']]],
 ];
 
-const state = { user: null, screen: 'login', search: '', motors: [], motorId: null, data: null, test: null, preview: null, mdbPaths: {}, armed: null,
+const state = { user: null, screen: 'login', search: '', motors: [], motorId: null, data: null, test: null, preview: null, armed: null,
   reportTab: 'report', reportHtml: '', draft: null, settings: {}, users: [], info: {}, toast: null, busy: false };
 let chartInstance = null;
 
@@ -169,7 +169,8 @@ const views = {
     <div class="card"><h3>PDF reports</h3>
       <div class="field"><label>Reports folder</label><div class="pathrow"><code>${esc(s.reports_dir || state.info.reportsDir)}</code><button class="btn sm" data-action="pick-folder">Change…</button>${s.reports_dir ? '<button class="btn sm" data-action="set" data-key="reports_dir" data-value="">Reset</button>' : ''}</div></div>
       <form class="field" data-action="save-scale" style="max-width:320px"><label for="f_scale">Print scale</label><div class="pathrow"><input class="input num" id="f_scale" name="pdf_scale" type="number" step="0.01" min="0.5" max="1" value="${esc(s.pdf_scale || '0.74')}"><button class="btn sm" type="submit">Save</button></div><span class="hint">0.74 fits the report on A4 like the old wkhtmltopdf output. Lower it slightly if page 1 spills onto a third page.</span></form></div>
-    <div class="card"><h3>Remembered instrument files</h3>${ORDER.filter((k) => TESTS[k].kind === 'import').map((k) => `<div class="field"><label>${TESTS[k].label}</label><div class="pathrow"><code>${esc(paths[k] || 'not chosen yet')}</code>${paths[k] ? `<button class="btn sm" data-action="forget-mdb" data-test="${k}">Forget</button>` : ''}</div></div>`).join('')}</div>
+    <div class="card"><div class="card-head"><h3>Instrument files</h3><span class="muted small">One Access .mdb file per import test. Tables inside are named by test date; rows are matched by the motor's serial number.</span></div>
+      ${ORDER.filter((k) => TESTS[k].kind === 'import').map((k) => `<div class="field"><label>${TESTS[k].label}</label><div class="pathrow"><code>${esc(paths[k] || 'Not set')}</code><button class="btn sm" data-action="pick-mdb" data-test="${k}">${paths[k] ? 'Change…' : 'Choose file…'}</button>${paths[k] ? `<button class="btn sm ghost" data-action="forget-mdb" data-test="${k}">Clear</button>` : ''}</div></div>`).join('')}</div>
     <div class="card"><div class="card-head"><h3>Users</h3></div>
       <table class="table"><tbody>${state.users.map((u) => `<tr><td>${esc(u.username)}</td><td class="muted">since ${when(u.created_on)}</td><td style="text-align:right"><button class="btn sm danger ${state.armed === 'u' + u.id ? 'armed' : ''}" data-action="remove-user" data-id="${u.id}" ${u.id === state.user.id ? 'disabled' : ''}>${state.armed === 'u' + u.id ? 'Confirm' : 'Remove'}</button></td></tr>`).join('')}</tbody></table>
       <form class="form-grid" data-action="add-user"><div class="field"><label for="f_nu">New username</label><input class="input" id="f_nu" name="username" required></div><div class="field"><label for="f_np">Password</label><input class="input" id="f_np" name="password" type="password" minlength="4" required></div><div class="field"><label>&nbsp;</label><button class="btn" type="submit">Add user</button></div></form></div>
@@ -190,7 +191,7 @@ function testPanel(k) {
     return `<form class="card" data-action="save-manual">${head}<div class="form-grid">${t.fields.map((f) => field(f, val(r[f[0]]))).join('')}${extra}<div class="wide">${remarks}</div></div>
       <div class="actions"><button class="btn primary" type="submit">${done ? 'Save changes' : 'Save and mark completed'}</button></div></form>`;
   }
-  const mdbPath = state.mdbPaths[k] || '';
+  const mdbPath = state.data.settings.mdbPaths[k] || '';
   const dv = state.draft?.test === k ? state.draft : {}; // values typed before "Preview import"
   const v = (f) => val(dv[f] !== undefined ? dv[f] : r[f]);
   const date = dv.dateStr !== undefined ? dv.dateStr : (k === 'performance_determination_test' ? r.report_date : r.reported_date);
@@ -201,7 +202,7 @@ function testPanel(k) {
   return `<form class="card" data-action="import" data-test="${k}">${head}
     <div class="form-grid">
       <div class="field"><label for="f_date">Test date</label><input class="input" id="f_date" name="dateStr" type="date" value="${esc(date || '')}" required><span class="hint">Table name in the .mdb: day, month and year without leading zeros</span></div>
-      <div class="field wide"><label>Instrument file (.mdb)</label><div class="pathrow"><code>${esc(mdbPath || 'No file chosen')}</code><button class="btn sm" type="button" data-action="pick-mdb" data-test="${k}">Choose file…</button></div></div>
+      <div class="field wide"><label>Instrument file (.mdb)</label><div class="pathrow"><code>${esc(mdbPath || 'Not set')}</code><button class="btn sm ghost" type="button" data-action="go" data-screen="settings">${mdbPath ? 'Change in Settings' : 'Set in Settings'}</button></div><span class="hint">Rows are matched to this motor by serial number <b class="mono">${esc(d.motor.serial_number)}</b> in the table for the test date.</span></div>
       ${k === 'no_load_test' ? field(['direction_of_rotation', 'Direction of rotation', 'select', [['CLOCKWISE', 'Clockwise'], ['ANTI_CLOCKWISE', 'Anti clockwise']]], v('direction_of_rotation') || 'CLOCKWISE') : ''}
       ${t.fields.map((f) => field(f, v(f[0]))).join('')}
       <div class="wide">${field(['remarks', 'Remarks', 'textarea'], v('remarks'))}</div>
@@ -257,7 +258,6 @@ async function drawChart() {
 async function loadMotors() { state.motors = await api('motors.list', { search: state.search }); }
 async function loadMotor(id) {
   state.motorId = id; state.data = await api('motors.get', { id });
-  state.mdbPaths = { ...state.data.settings.mdbPaths, ...Object.fromEntries(Object.entries(state.mdbPaths).filter(([, v]) => v)) };
   if (!state.test || !state.data.statuses[state.test]) state.test = ORDER.find((k) => state.data.statuses[k] === 'PENDING') || ORDER.find((k) => state.data.statuses[k]) || null;
 }
 async function go(screen) {
@@ -296,11 +296,15 @@ const actions = {
   },
   'pick-test': (el) => { state.test = el.dataset.test; state.preview = null; state.draft = null; render(); },
   tab: async (el) => { state.reportTab = el.dataset.tab; render(); },
-  'pick-mdb': async (el) => { const p = await guard(() => api('files.pickMdb')); if (p) { state.mdbPaths[el.dataset.test] = p; render(); } },
+  'pick-mdb': async (el) => {
+    const p = await guard(() => api('files.pickMdb')); if (!p) return;
+    const paths = JSON.parse(state.settings.mdb_paths || '{}'); paths[el.dataset.test] = p;
+    await guard(() => api('settings.set', { key: 'mdb_paths', value: JSON.stringify(paths) })); await go('settings'); toast('Instrument file saved', 'ok');
+  },
   'pick-folder': async () => { const p = await guard(() => api('files.pickFolder')); if (p) { await api('settings.set', { key: 'reports_dir', value: p }); await go('settings'); } },
   set: async (el) => { await guard(() => api('settings.set', { key: el.dataset.key, value: el.dataset.value || null })); await go('settings'); },
   'forget-mdb': async (el) => {
-    const paths = JSON.parse(state.settings.mdb_paths || '{}'); delete paths[el.dataset.test]; delete state.mdbPaths[el.dataset.test];
+    const paths = JSON.parse(state.settings.mdb_paths || '{}'); delete paths[el.dataset.test];
     await guard(() => api('settings.set', { key: 'mdb_paths', value: JSON.stringify(paths) })); await go('settings');
   },
   'open-file': (el) => guard(() => api('files.open', { path: el.dataset.path })),
@@ -338,7 +342,7 @@ const submits = {
   },
   import: async (form, submitter) => {
     const values = formData(form); const mode = submitter?.value || 'save'; const test = form.dataset.test;
-    const payload = { motorId: state.motorId, test, dateStr: values.dateStr, mdbPath: state.mdbPaths[test], values };
+    const payload = { motorId: state.motorId, test, dateStr: values.dateStr, values };
     state.draft = { test, ...values };
     state.busy = true; render();
     const r = await guard(() => api(mode === 'preview' ? 'tests.importPreview' : 'tests.importSave', payload));

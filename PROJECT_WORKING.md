@@ -43,7 +43,7 @@ renderer/app.js ──window.bridge.call──▶ preload.js ──ipcRenderer.i
 
 `motors` (the InductionMotor row, soft-deleted via `status`), `performance_tests` (7 rows per motor: Routine / Type /
 Special flags and `PENDING | COMPLETED | NOT_FOUND`), seven one-to-one result tables keyed by `motor_id`,
-`performance_test_parameters` (the 10 load rows), `users`, and `settings` (reports folder, PDF scale, remembered `.mdb` paths).
+`performance_test_parameters` (the 10 load rows), `users`, and `settings` (reports folder, PDF scale, the three configured `.mdb` paths).
 `mdb_data` columns hold the matched instrument rows as JSON, exactly as the Django JSONField did.
 
 ## 5. Status rules
@@ -55,7 +55,7 @@ Special flags and `PENDING | COMPLETED | NOT_FOUND`), seven one-to-one result ta
 
 ## 6. Imports and formulas (src/calc.js)
 
-The three instrument tests read the table named `day+month+year` (no leading zeros) from the chosen `.mdb`, filter rows by
+The three instrument tests read the table named `day+month+year` (no leading zeros) from the `.mdb` configured in Settings for that test, filter rows by
 the motor serial number (column 1 for No Load and Lock Rotor, column 3 for Performance) and compute with the column maps of
 the motor type (`45kw` vs `5kw`). Power factor is the constant 0.89, synchronous speed assumes two poles, efficiency is the
 house formula `P_mech / (P_elec + P_mech + P_loss)`, horsepower uses 5252, watts-out is `V·I·√3`. Lock Rotor stores the

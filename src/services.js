@@ -93,9 +93,12 @@ function createServices({ db, readMdbTable }) {
   }
 
   // ---- .mdb imports (NoLoadFormSaveView, LockRotorFormSave, PerformanceDeterminationFormSave) ----
+  const TEST_LABEL = { no_load_test: 'No Load', lock_rotor_test: 'Lock Rotor', performance_determination_test: 'Performance Determination' };
+  // The .mdb file per import test is configured once in Settings (like the old Configuration row); rows are matched by serial number.
   async function computeImport({ motorId, test, dateStr, mdbPath }) {
     const motor = motorOr404(motorId);
-    if (!mdbPath) fail('Choose the instrument .mdb file first');
+    mdbPath = mdbPath || JSON.parse(setting('mdb_paths') || '{}')[test];
+    if (!mdbPath) fail(`No instrument file set for ${TEST_LABEL[test] || test}. Choose it under Settings → Instrument files.`);
     const tableName = calc.formatDate(dateStr) || fail('Enter the test date as YYYY-MM-DD');
     let rows;
     try { rows = await readMdbTable(mdbPath, tableName); } catch (e) { fail(`No record found against this date ${dateStr}`); }
@@ -223,7 +226,7 @@ function createServices({ db, readMdbTable }) {
     // ---- instrument imports ----
     'tests.importPreview': (args) => computeImport(args),
     'tests.importSave': async (args) => {
-      const { motorId, test, mdbPath, values = {} } = args;
+      const { motorId, test, values = {} } = args;
       const dateStr = test === 'performance_determination_test' && values.is_current_date ? todayYmd() : args.dateStr;
       const r = await computeImport({ ...args, dateStr });
       if (test === 'no_load_test') {
@@ -246,9 +249,6 @@ function createServices({ db, readMdbTable }) {
         for (const p of r.table) run('INSERT INTO performance_test_parameters (motor_id, load, current, slip, speed, efficiency, cos) VALUES (?, ?, ?, ?, ?, ?, ?)',
           motorId, p.load, p.current, p.slip, p.speed, p.efficiency, p.cos);
       }
-      const paths = JSON.parse(setting('mdb_paths') || '{}');
-      paths[test] = mdbPath;
-      services['settings.set']({ key: 'mdb_paths', value: JSON.stringify(paths) });
       return { ...r, rows: undefined, mdbData: undefined, allCompleted: allCompleted(motorId) };
     },
 

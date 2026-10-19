@@ -34,7 +34,7 @@ wkhtmltopdf, no Microsoft Access driver.
 |---|---|
 | Database | `%APPDATA%\Induction Motor Testing\motor-lab.sqlite` |
 | PDF reports | `Documents\Motor Testing Reports\<customer>-<serial>.pdf` (change in Settings) |
-| Instrument `.mdb` files | Anywhere; chosen per test and remembered |
+| Instrument `.mdb` files | Anywhere; set once under **Settings → Instrument files**, one per import test |
 
 Back up the database file to keep the motor records.
 
@@ -42,7 +42,8 @@ Back up the database file to keep the motor records.
 
 1. **Motors** → **New motor**: identification, nameplate, motor type (45 KW or up to 5 KW) and the Routine / Type / Special matrix.
 2. **Tests**: the sidebar lists the selected tests. Manual tests are typed in. The three instrument tests (No Load, Lock Rotor,
-   Performance Determination) take a test date and the `.mdb` file; **Preview import** shows the computed values before
+   Performance Determination) read the `.mdb` file configured in Settings, open the table named after the test date and
+   keep the rows whose serial number matches the motor; **Preview import** shows the computed values before
    **Import, save and mark completed** writes them. Performance Determination needs the three resistances from Electric Resistance first.
 3. **Report & curve**: live preview of the report, final remarks, **Export PDF**, and the performance curve with PNG export.
 

@@ -26,8 +26,8 @@
   const f3 = $('form[data-action=import]'); f3.dateStr.value = '2024-03-06';
   await submits.import(f3, { value: 'preview' });
   log.push('importNoFile→toast=' + JSON.stringify(state.toast && state.toast.msg));
-  state.mdbPaths.performance_determination_test = 'perf.mdb'; state.mdbPaths.no_load_test = 'noload.mdb'; state.mdbPaths.lock_rotor_test = 'noload.mdb';
-  state.test = 'performance_determination_test'; render();
+  await api('settings.set', { key: 'mdb_paths', value: JSON.stringify({ performance_determination_test: 'perf.mdb', no_load_test: 'noload.mdb', lock_rotor_test: 'lock.mdb' }) });
+  await loadMotor(state.motorId); state.test = 'performance_determination_test'; render();
   const fp = $('form[data-action=import]'); fp.dateStr.value = '2024-03-06'; fp.voltage.value = '400'; fp.frequency.value = '50'; fp.nominal_t.value = '290';
   await submits.import(fp, { value: 'preview' });
   log.push('perfPreview rows=' + state.preview.rowCount + ' table=' + state.preview.table.length + ' domRows=' + document.querySelectorAll('form[data-action=import] tbody tr').length + ' status=' + state.data.statuses.performance_determination_test);

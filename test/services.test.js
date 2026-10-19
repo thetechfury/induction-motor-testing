@@ -56,6 +56,9 @@ test('manual save, import guard, import save, report and chart', async () => {
   assert.equal(m.values.ambient_temperature_C, 0);
   assert.equal(s['motors.get']({ id }).statuses.electric_resistance_test, 'COMPLETED');
 
+  await assert.rejects(s['tests.importPreview']({ motorId: id, test: 'no_load_test', dateStr: '2024-03-06' }), /Settings → Instrument files/);
+  s['settings.set']({ key: 'mdb_paths', value: JSON.stringify({ no_load_test: 'nl.mdb' }) });
+  assert.equal((await s['tests.importPreview']({ motorId: id, test: 'no_load_test', dateStr: '2024-03-06' })).rowCount, 2, 'path taken from settings');
   await assert.rejects(s['tests.importPreview']({ motorId: id, test: 'no_load_test', dateStr: '2024-01-01', mdbPath: 'nl.mdb' }), /No record found against this date 2024-01-01/);
   const prev = await s['tests.importPreview']({ motorId: id, test: 'no_load_test', dateStr: '2024-03-06', mdbPath: 'nl.mdb' });
   assert.equal(prev.rowCount, 2); assert.ok(Math.abs(prev.values.voltage - 405) < 1e-9);
@@ -72,7 +75,7 @@ test('manual save, import guard, import save, report and chart', async () => {
   assert.equal(data.parameters.length, 10);
   assert.equal(data.results.no_load_test.direction_of_rotation, 'ANTI_CLOCKWISE');
   assert.equal(data.results.no_load_test.report_date, '632024');
-  assert.deepEqual(data.settings.mdbPaths, { no_load_test: 'nl.mdb', performance_determination_test: 'perf.mdb', lock_rotor_test: 'nl.mdb' });
+  assert.deepEqual(data.settings.mdbPaths, { no_load_test: 'nl.mdb' }, 'imports never change the configured paths');
 
   const html = s['report.html']({ id, assets: { css: 'body{}', logoDataUri: 'data:,' } });
   assert.match(html, /3\.1\. Electric Resistance/);
