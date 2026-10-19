@@ -14,9 +14,9 @@
     "appId": "pk.edu.uet.motorlab",
     "productName": "Induction Motor Testing",
     "files": ["main.js", "preload.js", "src/**", "renderer/**", "assets/**"],
-    "win": { "target": "nsis", "icon": "assets/icons/icon-256.png" },
+    "win": { "target": "nsis", "icon": "assets/icons/icon-1024.png" },
     "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true },
-    "linux": { "target": "AppImage", "icon": "assets/icons/icon-256.png" }
+    "linux": { "target": "AppImage", "icon": "assets/icons/icon-1024.png" }
   },
   "license": "CC0-1.0",
   "devDependencies": {

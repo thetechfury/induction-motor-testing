@@ -25,7 +25,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1280, height: 840, minWidth: 980, minHeight: 640, show: false,
     title: 'Induction Motor Testing', backgroundColor: '#f4f6f9',
-    icon: process.platform === 'win32' ? asset('icons/win/icon.ico') : asset('icons/linux/icon.png'),
+    icon: asset('icons/icon-1024.png'),
     webPreferences: { preload: path.join(__dirname, 'preload.js'), sandbox: true, contextIsolation: true },
   });
   if (app.isPackaged) win.setMenuBarVisibility(false);

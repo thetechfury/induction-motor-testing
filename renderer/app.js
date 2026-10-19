@@ -60,7 +60,7 @@ const field = ([name, label, type = 'number', options], value, extra = '') => `
 function sidebar() {
   const nav = (id, label, icon) => `<button class="navbtn ${state.screen === id || (id === 'motors' && ['motor', 'workspace', 'report'].includes(state.screen)) ? 'on' : ''}" data-action="go" data-screen="${id}">${icon}<span>${label}</span></button>`;
   return `<aside class="sidebar">
-    <div class="brand"><span class="mark">${ICON.bolt}</span><div><b>Motor Lab</b><small>UET · Kala Shah Kaku</small></div></div>
+    <div class="brand"><img class="logo" src="img/logo.png" alt="Electromachanica"><div><b>Electromachanica</b><small>Motor Testing Lab · UET</small></div></div>
     <nav>${nav('motors', 'Motors', ICON.motors)}${nav('settings', 'Settings', ICON.settings)}</nav>
     <div class="sidefoot"><div class="avatar">${esc(state.user.username.slice(0, 2).toUpperCase())}</div><div class="who"><b>${esc(state.user.username)}</b><small>signed in</small></div><button class="iconbtn" data-action="logout" title="Log out" aria-label="Log out">${ICON.logout}</button></div>
   </aside>`;
@@ -85,7 +85,7 @@ const curveSvg = `<svg class="curve" viewBox="0 0 400 220" aria-hidden="true"><d
 const views = {
   login: () => `<div class="login">
     <section class="login-hero">
-      <div class="brand light"><span class="mark">${ICON.bolt}</span><div><b>Motor Lab</b><small>University of Engineering &amp; Technology</small></div></div>
+      <div class="brand light"><img class="logo" src="img/logo.png" alt="Electromachanica"><div><b>Electromachanica</b><small>Motor Testing Lab · University of Engineering &amp; Technology</small></div></div>
       <div class="hero-copy"><h1>Three-phase induction motor test reports</h1><p>Record the seven standard tests, import instrument data, and print the laboratory report. Everything runs on this machine, no internet needed.</p></div>
       ${curveSvg}
       <p class="hero-foot">Motor Testing Lab · University Rd. Kala Shah Kaku, Sheikhupura</p>
@@ -100,7 +100,7 @@ const views = {
 
   motors: () => {
     const ms = state.motors; const ready = ms.filter((m) => m.report_link).length; const prog = ms.filter((m) => m.completed_tests && m.completed_tests < m.total_tests).length;
-    return `<div class="page-head"><div><p class="eyebrow">Overview</p><h1>Motors</h1></div>
+    return `<div class="page-head"><div class="head-brand"><img class="logo lg" src="img/logo.png" alt=""><div><p class="eyebrow">Electromachanica · Overview</p><h1>Motors</h1></div></div>
       <div class="actions"><input class="input search" id="search" type="search" placeholder="Search serial number…" value="${esc(state.search)}" data-action="search">
       <button class="btn primary" data-action="new-motor">${ICON.plus}New motor</button></div></div>
     <div class="tiles">
