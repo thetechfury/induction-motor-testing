@@ -129,6 +129,10 @@ input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--accent);
 .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
 .kv div { background: var(--surface-2); border-radius: 10px; padding: 11px 13px; } .kv small { color: var(--muted); display: block; font-size: 12px; font-weight: 600; } .kv b { font-family: var(--mono); font-weight: 600; font-size: 16px; }
 .pathrow { display: flex; gap: 8px; align-items: center; } .pathrow code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono); font-size: 13px; background: var(--surface-2); padding: 10px 12px; border-radius: var(--r-sm); color: var(--muted); border: 1px dashed var(--line-2); }
+.pathbox { display: flex; gap: 12px; align-items: flex-start; background: var(--surface-2); border-radius: var(--r-sm); padding: 12px 14px; color: var(--accent); }
+.pathbox > div { min-width: 0; color: var(--fg); }
+.pathbox b { display: block; font-size: 14px; overflow-wrap: anywhere; }
+.pathbox small { display: block; font-family: var(--mono); font-size: 12px; color: var(--muted); overflow-wrap: anywhere; line-height: 1.5; margin-top: 2px; }
 .note { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--r-sm); background: var(--warn-soft); color: var(--warn); font-size: 14px; font-weight: 500; }
 .note.ok { background: var(--ok-soft); color: var(--ok); }
 

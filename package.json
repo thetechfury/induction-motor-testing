@@ -8,15 +8,44 @@
     "start": "electron .",
     "test": "node --test test/",
     "dist:win": "electron-builder --win --x64",
-    "dist:linux": "electron-builder --linux"
+    "dist:linux": "electron-builder --linux",
+    "dist:mac": "electron-builder --mac"
   },
   "build": {
     "appId": "pk.edu.uet.motorlab",
     "productName": "Induction Motor Testing",
-    "files": ["main.js", "preload.js", "src/**", "renderer/**", "assets/**"],
-    "win": { "target": "nsis", "icon": "assets/icons/icon-1024.png" },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true },
-    "linux": { "target": "AppImage", "icon": "assets/icons/icon-1024.png" }
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**",
+      "renderer/**",
+      "assets/**"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icons/icon-1024.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName} Setup ${version}.${ext}"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icons/icon-1024.png"
+    },
+    "icon": "assets/icons/icon-1024.png",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "assets/icons/icon-1024.png",
+      "category": "public.app-category.productivity"
+    },
+    "dmg": {
+      "artifactName": "${productName} ${version}.${ext}"
+    }
   },
   "license": "CC0-1.0",
   "devDependencies": {

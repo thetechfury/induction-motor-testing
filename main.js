@@ -29,6 +29,7 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, 'preload.js'), sandbox: true, contextIsolation: true },
   });
   if (app.isPackaged) win.setMenuBarVisibility(false);
+  if (process.platform === 'darwin' && !app.isPackaged) app.dock.setIcon(asset('icons/icon-1024.png')); // dev run otherwise shows Electron's icon
   win.once('ready-to-show', () => win.show());
   win.loadFile('renderer/index.html');
 }
